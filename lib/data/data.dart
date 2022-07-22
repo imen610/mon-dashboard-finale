@@ -1,33 +1,40 @@
+import 'package:responsive_admin_dashboard/bracelet.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
+import 'package:responsive_admin_dashboard/membre.dart';
 import 'package:responsive_admin_dashboard/models/analytic_info_model.dart';
 import 'package:responsive_admin_dashboard/models/discussions_info_model.dart';
 import 'package:responsive_admin_dashboard/models/referal_info_model.dart';
+import 'package:responsive_admin_dashboard/test.dart';
+
+import '../shop/index.dart';
+import '../user/index.dart';
 
 List analyticData = [
   AnalyticInfo(
-    title: "Users",
-    count: 720,
-    svgSrc: "assets/icons/Subscribers.svg",
-    color: primaryColor,
-  ),
+      title: "Users",
+      count: 720,
+      svgSrc: "assets/icons/Subscribers.svg",
+      color: primaryColor,
+      route: IndexPage()),
   AnalyticInfo(
     title: "shops",
     count: 820,
     svgSrc: "assets/icons/Post.svg",
     color: purple,
+    route: IndexPageShop(),
   ),
   AnalyticInfo(
-    title: "members",
-    count: 920,
-    svgSrc: "assets/icons/Pages.svg",
-    color: orange,
-  ),
+      title: "members",
+      count: 920,
+      svgSrc: "assets/icons/Pages.svg",
+      color: orange,
+      route: membre()),
   AnalyticInfo(
-    title: "bracelets",
-    count: 920,
-    svgSrc: "assets/icons/Comments.svg",
-    color: green,
-  ),
+      title: "bracelets",
+      count: 920,
+      svgSrc: "assets/icons/Comments.svg",
+      color: green,
+      route: bracelet()),
 ];
 
 List discussionData = [

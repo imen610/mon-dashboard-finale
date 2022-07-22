@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/models/analytic_info_model.dart';
+import 'package:responsive_admin_dashboard/test.dart';
 
 class AnalyticInfoCard extends StatefulWidget {
   const AnalyticInfoCard({Key? key, required this.info}) : super(key: key);
@@ -46,48 +47,54 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
                 spreadRadius: 2.0,
               ),
             ]),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${widget.info.count}",
-                  style: GoogleFonts.quicksand(
-                    fontWeight: FontWeight.w600,
-                    color: hovered ? Colors.white : textColor,
-                    fontSize: 18,
+        child: InkWell(
+          onTap: () => {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => widget.info.route))
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${widget.info.count}",
+                    style: GoogleFonts.quicksand(
+                      fontWeight: FontWeight.w600,
+                      color: hovered ? Colors.white : textColor,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(appPadding / 2),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                      color: hovered
-                          ? Colors.white
-                          : widget.info.color!.withOpacity(0.1),
-                      shape: BoxShape.circle),
-                  child: SvgPicture.asset(
-                    widget.info.svgSrc!,
-                    color: widget.info.color,
-                  ),
-                )
-              ],
-            ),
-            Text(
-              widget.info.title!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.quicksand(
-                fontWeight: FontWeight.w500,
-                color: hovered ? Colors.white : textColor,
-                fontSize: 15,
+                  Container(
+                    padding: EdgeInsets.all(appPadding / 2),
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: hovered
+                            ? Colors.white
+                            : widget.info.color!.withOpacity(0.1),
+                        shape: BoxShape.circle),
+                    child: SvgPicture.asset(
+                      widget.info.svgSrc!,
+                      color: widget.info.color,
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
+              Text(
+                widget.info.title!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.quicksand(
+                  fontWeight: FontWeight.w500,
+                  color: hovered ? Colors.white : textColor,
+                  fontSize: 15,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

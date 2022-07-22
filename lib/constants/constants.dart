@@ -17,3 +17,8 @@ const red = Colors.red;
 
 // Default App Padding
 const appPadding = 16.0;
+
+class appConstants {
+  static const String KEY_ACCESS_TOKEN = "access_token";
+  static const String USER_ID = 'user_id';
+}
