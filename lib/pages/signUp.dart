@@ -27,11 +27,12 @@ class _signUpState extends State<signUp> {
         'email': email,
         'username': username,
         'password': password,
-        'phone_number': int.parse(phone)
+        'phone_number': int.parse(phone).toString()
       });
       print(response.statusCode);
+      print(response.body);
 
-      if (response.statusCode == 302) {
+      if (response.statusCode != 302) {
         var data = jsonDecode(response.body.toString());
         print(data);
         //print(data['token']);
@@ -40,8 +41,8 @@ class _signUpState extends State<signUp> {
 
         print('account created successfully');
       } else {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => home()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => home()));
         print('failed');
       }
     } catch (e) {

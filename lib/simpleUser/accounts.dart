@@ -13,26 +13,35 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../user/edit.dart';
+import 'member_account_page.dart';
+
 // import 'edit.dart';
 
-class IndexPage extends StatefulWidget {
-  const IndexPage({Key? key}) : super(key: key);
+class AccountsPage extends StatefulWidget {
+  const AccountsPage({Key? key}) : super(key: key);
 
   @override
-  State<IndexPage> createState() => _IndexPageState();
+  State<AccountsPage> createState() => _AccountsPageState();
 }
 
-class _IndexPageState extends State<IndexPage> {
+class _AccountsPageState extends State<AccountsPage> {
   List members = [];
   bool isLoading = false;
-
+  var memberId = '';
   @override
   void initState() {
     super.initState();
-    this.fetchProduct();
+    this.fetchMembers();
   }
 
-  fetchProduct() async {
+  fetchMembers() async {
+    SharedPreferences ID_USER = await SharedPreferences.getInstance();
+    var x = ID_USER.getString('user_id');
+    print('id get from constant $x');
+    var url = BASE_API + "usermem/$x/";
+    print(x);
+
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
@@ -44,7 +53,6 @@ class _IndexPageState extends State<IndexPage> {
       });
     });
 
-    var url = BASE_API + "/usermem/6/";
     //String? token;
     print(url);
     SharedPreferences access_data = await SharedPreferences.getInstance();
@@ -79,7 +87,7 @@ class _IndexPageState extends State<IndexPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Users",
+          "members ",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -149,8 +157,10 @@ class _IndexPageState extends State<IndexPage> {
                       child: TextField(
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "search for contacts"),
+                          border: InputBorder.none,
+                          hintText: "search for contacts",
+                        ),
+                        onChanged: searchMember,
                       ),
                     )
                   ]),
@@ -182,7 +192,7 @@ class _IndexPageState extends State<IndexPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GestureDetector(
-                onTap: () => getmember(item),
+                onTap: () => getaccount(item),
                 child: Container(
                   child: Slidable(
                     actionPane: SlidableDrawerActionPane(),
@@ -218,7 +228,9 @@ class _IndexPageState extends State<IndexPage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(image.toString()),
+                                    image: NetworkImage(
+                                        'http://127.0.0.1:8000' +
+                                            image.toString()),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -249,12 +261,11 @@ class _IndexPageState extends State<IndexPage> {
                     ),
                     secondaryActions: <Widget>[
                       IconSlideAction(
-                          caption: 'Edit',
-                          color: Color(0xff16F8FA),
-                          icon: Icons.edit,
-                          onTap: () => {}
-                          //  editUser(item),
-                          ),
+                        caption: 'Edit',
+                        color: Color(0xff16F8FA),
+                        icon: Icons.edit,
+                        onTap: () => editUser(item),
+                      ),
                       IconSlideAction(
                           caption: 'Delete',
                           color: Color(0xffFA1645),
@@ -271,7 +282,7 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 
-  getmember(item) {
+  getaccount(item) {
     var memberId = item['id'].toString();
     var username = item['username'].toString();
     var email = item['email'].toString();
@@ -284,7 +295,7 @@ class _IndexPageState extends State<IndexPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => member(
+            builder: (context) => MemberAccount(
                   memberId: memberId,
                   username: username,
                   email: email,
@@ -297,29 +308,29 @@ class _IndexPageState extends State<IndexPage> {
                 )));
   }
 
-  // editUser(item) {
-  //   var userId = item['id'].toString();
-  //   var username = item['username'].toString();
-  //   var email = item['email'].toString();
-  //   var image = item['image'].toString();
-  //   var firstName = item['first_name'].toString();
-  //   var lastName = item['last_name'].toString();
-  //   var phone = item['phone'].toString();
-  //   var address = item['address'].toString();
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) => EditUser(
-  //                 userId: userId,
-  //                 username: username,
-  //                 email: email,
-  //                 phone: phone,
-  //                 firstName: firstName,
-  //                 lastName: lastName,
-  //                 address: address,
-  //                 image: image,
-  //               )));
-  // }
+  editUser(item) {
+    var userId = item['id'].toString();
+    var username = item['username'].toString();
+    var email = item['email'].toString();
+    var image = item['image'].toString();
+    var firstName = item['first_name'].toString();
+    var lastName = item['last_name'].toString();
+    var phone = item['phone'].toString();
+    var address = item['address'].toString();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditUser(
+                  userId: userId,
+                  username: username,
+                  email: email,
+                  phone: phone,
+                  firstName: firstName,
+                  lastName: lastName,
+                  address: address,
+                  image: image,
+                )));
+  }
 
   deleteUser(userId) async {
     print(userId);
@@ -329,10 +340,11 @@ class _IndexPageState extends State<IndexPage> {
       "Accept": "application/json"
     });
     if (response.statusCode == 200) {
-      this.fetchProduct();
+      var items = jsonDecode(response.body);
+      print(items);
 
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => IndexPage()),
+          MaterialPageRoute(builder: (context) => AccountsPage()),
           (Route<dynamic> route) => false);
     }
   }
@@ -374,5 +386,23 @@ class _IndexPageState extends State<IndexPage> {
         return alert;
       },
     );
+  }
+
+  void searchMember(String query) {
+    final suggestions = members.where((user) {
+      final username = user['username'].toString().toLowerCase();
+      final input = query.toLowerCase();
+      return username.contains(input);
+    }).toList();
+    print(suggestions);
+    if (suggestions != []) {
+      setState(() {
+        members = suggestions;
+      });
+    } else {
+      setState(() {
+        members = members;
+      });
+    }
   }
 }

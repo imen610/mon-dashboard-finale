@@ -54,17 +54,14 @@ class _IndexPageState extends State<IndexPage> {
       'Content-Type': 'application/json ; charset=UTF-8',
       'Accept': 'application/json',
       'Authorization': 'Bearer ${access_data.getString('access_token')}',
-
-      
     });
 
-  
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
 
-      
       setState(() {
         users = items;
+
         isLoading = false;
       });
 
@@ -156,6 +153,7 @@ class _IndexPageState extends State<IndexPage> {
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: "search for contacts"),
+                        onChanged: searchUser,
                       ),
                     )
                   ]),
@@ -169,8 +167,7 @@ class _IndexPageState extends State<IndexPage> {
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     return cardItem(users[index]);
-                  })
-                  )
+                  }))
         ],
       ),
     );
@@ -379,5 +376,23 @@ class _IndexPageState extends State<IndexPage> {
         return alert;
       },
     );
+  }
+
+  void searchUser(String query) {
+    final suggestions = users.where((user) {
+      final username = user['username'].toString().toLowerCase();
+      final input = query.toLowerCase();
+      return username.contains(input);
+    }).toList();
+    print(suggestions);
+    if (suggestions != []) {
+      setState(() {
+        users = suggestions;
+      });
+    } else {
+      setState(() {
+        users = users;
+      });
+    }
   }
 }

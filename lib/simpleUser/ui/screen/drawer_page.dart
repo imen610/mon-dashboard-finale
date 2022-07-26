@@ -3,11 +3,16 @@ import 'package:responsive_admin_dashboard/constants/constants.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_admin_dashboard/membre.dart';
 import 'package:responsive_admin_dashboard/simpleUser/main_page/data/json.dart';
 import 'package:http/http.dart' as http;
+import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../bracelet.dart';
 import '../../../shop/constants/base_api.dart';
+import '../../../shop/index.dart';
 import '../../../user/index.dart';
+import '../../accounts.dart';
 import '../../main_page/pages/home.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -41,11 +46,10 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
       'Authorization': 'Bearer ${access_data.getString('access_token')}'
     });
 
-    
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
       print(items['username']);
-      
+
       SharedPreferences sharedPreferencesUserId =
           await SharedPreferences.getInstance();
       sharedPreferencesUserId.setString(
@@ -63,6 +67,14 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
     }
   }
 
+  bool Selected1 = false;
+  bool Selected2 = false;
+  bool Selected3 = false;
+  bool Selected4 = false;
+  bool Selected5 = false;
+  bool Selected6 = false;
+  bool Selected7 = false;
+  Widget Current_page = IndexPage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,13 +163,13 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    navigatorTitle("Home", isSelected)
-                    // navigatorTitle("Accounts", isSelected),
-                    // navigatorTitle("Profile", isSelected),
-                    // navigatorTitle("Transactions", isSelected),
-                    // navigatorTitle("Stats", isSelected),
-                    // navigatorTitle("Settings", isSelected),
-                    // navigatorTitle("Help", isSelected),
+                    navigatorTitle(1, "Home", Selected1 ? true : false),
+                    navigatorTitle(2, "Accounts", Selected2 ? true : false),
+                    navigatorTitle(3, "Profile", Selected3 ? true : false),
+                    navigatorTitle(4, "Transactions", Selected4 ? true : false),
+                    navigatorTitle(5, "Stats", Selected5 ? true : false),
+                    navigatorTitle(6, "Settings", Selected6 ? true : false),
+                    navigatorTitle(7, "Help", Selected7 ? true : false),
                   ],
                 ),
               ),
@@ -241,44 +253,117 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
     );
   }
 
-  Row navigatorTitle(String name, bool isSelected) {
-    return Row(
-      children: [
+  Widget navigatorTitle(int id, String name, bool selected) {
+    return
 // exemple*******************************************
         GestureDetector(
-          onTap: () => {
-            select(),
+      onTap: () {
+        setState(() {
+          if (id == 1) {
+            print(' 1 $selected');
+            Current_page = DrawerPage();
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => IndexPage()))
-          },
-          child: Row(
-            children: [
-              (isSelected)
-                  ? Container(
-                      width: 5,
-                      height: 40,
-                      color: const Color(0xffffac30),
-                    )
-                  : const SizedBox(
-                      width: 5,
-                      height: 40,
-                    ),
-              const SizedBox(
-                width: 10,
-                height: 45,
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            print(' 2 $selected');
+            Selected1 = true;
+            Selected2 = false;
+            Selected3 = false;
+            Selected4 = false;
+            Selected5 = false;
+            Selected6 = false;
+            Selected7 = false;
+          } else if (id == 2) {
+            Current_page = AccountsPage();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            Selected1 = false;
+            Selected2 = true;
+            Selected3 = false;
+            Selected4 = false;
+            Selected5 = false;
+            Selected6 = false;
+            Selected7 = false;
+          } else if (id == 3) {
+            Current_page = bracelet();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            Selected1 = false;
+            Selected2 = false;
+            Selected3 = true;
+            Selected4 = false;
+            Selected5 = false;
+            Selected6 = false;
+            Selected7 = false;
+          } else if (id == 4) {
+            Current_page = bracelet();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            Selected1 = false;
+            Selected2 = false;
+            Selected3 = false;
+            Selected4 = true;
+            Selected5 = false;
+            Selected6 = false;
+            Selected7 = false;
+          } else if (id == 5) {
+            Current_page = bracelet();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            Selected1 = false;
+            Selected2 = false;
+            Selected3 = false;
+            Selected4 = false;
+            Selected5 = true;
+            Selected6 = false;
+            Selected7 = false;
+          } else if (id == 6) {
+            Current_page = bracelet();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            Selected1 = false;
+            Selected2 = false;
+            Selected3 = false;
+            Selected4 = false;
+            Selected5 = false;
+            Selected6 = true;
+            Selected7 = false;
+          } else if (id == 7) {
+            Current_page = bracelet();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Current_page));
+            Selected1 = false;
+            Selected2 = false;
+            Selected3 = false;
+            Selected4 = false;
+            Selected5 = false;
+            Selected6 = false;
+            Selected7 = true;
+          }
+        });
+      },
+      child: Row(children: [
+        (selected)
+            ? Container(
+                width: 5,
+                height: 40,
+                color: const Color(0xffffac30),
+              )
+            : const SizedBox(
+                width: 5,
+                height: 40,
               ),
-              Text(
-                name,
-                style: Theme.of(context).textTheme.headline6!.copyWith(
-                      fontSize: 16,
-                      fontWeight:
-                          (isSelected) ? FontWeight.w700 : FontWeight.w400,
-                    ),
-              ),
-            ],
-          ),
+        const SizedBox(
+          width: 10,
+          height: 45,
         ),
-      ],
+        Text(
+          name,
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+                fontSize: 16,
+                fontWeight: (isSelected) ? FontWeight.w700 : FontWeight.w400,
+              ),
+        ),
+      ]),
     );
   }
 
@@ -289,11 +374,6 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
 
   void openSideBar() {
     sideBarActive = true;
-    setState(() {});
-  }
-
-  void select() {
-    isSelected = true;
     setState(() {});
   }
 }

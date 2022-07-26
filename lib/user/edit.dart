@@ -58,7 +58,7 @@ class _EditUserState extends State<EditUser> {
       _controllerlastName.text = widget.lastName;
       _controllerfirstName.text = widget.firstName;
       _controlleraddress.text = widget.address;
-      image = widget.image;
+      image = 'http://127.0.0.1:8000' + widget.image.toString();
     });
 
     print(widget.userId);
@@ -336,4 +336,5 @@ class _EditUserState extends State<EditUser> {
       ],
     );
   }
+ 
 }
