@@ -24,13 +24,13 @@ List analyticData = [
     route: IndexPageShop(),
   ),
   AnalyticInfo(
-      title: "members",
+      title: "payments",
       count: 920,
       svgSrc: "assets/icons/Pages.svg",
       color: orange,
       route: membre()),
   AnalyticInfo(
-      title: "bracelets",
+      title: "transactions",
       count: 920,
       svgSrc: "assets/icons/Comments.svg",
       color: green,

@@ -238,8 +238,8 @@ class _loginState extends State<login> {
         // saveToken(access_token);
       } else {
         Navigator.push(
-            // it wos home() with admin
-            // and DrawerPage() with the simple user
+            //  home() ===> admin
+            // and DrawerPage() =====> simple user
             context,
             MaterialPageRoute(builder: (context) => DrawerPage()));
       }
@@ -248,12 +248,4 @@ class _loginState extends State<login> {
           const SnackBar(content: Text("black field not allowed")));
     }
   }
-
-  // void saveToken(data) async {
-  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  //   sharedPreferences.setString(appConstants.KEY_ACCESS_TOKEN, data['access']);
-  //   //print('KEY_ACCESS_TOKEN, ${appConstants.KEY_ACCESS_TOKEN}');
-  //   //sharedPreferences.setInt("userId", data['userId']);
-  // }
-  
 }

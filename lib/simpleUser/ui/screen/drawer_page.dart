@@ -13,6 +13,8 @@ import '../../../shop/constants/base_api.dart';
 import '../../../shop/index.dart';
 import '../../../user/index.dart';
 import '../../accounts.dart';
+import '../../listTransactions.dart';
+import '../../list_payments.dart';
 import '../../main_page/pages/home.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -165,9 +167,9 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
                   children: [
                     navigatorTitle(1, "Home", Selected1 ? true : false),
                     navigatorTitle(2, "Accounts", Selected2 ? true : false),
-                    navigatorTitle(3, "Profile", Selected3 ? true : false),
+                    navigatorTitle(3, "Payments", Selected3 ? true : false),
                     navigatorTitle(4, "Transactions", Selected4 ? true : false),
-                    navigatorTitle(5, "Stats", Selected5 ? true : false),
+                    navigatorTitle(5, "Profile", Selected5 ? true : false),
                     navigatorTitle(6, "Settings", Selected6 ? true : false),
                     navigatorTitle(7, "Help", Selected7 ? true : false),
                   ],
@@ -284,7 +286,7 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
             Selected6 = false;
             Selected7 = false;
           } else if (id == 3) {
-            Current_page = bracelet();
+            Current_page = paymentsPage();
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Current_page));
             Selected1 = false;
@@ -295,7 +297,7 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
             Selected6 = false;
             Selected7 = false;
           } else if (id == 4) {
-            Current_page = bracelet();
+            Current_page = transactionsPage();
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Current_page));
             Selected1 = false;

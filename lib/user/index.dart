@@ -29,10 +29,10 @@ class _IndexPageState extends State<IndexPage> {
   @override
   void initState() {
     super.initState();
-    this.fetchProduct();
+    this.fetchUsers();
   }
 
-  fetchProduct() async {
+  fetchUsers() async {
     final client = Dio();
 
     String? token;
@@ -331,7 +331,7 @@ class _IndexPageState extends State<IndexPage> {
       "Accept": "application/json"
     });
     if (response.statusCode == 200) {
-      this.fetchProduct();
+      this.fetchUsers();
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => IndexPage()),

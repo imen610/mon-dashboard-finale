@@ -1,38 +1,44 @@
 import 'dart:convert';
 
 import 'package:badges/badges.dart';
-
 import 'package:flutter/material.dart';
-import 'package:responsive_admin_dashboard/simpleUser/main_page/data/json.dart';
-import 'package:responsive_admin_dashboard/simpleUser/main_page/widgets/transaction_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:responsive_admin_dashboard/constants/constants.dart';
+import '../shop/constants/base_api.dart';
 import 'package:http/http.dart' as http;
-import '../../../shop/constants/base_api.dart';
-import '../../send_money.dart';
-import '../theme/colors.dart';
-import '../widgets/action_box.dart';
-import '../widgets/avatar_image.dart';
-import '../widgets/balance_card.dart';
 
-class HomePage extends StatefulWidget {
-  //const HomePage({Key? key}) : super(key: key);
+import 'main_page/theme/colors.dart';
+
+class transactionsPage extends StatefulWidget {
+  const transactionsPage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<transactionsPage> createState() => _transactionsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  var list_members = [];
+class _transactionsPageState extends State<transactionsPage> {
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
+    this.fetchtransactions();
     this.getMembers();
-    this.getTransaction();
+    this.fetchUSER();
   }
 
+  var user;
   List list_transactions = [];
+  List list_members = [];
+  fetchtransactions() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+      });
+    });
 
-  getTransaction() async {
     var url = BASE_API + "transactions/";
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
@@ -100,7 +106,7 @@ class _HomePageState extends State<HomePage> {
             ]),
           ),
           SizedBox(
-            width: 160,
+            width: 90,
           ),
           Container(
             padding: EdgeInsets.all(5),
@@ -117,15 +123,77 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             // child: Icon(Icons.notifications_rounded)
-            child: Badge(
-                padding: EdgeInsets.all(3),
-                position: BadgePosition.topEnd(top: -5, end: 2),
-                badgeContent: Text(
-                  '',
-                  style: TextStyle(color: Colors.white),
-                ),
-                child: Icon(Icons.notifications_rounded)),
+            child: Container(
+              padding: EdgeInsets.all(3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(top: 30),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${user['username']}",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 34, 33, 33),
+                                fontSize: 13),
+                          )
+                        ]),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    width: 65,
+                    height: 65,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: Colors.black)),
+                    child: Center(
+                        child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                'http://127.0.0.1:8000' +
+                                    user['image'].toString(),
+                              ),
+                              fit: BoxFit.cover)),
+                    )),
+                  ),
+                ],
+              ),
+            ),
           ),
+          // Container(
+          //   padding: EdgeInsets.all(5),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     shape: BoxShape.circle,
+          //     boxShadow: [
+          //       BoxShadow(
+          //         color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
+          //         spreadRadius: 1,
+          //         blurRadius: 1,
+          //         offset: Offset(1, 1), // changes position of shadow
+          //       ),
+          //     ],
+          //   ),
+
+          //   child: Badge(
+          //       padding: EdgeInsets.all(3),
+          //       position: BadgePosition.topEnd(top: -5, end: 2),
+          //       badgeContent: Text(
+          //         '',
+          //         style: TextStyle(color: Colors.white),
+          //       ),
+          //       child: Icon(Icons.notifications_rounded)),
+          // ),
         ],
       ),
     );
@@ -136,42 +204,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  BalanceCard(),
-                  Positioned(
-                      top: 100,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: secondary,
-                              shape: BoxShape.circle,
-                              border: Border.all()),
-                          child: Icon(Icons.add)))
-                ],
-              )),
-          Container(
-              padding: EdgeInsets.only(left: 20),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-              )),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: getRecentUsers(),
-          ),
           SizedBox(
             height: 25,
           ),
@@ -189,27 +221,6 @@ class _HomePageState extends State<HomePage> {
                           TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  SizedBox(
-                    width: 160,
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {},
-                      child: Text(
-                        "payments",
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    //  Container(
-                    //     alignment: Alignment.centerRight,
-                    //     child: Text(
-                    //       "Today",
-                    //       style: TextStyle(
-                    //           fontSize: 14, fontWeight: FontWeight.w500),
-                    //     ))
-                  ),
-                  // Icon(Icons.expand_more_rounded),
                 ],
               )),
           SizedBox(
@@ -221,132 +232,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-    );
-  }
-
-  getActions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-            child: ActionBox(
-          title: "Send",
-          icon: Icons.send_rounded,
-          bgColor: green,
-        )),
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-            child: ActionBox(
-                title: "Request",
-                icon: Icons.arrow_circle_down_rounded,
-                bgColor: yellow)),
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-            child: ActionBox(
-                title: "More", icon: Icons.widgets_rounded, bgColor: purple)),
-        SizedBox(
-          width: 15,
-        ),
-      ],
-    );
-  }
-
-  getRecentUsers() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(bottom: 5),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-          children: List.generate(
-              list_members.length,
-              (index) => index == 0
-                  ? Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 15),
-                          child: getSearchBox(),
-                        ),
-                        Container(
-                            margin: const EdgeInsets.only(right: 15),
-                            child: getmemberitems(index))
-                      ],
-                    )
-                  : Container(
-                      margin: const EdgeInsets.only(right: 15),
-                      child: getmemberitems(index)))),
-    );
-  }
-
-  Widget getmemberitems(item) {
-    String image = list_members[item]['image'].toString();
-    String URL_image = 'http://127.0.0.1:8000' + image;
-    print(URL_image);
-    var username = list_members[item]['username'];
-    print('hello_hello_hello $username');
-    return Column(
-      children: [
-        InkWell(
-          onTap: () => send(list_members[item]),
-          child: Container(
-            width: 65,
-            height: 65,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: Colors.black)),
-            child: Center(
-                child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  image: DecorationImage(
-                      image: NetworkImage('http://127.0.0.1:8000' + image),
-                      fit: BoxFit.cover)),
-            )),
-          ),
-        ),
-        // Container(
-        //   child: Image.network(
-        //     'http://127.0.0.1:8000' + image,
-        //     width: 55,
-        //     height: 55,
-        //   ),
-        // ),
-        SizedBox(
-          height: 8,
-        ),
-        Text(
-          username,
-          style: TextStyle(fontWeight: FontWeight.w500),
-        )
-      ],
-    );
-  }
-
-  getSearchBox() {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 238, 235, 235),
-              shape: BoxShape.circle),
-          child: Icon(Icons.arrow_forward),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Text(
-          "send_money",
-          style: TextStyle(fontWeight: FontWeight.w500),
-        )
-      ],
     );
   }
 
@@ -371,6 +256,7 @@ class _HomePageState extends State<HomePage> {
       for (var member in list_members)
         if (member["username"] == name2) member['image']
     ];
+    print(result);
     String image2 = result.isEmpty ? null : result.first;
     print(image2);
     return GestureDetector(
@@ -480,11 +366,11 @@ class _HomePageState extends State<HomePage> {
                             child: type == 'Inflow'
                                 ? Icon(
                                     Icons.download_rounded,
-                                    color: green,
+                                    color: Colors.green,
                                   )
                                 : Icon(
                                     Icons.upload_rounded,
-                                    color: red,
+                                    color: Colors.red,
                                   )),
                       ],
                     ),
@@ -524,29 +410,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  send(index) {
-    var userId = index['id'].toString();
-    print('the last $userId');
-    var username = index['username'].toString();
-    var email = index['email'].toString();
-    var image = index['image'].toString();
-    var firstName = index['first_name'].toString();
-    var lastName = index['last_name'].toString();
-    var phone = index['phone'].toString();
-    var address = index['address'].toString();
-    print(image);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SendMoney(
-                  userId: userId,
-                  username: username,
-                  email: email,
-                  phone: phone,
-                  firstName: firstName,
-                  lastName: lastName,
-                  address: address,
-                  image: image,
-                )));
+  fetchUSER() async {
+    var url = BASE_API + "current/";
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      print(items['username']);
+
+      setState(() {
+        user = items;
+      });
+    }
   }
 }

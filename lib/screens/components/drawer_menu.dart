@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/screens/components/drawer_list_tile.dart';
 
+import '../../shop/index.dart';
+import '../../user/index.dart';
+
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({Key? key}) : super(key: key);
 
@@ -40,9 +43,19 @@ class DrawerMenu extends StatelessWidget {
             height: 20,
           ),
           DrawerListTile(
-              title: 'Users', svgSrc: 'assets/icons/Dashboard.svg', tap: () {}),
+            title: 'Users',
+            svgSrc: 'assets/icons/Dashboard.svg',
+            tap: () => {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => IndexPage()))
+            },
+          ),
+          
           DrawerListTile(
-              title: 'Shops', svgSrc: 'assets/icons/BlogPost.svg', tap: () {}),
+              title: 'Shops', svgSrc: 'assets/icons/BlogPost.svg', tap: () => {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => IndexPageShop()))
+            },),
           DrawerListTile(
               title: 'Message', svgSrc: 'assets/icons/Message.svg', tap: () {}),
           DrawerListTile(

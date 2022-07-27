@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/models/analytic_info_model.dart';
 import 'package:responsive_admin_dashboard/test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import '../../shop/constants/base_api.dart';
 
 class AnalyticInfoCard extends StatefulWidget {
   const AnalyticInfoCard({Key? key, required this.info}) : super(key: key);
@@ -16,8 +21,121 @@ class AnalyticInfoCard extends StatefulWidget {
 
 class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
   bool hovered = false;
+  List users = [];
+  bool isLoading = false;
+  List shops = [];
+
+  @override
+  void initState() {
+    super.initState();
+    this.fetchShop();
+    this.fetchUsers();
+    this.fetchtransactions();
+  }
+
+  fetchShop() async {
+    setState(() {
+      isLoading = false;
+    });
+    var url = BASE_API + "shops/";
+    print(url);
+    var response = await http.get(Uri.parse(url));
+    // print(response.body);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      // print(items);
+      setState(() {
+        shops = items;
+        isLoading = false;
+      });
+      return;
+    } else {
+      setState(() {
+        shops = [];
+        isLoading = true;
+      });
+    }
+  }
+
+  fetchUsers() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+        // print('Bearer $token');
+        // print(token);
+      });
+    });
+
+    var url = BASE_API + "users/";
+    //String? token;
+    print(url);
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}',
+    });
+
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+
+      setState(() {
+        users = items;
+
+        isLoading = false;
+      });
+
+      return;
+    } else {
+      setState(() {
+        users = [];
+        isLoading = true;
+      });
+    }
+  }
+
+  List list_transactions = [];
+  List list_members = [];
+  fetchtransactions() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+      });
+    });
+
+    var url = BASE_API + "transactions/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      print(' voici la liste des transactions $items');
+      setState(() {
+        list_transactions = items;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.info.title.toString() == 'Users') {
+      setState(() {
+        widget.info.count = users.length;
+      });
+    } else if (widget.info.title.toString() == 'shops') {
+      widget.info.count = shops.length;
+    } else if (widget.info.title.toString() == 'transactions') {
+      widget.info.count = shops.length;
+    }
     return MouseRegion(
       onEnter: (value) {
         setState(() {

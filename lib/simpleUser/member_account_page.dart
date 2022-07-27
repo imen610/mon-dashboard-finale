@@ -226,18 +226,6 @@ class _MemberAccountState extends State<MemberAccount> {
                     )),
                   ),
 
-                  // Expanded(
-                  //       SizedBox(
-                  //         height: 5,
-                  //       ),
-                  //       Text(
-                  //         "Welcome Back!",
-                  //         style: TextStyle(
-                  //             fontWeight: FontWeight.w600, fontSize: 17),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )),
                 ],
               ),
             ),
@@ -323,108 +311,6 @@ class _MemberAccountState extends State<MemberAccount> {
       ),
     );
   }
-
-  // getActions() {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //     children: [
-  //       SizedBox(
-  //         width: 15,
-  //       ),
-  //       Expanded(
-  //           child: ActionBox(
-  //         title: "Send",
-  //         icon: Icons.send_rounded,
-  //         bgColor: green,
-  //       )),
-  //       SizedBox(
-  //         width: 15,
-  //       ),
-  //       Expanded(
-  //           child: ActionBox(
-  //               title: "Request",
-  //               icon: Icons.arrow_circle_down_rounded,
-  //               bgColor: yellow)),
-  //       SizedBox(
-  //         width: 15,
-  //       ),
-  //       Expanded(
-  //           child: ActionBox(
-  //               title: "More", icon: Icons.widgets_rounded, bgColor: purple)),
-  //       SizedBox(
-  //         width: 15,
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // getRecentUsers() {
-  //   return SingleChildScrollView(
-  //     padding: EdgeInsets.only(bottom: 5),
-  //     scrollDirection: Axis.horizontal,
-  //     child: Row(
-  //         children: List.generate(
-  //             list_members.length,
-  //             (index) => index == 0
-  //                 ? Row(
-  //                     children: [
-  //                       Container(
-  //                         margin: const EdgeInsets.only(right: 15),
-  //                         child: getSearchBox(),
-  //                       ),
-  //                       Container(
-  //                           margin: const EdgeInsets.only(right: 15),
-  //                           child: getmemberitems(index))
-  //                     ],
-  //                   )
-  //                 : Container(
-  //                     margin: const EdgeInsets.only(right: 15),
-  //                     child: getmemberitems(index))
-  //                     )),
-  //   );
-  // }
-
-  // Widget getmemberitems(item) {
-  //   String image = list_members[item]['image'].toString();
-  //   String URL_image = 'http://127.0.0.1:8000' + image;
-  //   print(URL_image);
-  //   var username = list_members[item]['username'];
-  //   return Column(
-  //     children: [
-  //       Container(
-  //         width: 65,
-  //         height: 65,
-  //         decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(28),
-  //             border: Border.all(color: Colors.black)),
-  //         child: Center(
-  //             child: Container(
-  //           width: 60,
-  //           height: 60,
-  //           decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(30),
-  //               image: DecorationImage(
-  //                   image: NetworkImage('http://127.0.0.1:8000' + image),
-  //                   fit: BoxFit.cover)),
-  //         )),
-  //       ),
-  //       // Container(
-  //       //   child: Image.network(
-  //       //     'http://127.0.0.1:8000' + image,
-  //       //     width: 55,
-  //       //     height: 55,
-  //       //   ),
-  //       // ),
-  //       SizedBox(
-  //         height: 8,
-  //       ),
-  //       Text(
-  //         username,
-  //         style: TextStyle(fontWeight: FontWeight.w500),
-  //       )
-  //     ],
-  //   );
-  // }
 
   getSearchBox() {
     return Column(
