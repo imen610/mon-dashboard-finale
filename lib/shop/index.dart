@@ -61,6 +61,9 @@ class _IndexPageShopState extends State<IndexPageShop> {
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
+        leading: BackButton(
+          color: Colors.black,
+        ),
         actions: <Widget>[
           FlatButton(
               onPressed: () {

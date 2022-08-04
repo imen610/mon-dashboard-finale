@@ -73,7 +73,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
           ),
         ),
         getItems(user)
-        
       ],
     );
   }
@@ -87,15 +86,26 @@ class _ProfileInfoState extends State<ProfileInfo> {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            child: Image.network(
-              'http://127.0.0.1:8000' + items['image'].toString(),
-              height: 38,
-              width: 38,
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.circular(30),
+          Container(
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: Colors.black)),
+            child: Center(
+                child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  image: DecorationImage(
+                      image: NetworkImage(
+                        'http://127.0.0.1:8000' + items['image'].toString(),
+                      ),
+                      fit: BoxFit.cover)),
+            )),
           ),
+        
           if (!Responsive.isMobile(context))
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: appPadding / 2),

@@ -31,6 +31,7 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
     this.fetchShop();
     this.fetchUsers();
     this.fetchtransactions();
+    this.fetchpayments();
   }
 
   fetchShop() async {
@@ -108,7 +109,7 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
       });
     });
 
-    var url = BASE_API + "transactions/";
+    var url = BASE_API + "TransactionsAdminDashListView/";
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url), headers: {
@@ -125,6 +126,34 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
     }
   }
 
+  List list_payments = [];
+  List list_shops = [];
+  fetchpayments() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+      });
+    });
+
+    var url = BASE_API + "PaymentShopsAdminDashView/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      print(' voici la liste des payments $items');
+      setState(() {
+        list_payments = items;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.info.title.toString() == 'Users') {
@@ -134,18 +163,17 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
     } else if (widget.info.title.toString() == 'shops') {
       widget.info.count = shops.length;
     } else if (widget.info.title.toString() == 'transactions') {
-      widget.info.count = shops.length;
+      widget.info.count = list_transactions.length;
+    } else if (widget.info.title.toString() == 'payments') {
+      widget.info.count = list_payments.length;
     }
+
     return MouseRegion(
       onEnter: (value) {
-        setState(() {
-          hovered = true;
-        });
+        setState(() {});
       },
       onExit: (value) {
-        setState(() {
-          hovered = false;
-        });
+        setState(() {});
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 275),
@@ -166,10 +194,11 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
               ),
             ]),
         child: InkWell(
-          onTap: () => {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => widget.info.route))
-          },
+          onTap: () {},
+          // => {
+          //   Navigator.push(context,
+          //       MaterialPageRoute(builder: (context) => widget.info.route))
+          // },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

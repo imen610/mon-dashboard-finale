@@ -6,10 +6,10 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 
-import 'constants/base_api.dart';
+import 'accounts.dart';
 
-class EditUser extends StatefulWidget {
-  //const EditUser({Key? key}) : super(key: key);
+class EditMember extends StatefulWidget {
+  //const EditMember({Key? key}) : super(key: key);
   String userId;
   String username;
   String email;
@@ -19,7 +19,7 @@ class EditUser extends StatefulWidget {
   String lastName;
   String address;
 
-  EditUser(
+  EditMember(
       {required this.userId,
       required this.username,
       required this.email,
@@ -30,10 +30,10 @@ class EditUser extends StatefulWidget {
       required this.image});
 
   @override
-  State<EditUser> createState() => _EditUserState();
+  State<EditMember> createState() => _EditMemberState();
 }
 
-class _EditUserState extends State<EditUser> {
+class _EditMemberState extends State<EditMember> {
   final TextEditingController _controllerUserName = new TextEditingController();
   final TextEditingController _controllerEmail = new TextEditingController();
   final TextEditingController _controllerphone = new TextEditingController();
@@ -170,7 +170,7 @@ class _EditUserState extends State<EditUser> {
         FlatButton(
             color: Color(0xff89e6f5),
             onPressed: () {
-              editUser();
+              EditMember();
             },
             child: Text(
               "done",
@@ -183,7 +183,7 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
-  editUser() async {
+  EditMember() async {
     var url = BASE_API + "users/$userId/";
     print(url);
     var username = _controllerUserName.text;
@@ -213,10 +213,10 @@ class _EditUserState extends State<EditUser> {
       print(response.statusCode);
       if (response.statusCode == 200) {
         var messageSuccess = "success";
-        showMessage(context, messageSuccess);
+        showMessageMember(context, messageSuccess);
       } else {
         var messageError = "Error";
-        showMessage(context, messageError);
+        showMessageMember(context, messageError);
       }
     }
   }
@@ -336,6 +336,36 @@ class _EditUserState extends State<EditUser> {
       ],
     );
   }
-
 }
 
+showMessageMember(BuildContext context, String contentMessage) {
+  // set up the buttons
+  var primary;
+
+  Widget yesButton = FlatButton(
+    child: Text("ok", style: TextStyle(color: primary)),
+    onPressed: () {
+      Navigator.pop(context);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => AccountsPage()),
+          (Route<dynamic> route) => false);
+      // deleteUser(item['id']);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Message"),
+    content: Text(contentMessage),
+    actions: [
+      yesButton,
+    ],
+  );
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

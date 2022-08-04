@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'constants/base_api.dart';
 import 'constants/util.dart';
 

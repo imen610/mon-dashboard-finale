@@ -10,7 +10,6 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../bracelet.dart';
 import '../../../shop/constants/base_api.dart';
-import '../../../shop/index.dart';
 import '../../../user/index.dart';
 import '../../accounts.dart';
 import '../../listTransactions.dart';
@@ -31,8 +30,10 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
   var user;
   var id;
   bool isSelected = false;
+  bool progress = false;
   @override
   void initState() {
+    progress = true;
     rotationController = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
     super.initState();
@@ -65,6 +66,7 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
 
       setState(() {
         user = items;
+        progress = false;
       });
     }
   }
@@ -81,177 +83,193 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color.fromARGB(255, 223, 218, 218),
-                              blurRadius: 0.2,
-                              spreadRadius: 0.3)
-                        ],
-                        borderRadius: const BorderRadius.only(
-                            bottomRight: Radius.circular(60)),
-                        color: Colors.white),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(28),
-                                border: Border.all(color: Colors.black)),
-                            child: Center(
-                                child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                        'http://127.0.0.1:8000' +
-                                            user['image'].toString(),
-                                      ),
-                                      fit: BoxFit.cover)),
-                            )),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                              child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: Column(
+      body: (progress)
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            )
+          : Stack(
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 223, 218, 218),
+                                    blurRadius: 0.2,
+                                    spreadRadius: 0.3)
+                              ],
+                              borderRadius: const BorderRadius.only(
+                                  bottomRight: Radius.circular(60)),
+                              color: Colors.white),
+                          child: Center(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Hello ${user['username']}",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 13),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  width: 65,
+                                  height: 65,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(28),
+                                      border: Border.all(color: Colors.black)),
+                                  child: Center(
+                                      child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                              'http://127.0.0.1:8000' +
+                                                  user['image'].toString(),
+                                            ),
+                                            fit: BoxFit.cover)),
+                                  )),
                                 ),
                                 SizedBox(
-                                  height: 5,
+                                  width: 15,
                                 ),
-                                Text(
-                                  "Welcome Back!",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 17),
-                                ),
+                                Expanded(
+                                    child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Hello ${user['username']}",
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 13),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "Welcome Back!",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 17),
+                                      ),
+                                    ],
+                                  ),
+                                )),
                               ],
                             ),
-                          )),
+                          ),
+                        )
+                      ],
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          navigatorTitle(1, "Home", Selected1 ? true : false),
+                          navigatorTitle(
+                              2, "Accounts", Selected2 ? true : false),
+                          navigatorTitle(
+                              3, "Payments", Selected3 ? true : false),
+                          navigatorTitle(
+                              4, "Transactions", Selected4 ? true : false),
+                          navigatorTitle(
+                              5, "Profile", Selected5 ? true : false),
+                          navigatorTitle(
+                              6, "Settings", Selected6 ? true : false),
+                          navigatorTitle(7, "Help", Selected7 ? true : false),
                         ],
                       ),
                     ),
-                  )
-                ],
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    navigatorTitle(1, "Home", Selected1 ? true : false),
-                    navigatorTitle(2, "Accounts", Selected2 ? true : false),
-                    navigatorTitle(3, "Payments", Selected3 ? true : false),
-                    navigatorTitle(4, "Transactions", Selected4 ? true : false),
-                    navigatorTitle(5, "Profile", Selected5 ? true : false),
-                    navigatorTitle(6, "Settings", Selected6 ? true : false),
-                    navigatorTitle(7, "Help", Selected7 ? true : false),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.power_settings_new,
+                            size: 24,
+                            color: Theme.of(context).iconTheme.color,
+                            // color: sideBarActive ? Colors.black : Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Logout",
+                            style: Theme.of(context).textTheme.headline6,
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.power_settings_new,
-                      size: 24,
-                      color: Theme.of(context).iconTheme.color,
-                      // color: sideBarActive ? Colors.black : Colors.white,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Logout",
-                      style: Theme.of(context).textTheme.headline6,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            left: (sideBarActive) ? MediaQuery.of(context).size.width * 0.6 : 0,
-            top: (sideBarActive) ? MediaQuery.of(context).size.height * 0.2 : 0,
-            child: RotationTransition(
-              turns: (sideBarActive)
-                  ? Tween(begin: -0.05, end: 0.0).animate(rotationController)
-                  : Tween(begin: 0.0, end: -0.05).animate(rotationController),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: (sideBarActive)
-                    ? MediaQuery.of(context).size.height * 0.7
-                    : MediaQuery.of(context).size.height,
-                width: (sideBarActive)
-                    ? MediaQuery.of(context).size.width * 0.8
-                    : MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: sideBarActive
-                      ? const BorderRadius.all(Radius.circular(40))
-                      : const BorderRadius.all(Radius.circular(0)),
-                  color: Colors.white,
-                ),
-                child: ClipRRect(
-                  borderRadius: sideBarActive
-                      ? const BorderRadius.all(Radius.circular(40))
-                      : const BorderRadius.all(Radius.circular(0)),
-                  child: const Home(),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 0,
-            top: 20,
-            child: (sideBarActive)
-                ? IconButton(
-                    padding: const EdgeInsets.all(30),
-                    onPressed: closeSideBar,
-                    icon: Icon(
-                      Icons.close,
-                      color: Theme.of(context).iconTheme.color,
-                      size: 30,
-                    ),
-                  )
-                : InkWell(
-                    onTap: openSideBar,
-                    child: Container(
-                      margin: const EdgeInsets.all(17),
-                      height: 30,
-                      width: 30,
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 300),
+                  left: (sideBarActive)
+                      ? MediaQuery.of(context).size.width * 0.6
+                      : 0,
+                  top: (sideBarActive)
+                      ? MediaQuery.of(context).size.height * 0.2
+                      : 0,
+                  child: RotationTransition(
+                    turns: (sideBarActive)
+                        ? Tween(begin: -0.05, end: 0.0)
+                            .animate(rotationController)
+                        : Tween(begin: 0.0, end: -0.05)
+                            .animate(rotationController),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      height: (sideBarActive)
+                          ? MediaQuery.of(context).size.height * 0.7
+                          : MediaQuery.of(context).size.height,
+                      width: (sideBarActive)
+                          ? MediaQuery.of(context).size.width * 0.8
+                          : MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: sideBarActive
+                            ? const BorderRadius.all(Radius.circular(40))
+                            : const BorderRadius.all(Radius.circular(0)),
+                        color: Colors.white,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: sideBarActive
+                            ? const BorderRadius.all(Radius.circular(40))
+                            : const BorderRadius.all(Radius.circular(0)),
+                        child: const Home(),
+                      ),
                     ),
                   ),
-          )
-        ],
-      ),
+                ),
+                Positioned(
+                  right: 0,
+                  top: 20,
+                  child: (sideBarActive)
+                      ? IconButton(
+                          padding: const EdgeInsets.all(30),
+                          onPressed: closeSideBar,
+                          icon: Icon(
+                            Icons.close,
+                            color: Theme.of(context).iconTheme.color,
+                            size: 30,
+                          ),
+                        )
+                      : InkWell(
+                          onTap: openSideBar,
+                          child: Container(
+                            margin: const EdgeInsets.all(17),
+                            height: 30,
+                            width: 30,
+                          ),
+                        ),
+                )
+              ],
+            ),
     );
   }
 

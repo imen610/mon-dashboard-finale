@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:badges/badges.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/simpleUser/main_page/data/json.dart';
 import 'package:responsive_admin_dashboard/simpleUser/main_page/widgets/transaction_item.dart';
@@ -54,13 +55,10 @@ class _MemberAccountState extends State<MemberAccount> {
     this.getMembers();
     this.fetchwallet();
     this.getTransaction();
+    isLoading1 = true;
+    isLoading2 = true;
+    isLoading3 = true;
     setState(() {
-      // _controllerUserName.text = widget.username;
-      // _controllerEmail.text = widget.email;
-      // _controllerphone.text = widget.phone;
-      // _controllerlastName.text = widget.lastName;
-      // _controllerfirstName.text = widget.firstName;
-      // _controlleraddress.text = widget.address;
       image = widget.image;
     });
     print(widget.memberId);
@@ -79,6 +77,9 @@ class _MemberAccountState extends State<MemberAccount> {
     print(name);
   }
 
+  bool isLoading1 = false;
+  bool isLoading2 = false;
+  bool isLoading3 = false;
   List list_transactions = [];
   fetchwallet() async {
     var url = BASE_API + "my-wallet/${widget.memberId}/";
@@ -93,6 +94,7 @@ class _MemberAccountState extends State<MemberAccount> {
       print(items['balance']);
       setState(() {
         wallet = items;
+        isLoading1 = false;
       });
     }
   }
@@ -111,6 +113,7 @@ class _MemberAccountState extends State<MemberAccount> {
       print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
+        isLoading2 = false;
       });
     }
   }
@@ -120,7 +123,11 @@ class _MemberAccountState extends State<MemberAccount> {
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: getAppBar(),
-      body: getBody(),
+      body: (isLoading1 || isLoading2 || isLoading3)
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            )
+          : getBody(),
     );
   }
 
@@ -146,26 +153,17 @@ class _MemberAccountState extends State<MemberAccount> {
         children: [
           Container(
             margin: EdgeInsets.only(right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/logo1.png'))),
+            child: IconButton(
+              icon: new Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.black,
+                size: 30,
               ),
-              Text(
-                'MyWallet',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 20,
-                ),
-              ),
-            ]),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
           SizedBox(
-            width: 90,
+            width: 130,
           ),
           Container(
             padding: EdgeInsets.all(5),
@@ -225,7 +223,6 @@ class _MemberAccountState extends State<MemberAccount> {
                               fit: BoxFit.cover)),
                     )),
                   ),
-
                 ],
               ),
             ),
@@ -305,7 +302,9 @@ class _MemberAccountState extends State<MemberAccount> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 15),
-            child: getTransanctions(),
+            child: (list_transactions.length != 0)
+                ? getTransanctions()
+                : Center(child: Text('No Transactions')),
           ),
         ],
       ),
@@ -350,6 +349,7 @@ class _MemberAccountState extends State<MemberAccount> {
     String name2 = list_transactions[item]['to'];
 
     print(type);
+    print(name2);
     var result = [
       for (var member in list_members)
         if (member["username"] == name2) member['image']
@@ -412,8 +412,7 @@ class _MemberAccountState extends State<MemberAccount> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' + image2),
+                                    image: NetworkImage(image2),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -454,7 +453,8 @@ class _MemberAccountState extends State<MemberAccount> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            child: Text('date',
+                            child: Text(
+                                '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_transactions[item]['timestamp']))}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -484,8 +484,7 @@ class _MemberAccountState extends State<MemberAccount> {
   getMembers() async {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
     var x = ID_USER.getString('user_id');
-    print('id get from constant $x');
-    var url2 = BASE_API + "usermem/$x/";
+    var url2 = BASE_API + "users/";
     print(x);
     print(url2);
 
@@ -503,6 +502,7 @@ class _MemberAccountState extends State<MemberAccount> {
 
       setState(() {
         list_members = items;
+        isLoading3 = false;
       });
     }
   }
@@ -515,22 +515,8 @@ class _MemberAccountState extends State<MemberAccount> {
           height: 120,
           width: double.infinity,
           decoration: BoxDecoration(
-            //
             color: Color.fromARGB(255, 157, 244, 245),
             borderRadius: BorderRadius.circular(30),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: shadowColor.withOpacity(0.1),
-            //     spreadRadius: 1,
-            //     blurRadius: 1,
-            //     offset: Offset(1, 1), // changes position of shadow
-            //   ),
-            // ],
-            // image: DecorationImage(
-            //   colorFilter: new ColorFilter.mode(
-            //       Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            //   image: AssetImage(""),
-            // )
           ),
           child: Column(
             children: [

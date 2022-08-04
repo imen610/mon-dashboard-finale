@@ -117,15 +117,7 @@ class _DiscussionsState extends State<Discussions> {
                       fit: BoxFit.cover)),
             )),
           ),
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(40),
-          //   child: Image.network(
-          //     "http://127.0.0.1:8000" + image_shop.toString(),
-          //     height: 38,
-          //     width: 38,
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
+         
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: appPadding),
@@ -159,102 +151,4 @@ class _DiscussionsState extends State<Discussions> {
   }
 }
 
-// import 'dart:convert';
 
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-
-// class IndexPage extends StatefulWidget {
-//   const IndexPage({Key? key}) : super(key: key);
-
-//   @override
-//   State<IndexPage> createState() => _IndexPageState();
-// }
-
-// class _IndexPageState extends State<IndexPage> {
-//   List users = [];
-//   bool isLoading = false;
-
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     this.fetchUser();
-//   }
-
-//   fetchUser() async {
-//     var url = Uri.parse("http://127.0.0.1:8000/auth/shops/");
-//     var response = await http.get(url);
-//     if (response.statusCode == 200) {
-//       var items = json.decode(response.body);
-//       setState(() {
-//         users = items;
-//       });
-//     } else {
-//       setState(() {
-//         users = [];
-//       });
-//     }
-//     print(response.body);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Listing Users"),
-//       ),
-//       body: getBody(),
-//     );
-//   }
-
-//   Widget getBody() {
-//     List items = ["", ""];
-//     return ListView.builder(
-//         itemCount: users.length,
-//         itemBuilder: (context, index) {
-//           return getCard(users[index]);
-//         });
-//   }
-
-//   Widget getCard(index) {
-//     var name_shop = index['name_shop'];
-//     var email_shop = index['email_shop'];
-//     var image_shop = index['image_shop'];
-//     return Padding(
-//       padding: const EdgeInsets.all(10.0),
-//       child: Card(
-//         child: ListTile(
-//             title: Row(
-//           children: <Widget>[
-//             Container(
-//               width: 60,
-//               height: 60,
-//               decoration: BoxDecoration(
-//                   color: Colors.purple,
-//                   borderRadius: BorderRadius.circular(60),
-//                   image: DecorationImage(
-//                       image: NetworkImage(
-//                           "http://127.0.0.1:8000" + image_shop.toString()),
-//                       fit: BoxFit.cover)),
-//             ),
-//             SizedBox(
-//               width: 20,
-//             ),
-//             Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: <Widget>[
-//                 Text(name_shop.toString(), style: TextStyle(fontSize: 17)),
-//                 SizedBox(
-//                   height: 10,
-//                 ),
-//                 Text(email_shop.toString(),
-//                     style: TextStyle(fontSize: 12, color: Colors.grey))
-//               ],
-//             )
-//           ],
-//         )),
-//       ),
-//     );
-//   }
-// }

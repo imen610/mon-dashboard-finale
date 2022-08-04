@@ -6,7 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/constants/constants.dart';
-import 'package:responsive_admin_dashboard/simpleUser/editMember.dart';
+import 'package:responsive_admin_dashboard/screens/components/UserAccountDash.dart';
 import 'package:responsive_admin_dashboard/user/Listmembers.dart';
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:responsive_admin_dashboard/user/create.dart';
@@ -14,19 +14,19 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../user/edit.dart';
-import 'member_account_page.dart';
+import '../../simpleUser/member_account_page.dart';
+import '../../user/edit.dart';
 
 // import 'edit.dart';
 
-class AccountsPage extends StatefulWidget {
-  const AccountsPage({Key? key}) : super(key: key);
+class AccountsDashPage extends StatefulWidget {
+  const AccountsDashPage({Key? key}) : super(key: key);
 
   @override
-  State<AccountsPage> createState() => _AccountsPageState();
+  State<AccountsDashPage> createState() => _AccountsDashPageState();
 }
 
-class _AccountsPageState extends State<AccountsPage> {
+class _AccountsDashPageState extends State<AccountsDashPage> {
   List members = [];
   bool isLoading = false;
   var memberId = '';
@@ -41,7 +41,7 @@ class _AccountsPageState extends State<AccountsPage> {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
     var x = ID_USER.getString('user_id');
     print('id get from constant $x');
-    var url = BASE_API + "usermem/$x/";
+    var url = BASE_API + "users/";
     print(x);
 
     String? token;
@@ -186,6 +186,7 @@ class _AccountsPageState extends State<AccountsPage> {
     var username = item['username'];
     var email = item['email'];
     var image = item['image'];
+    print(' imeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeen $image');
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -230,9 +231,7 @@ class _AccountsPageState extends State<AccountsPage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' +
-                                            image.toString()),
+                                    image: NetworkImage(image.toString()),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -297,7 +296,7 @@ class _AccountsPageState extends State<AccountsPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => MemberAccount(
+            builder: (context) => userAccountDash(
                   memberId: memberId,
                   username: username,
                   email: email,
@@ -322,7 +321,7 @@ class _AccountsPageState extends State<AccountsPage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => EditMember(
+            builder: (context) => EditUser(
                   userId: userId,
                   username: username,
                   email: email,
@@ -346,7 +345,7 @@ class _AccountsPageState extends State<AccountsPage> {
       print(items);
 
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => AccountsPage()),
+          MaterialPageRoute(builder: (context) => AccountsDashPage()),
           (Route<dynamic> route) => false);
     }
   }

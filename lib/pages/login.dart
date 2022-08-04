@@ -44,8 +44,6 @@ class _loginState extends State<login> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(DateFormat('h:mm a').format(DateTime.now()),
-                        // DateTime.now().toString(),
-                        // "${DateFormat("EEEE").format(today)}, ${DateFormat("d MMMM").format(today)}",
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontFamily: 'avenir',
@@ -60,8 +58,6 @@ class _loginState extends State<login> {
                     Text(
                         DateFormat('EEE, MMM d, ' 'yyyy')
                             .format(DateTime.now()),
-                        // DateTime.now().toString(),
-                        // "${DateFormat("EEEE").format(today)}, ${DateFormat("d MMMM").format(today)}",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                             fontFamily: 'avenir',
@@ -212,10 +208,6 @@ class _loginState extends State<login> {
           })));
       String email = emailController.text;
       var access_token = json.decode(response.body);
-      // print('imen, ${access_token['access']}');
-      // print('access token is -> ${json.decode(response.body)['access']}');
-      // print(response.statusCode);
-      // print(response.body);
       String? token;
       print('hello');
       SharedPreferences sharedPreferences =
@@ -230,18 +222,15 @@ class _loginState extends State<login> {
       });
 
       print('$email');
-      // print('KEY_ACCESS_TOKEN, ${appConstants.KEY_ACCESS_TOKEN}');
       if (response.statusCode != 200) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("invalid")));
-
-        // saveToken(access_token);
       } else {
         Navigator.push(
             //  home() ===> admin
             // and DrawerPage() =====> simple user
             context,
-            MaterialPageRoute(builder: (context) => DrawerPage()));
+            MaterialPageRoute(builder: (context) => home()));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

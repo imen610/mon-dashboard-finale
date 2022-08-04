@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:badges/badges.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_admin_dashboard/simpleUser/main_page/data/json.dart';
 import 'package:responsive_admin_dashboard/simpleUser/main_page/widgets/transaction_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,11 +24,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var list_members = [];
+  bool isLoading2 = false;
+  bool isLoading3 = false;
   @override
   void initState() {
     super.initState();
     this.getMembers();
     this.getTransaction();
+    isLoading2 = true;
+    isLoading3 = true;
   }
 
   List list_transactions = [];
@@ -44,8 +49,13 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
       print(' voici la liste des transactions $items');
+      // print(items['timestamp'].toString());
+      // var formatter = new DateFormat('yyyy-MM-dd');
+      // String formatted = formatter.format(items['timestamp']);
+      // print('formatted $formatted');
       setState(() {
         list_transactions = items;
+        isLoading2 = false;
       });
     }
   }
@@ -55,7 +65,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: getAppBar(),
-      body: getBody(),
+      body: (isLoading2 == true && isLoading3 == true)
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            )
+          : getBody(),
     );
   }
 
@@ -217,7 +231,9 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 15),
-            child: getTransanctions(),
+            child: (list_transactions.length != 0 || isLoading2 == false)
+                ? getTransanctions()
+                : Center(child: Text('No Transactions')),
           ),
         ],
       ),
@@ -311,13 +327,7 @@ class _HomePageState extends State<HomePage> {
             )),
           ),
         ),
-        // Container(
-        //   child: Image.network(
-        //     'http://127.0.0.1:8000' + image,
-        //     width: 55,
-        //     height: 55,
-        //   ),
-        // ),
+        
         SizedBox(
           height: 8,
         ),
@@ -366,6 +376,16 @@ class _HomePageState extends State<HomePage> {
     String type = list_transactions[item]['type'];
     String name2 = list_transactions[item]['to'];
 
+    print(
+        'timestamp___________________________ ${list_transactions[item]['timestamp']}');
+    print(DateFormat.yMMMd()
+        .format(DateTime.tryParse(list_transactions[item]['timestamp'])));
+    // var x =
+    //     DateFormat("dd-MM-yyyy").parse(list_transactions[item]['timestamp']);
+    // print('xxxxxxxx___________________________$x');
+    // var formatter = new DateFormat('yyyy-MM-dd');
+    // String formatted = formatter.format(list_transactions[item]['timestamp']);
+    // print('formatted $formatted');
     print(type);
     var result = [
       for (var member in list_members)
@@ -471,7 +491,8 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            child: Text('date',
+                            child: Text(
+                                '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_transactions[item]['timestamp']))}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -520,6 +541,7 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         list_members = items;
+        isLoading3 = false;
       });
     }
   }

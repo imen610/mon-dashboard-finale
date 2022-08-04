@@ -70,13 +70,15 @@ class DashboardContent extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              if(!Responsive.isMobile(context))
+                              if (!Responsive.isMobile(context))
                                 Expanded(
                                   child: TopReferals(),
                                   flex: 2,
                                 ),
-                              if(!Responsive.isMobile(context))
-                                SizedBox(width: appPadding,),
+                              if (!Responsive.isMobile(context))
+                                SizedBox(
+                                  width: appPadding,
+                                ),
                               Expanded(
                                 flex: 3,
                                 child: Viewers(),
@@ -113,7 +115,6 @@ class DashboardContent extends StatelessWidget {
                 ),
               ],
             ),
-
           ],
         ),
       ),

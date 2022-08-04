@@ -1,52 +1,108 @@
 import 'dart:convert';
 
 import 'package:badges/badges.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
-import '../shop/constants/base_api.dart';
+import 'package:responsive_admin_dashboard/simpleUser/main_page/data/json.dart';
+import 'package:responsive_admin_dashboard/simpleUser/main_page/widgets/transaction_item.dart';
+import 'package:responsive_admin_dashboard/simpleUser/send_money.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../../../shop/constants/base_api.dart';
 
-import 'main_page/theme/colors.dart';
+import '../../simpleUser/main_page/theme/colors.dart';
+import '../../simpleUser/main_page/widgets/balance_card.dart';
 
-class transactionsPage extends StatefulWidget {
-  const transactionsPage({Key? key}) : super(key: key);
+class userAccountDash extends StatefulWidget {
+  //const HomePage({Key? key}) : super(key: key);
+  String memberId;
+  String username;
+  String email;
+  String image;
+  String phone;
+  String firstName;
+  String lastName;
+  String address;
+  List membre;
+
+  userAccountDash(
+      {required this.memberId,
+      required this.username,
+      required this.email,
+      required this.phone,
+      required this.firstName,
+      required this.lastName,
+      required this.address,
+      required this.image,
+      required this.membre});
 
   @override
-  State<transactionsPage> createState() => _transactionsPageState();
+  _userAccountDashState createState() => _userAccountDashState();
 }
 
-class _transactionsPageState extends State<transactionsPage> {
-  bool isLoading1 = false;
-  bool isLoading2 = false;
-  bool isLoading3 = false;
+class _userAccountDashState extends State<userAccountDash> {
+  var list_members = [];
 
+  String image = '';
+  bool isImageSelected = false;
+  List members = [];
+  var wallet;
+  var user;
   @override
   void initState() {
     super.initState();
-    this.fetchtransactions();
     this.getMembers();
-    this.fetchUSER();
+    this.fetchwallet();
+    this.getTransaction();
     isLoading1 = true;
     isLoading2 = true;
     isLoading3 = true;
+    setState(() {
+      image = widget.image;
+    });
+    print(widget.memberId);
+    print(widget.username);
+    print(widget.email);
+    print(widget.image);
+    print(widget.phone);
+    print(widget.lastName);
+    print(widget.firstName);
+    print(widget.address);
+    print("hello ACCOUNT MEMBER YEAAAH !!!!!");
+    print(widget.membre);
+    print("users  ");
+    var name = widget.membre.length;
+
+    print(name);
   }
 
-  var user;
+  bool isLoading1 = false;
+  bool isLoading2 = false;
+  bool isLoading3 = false;
   List list_transactions = [];
-  List list_members = [];
-  fetchtransactions() async {
-    String? token;
-    SharedPreferences.getInstance().then((sharedPrefValue) {
-      setState(() {
-        isLoading1 = false;
-        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-      });
+  fetchwallet() async {
+    var url = BASE_API + "my-wallet/${widget.memberId}/";
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
     });
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      print(items['balance']);
+      setState(() {
+        wallet = items;
+        isLoading1 = false;
+      });
+    }
+  }
 
-    var url = BASE_API + "transactions/";
-
+  getTransaction() async {
+    var url = BASE_API + "transactions/${widget.memberId}/${widget.username}/";
+    print('this is our url');
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json ; charset=UTF-8',
@@ -58,6 +114,7 @@ class _transactionsPageState extends State<transactionsPage> {
       print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
+        isLoading2 = false;
       });
     }
   }
@@ -78,7 +135,7 @@ class _transactionsPageState extends State<transactionsPage> {
   getAppBar() {
     return Container(
       height: 100,
-      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+      padding: EdgeInsets.only(left: 30, right: 20, top: 20),
       decoration: BoxDecoration(
           color: appBgColor,
           borderRadius: BorderRadius.only(
@@ -107,7 +164,7 @@ class _transactionsPageState extends State<transactionsPage> {
             ),
           ),
           SizedBox(
-            width: 135,
+            width: 120,
           ),
           Container(
             padding: EdgeInsets.all(5),
@@ -137,7 +194,7 @@ class _transactionsPageState extends State<transactionsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${user['username']}",
+                            "${widget.username}",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 34, 33, 33),
                                 fontSize: 13),
@@ -148,21 +205,20 @@ class _transactionsPageState extends State<transactionsPage> {
                     width: 10,
                   ),
                   Container(
-                    width: 65,
-                    height: 65,
+                    width: 55,
+                    height: 55,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(28),
                         border: Border.all(color: Colors.black)),
                     child: Center(
                         child: Container(
-                      width: 60,
-                      height: 60,
+                      width: 50,
+                      height: 50,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(
                               image: NetworkImage(
-                                'http://127.0.0.1:8000' +
-                                    user['image'].toString(),
+                                widget.image.toString(),
                               ),
                               fit: BoxFit.cover)),
                     )),
@@ -184,20 +240,61 @@ class _transactionsPageState extends State<transactionsPage> {
           SizedBox(
             height: 25,
           ),
+          Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  getBalanceCard(),
+                  Positioned(
+                      top: 100,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: secondary,
+                              shape: BoxShape.circle,
+                              border: Border.all()),
+                          child: Icon(Icons.add)))
+                ],
+              )),
+          Container(
+              padding: EdgeInsets.only(left: 20),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              )),
+          SizedBox(
+            height: 15,
+          ),
+          // Padding(
+          //   padding: EdgeInsets.only(left: 15),
+          //   child: getRecentUsers(),
+          // ),
+          SizedBox(
+            height: 25,
+          ),
           Container(
               padding: EdgeInsets.only(left: 20, right: 15),
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "Transactions",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    ),
+                  Text(
+                    "Transactions",
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                   ),
+                  Expanded(
+                      child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Today",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ))),
+                  Icon(Icons.expand_more_rounded),
                 ],
               )),
           SizedBox(
@@ -205,10 +302,33 @@ class _transactionsPageState extends State<transactionsPage> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 15),
-            child: getTransanctions(),
+            child: (list_transactions.length != 0)
+                ? getTransanctions()
+                : Center(child: Text('No Transactions')),
           ),
         ],
       ),
+    );
+  }
+
+  getSearchBox() {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+              color: Color.fromARGB(255, 238, 235, 235),
+              shape: BoxShape.circle),
+          child: Icon(Icons.search_rounded),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          "Search",
+          style: TextStyle(fontWeight: FontWeight.w500),
+        )
+      ],
     );
   }
 
@@ -229,11 +349,11 @@ class _transactionsPageState extends State<transactionsPage> {
     String name2 = list_transactions[item]['to'];
 
     print(type);
+    print(name2);
     var result = [
       for (var member in list_members)
         if (member["username"] == name2) member['image']
     ];
-    print(result);
     String image2 = result.isEmpty ? null : result.first;
     print(image2);
     return GestureDetector(
@@ -292,8 +412,7 @@ class _transactionsPageState extends State<transactionsPage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' + image2),
+                                    image: NetworkImage(image2),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -365,8 +484,7 @@ class _transactionsPageState extends State<transactionsPage> {
   getMembers() async {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
     var x = ID_USER.getString('user_id');
-    print('id get from constant $x');
-    var url2 = BASE_API + "usermem/$x/";
+    var url2 = BASE_API + "users/";
     print(x);
     print(url2);
 
@@ -384,28 +502,62 @@ class _transactionsPageState extends State<transactionsPage> {
 
       setState(() {
         list_members = items;
-        isLoading2 = false;
+        isLoading3 = false;
       });
     }
   }
 
-  fetchUSER() async {
-    var url = BASE_API + "current/";
-    SharedPreferences access_data = await SharedPreferences.getInstance();
-    var response = await http.get(Uri.parse(url), headers: {
-      'Content-Type': 'application/json ; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${access_data.getString('access_token')}'
-    });
-
-    if (response.statusCode == 200) {
-      var items = jsonDecode(response.body);
-      print(items['username']);
-
-      setState(() {
-        user = items;
-        isLoading3 = false;
-      });
-    }
+  getBalanceCard() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: 120,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 157, 244, 245),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 25,
+              ),
+              Text(
+                "Your Balance",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "${wallet['balance']} DT",
+                style: TextStyle(
+                    color: secondary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: secondary,
+                    shape: BoxShape.circle,
+                    border: Border.all()),
+                child: InkWell(
+                  onTap: () {},
+                  child: Icon(Icons.add),
+                )))
+      ],
+    );
   }
 }

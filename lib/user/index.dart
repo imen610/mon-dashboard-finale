@@ -33,8 +33,6 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   fetchUsers() async {
-    final client = Dio();
-
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
@@ -84,6 +82,9 @@ class _IndexPageState extends State<IndexPage> {
           "Users",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        leading: BackButton(
+          color: Colors.black,
         ),
         actions: <Widget>[
           FlatButton(

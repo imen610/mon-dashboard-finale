@@ -10,7 +10,7 @@ import 'package:responsive_admin_dashboard/simpleUser/ui/screen/drawer_page.dart
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SendMoney extends StatefulWidget {
+class SendPageDash extends StatefulWidget {
   //const EditUser({Key? key}) : super(key: key);
   String userId;
   String username;
@@ -21,7 +21,7 @@ class SendMoney extends StatefulWidget {
   String lastName;
   String address;
 
-  SendMoney(
+  SendPageDash(
       {required this.userId,
       required this.username,
       required this.email,
@@ -32,10 +32,10 @@ class SendMoney extends StatefulWidget {
       required this.image});
 
   @override
-  State<SendMoney> createState() => _SendMoneyState();
+  State<SendPageDash> createState() => _SendPageDashState();
 }
 
-class _SendMoneyState extends State<SendMoney> {
+class _SendPageDashState extends State<SendPageDash> {
   String userId = '';
   String image = '';
   String userName = '';
@@ -55,7 +55,7 @@ class _SendMoneyState extends State<SendMoney> {
     _focusNode.addListener(onFocusChanged);
     setState(() {
       userId = widget.userId;
-      image = 'http://127.0.0.1:8000' + widget.image.toString();
+      image = widget.image.toString();
       userName = widget.username;
     });
 
@@ -218,7 +218,7 @@ class _SendMoneyState extends State<SendMoney> {
                       color: Color.fromARGB(255, 252, 193, 75),
                       child: MaterialButton(
                         onPressed: () {
-                          SendMoneyToMember();
+                          SendPageDashToMember();
                         },
                         minWidth: double.infinity,
                         height: 50,
@@ -236,7 +236,7 @@ class _SendMoneyState extends State<SendMoney> {
         ));
   }
 
-  Future<void> SendMoneyToMember() async {
+  Future<void> SendPageDashToMember() async {
     var url = BASE_API + "pay/";
     print(url);
     print(userName);

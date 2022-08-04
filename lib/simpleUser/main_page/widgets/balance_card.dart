@@ -17,13 +17,14 @@ class _BalanceCardState extends State<BalanceCard> {
   var wallet;
   var user;
   var list_members = [];
+  bool isLoading = false;
   var user_id;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     this.fetchwallet();
-  
+    isLoading = true;
   }
 
   fetchwallet() async {
@@ -39,74 +40,78 @@ class _BalanceCardState extends State<BalanceCard> {
       print(items['balance']);
       setState(() {
         wallet = items;
+        isLoading = false;
       });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          height: 120,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            //
-            color: Color.fromARGB(255, 252, 193, 75),
-            borderRadius: BorderRadius.circular(30),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: shadowColor.withOpacity(0.1),
-            //     spreadRadius: 1,
-            //     blurRadius: 1,
-            //     offset: Offset(1, 1), // changes position of shadow
-            //   ),
-            // ],
-            // image: DecorationImage(
-            //   colorFilter: new ColorFilter.mode(
-            //       Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            //   image: AssetImage(""),
-            // )
-          ),
-          child: Column(
+    return (isLoading)
+        ? Center(
+            child: CircularProgressIndicator(color: Colors.black),
+          )
+        : Stack(
+            clipBehavior: Clip.none,
             children: [
-              SizedBox(
-                height: 25,
-              ),
-              Text(
-                "Your Balance",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
+              Container(
+                height: 120,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  //
+                  color: Color.fromARGB(255, 252, 193, 75),
+                  borderRadius: BorderRadius.circular(30),
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: shadowColor.withOpacity(0.1),
+                  //     spreadRadius: 1,
+                  //     blurRadius: 1,
+                  //     offset: Offset(1, 1), // changes position of shadow
+                  //   ),
+                  // ],
+                  // image: DecorationImage(
+                  //   colorFilter: new ColorFilter.mode(
+                  //       Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                  //   image: AssetImage(""),
+                  // )
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Text(
+                      "Your Balance",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "${wallet['balance']} DT",
+                      style: TextStyle(
+                          color: secondary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "${wallet['balance']} DT",
-                style: TextStyle(
-                    color: secondary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600),
-              ),
+              Positioned(
+                  top: 100,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: secondary,
+                          shape: BoxShape.circle,
+                          border: Border.all()),
+                      child: Icon(Icons.add)))
             ],
-          ),
-        ),
-        Positioned(
-            top: 100,
-            left: 0,
-            right: 0,
-            child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: secondary,
-                    shape: BoxShape.circle,
-                    border: Border.all()),
-                child: Icon(Icons.add)))
-      ],
-    );
+          );
   }
 }

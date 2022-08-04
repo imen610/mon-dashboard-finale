@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import '../shop/constants/base_api.dart';
@@ -17,7 +18,9 @@ class paymentsPage extends StatefulWidget {
 }
 
 class _paymentsPageState extends State<paymentsPage> {
-  bool isLoading = false;
+  bool isLoading = true;
+  bool isLoading2 = true;
+  bool isLoading3 = true;
 
   @override
   void initState() {
@@ -52,6 +55,7 @@ class _paymentsPageState extends State<paymentsPage> {
       print(' voici la liste des payments $items');
       setState(() {
         list_payments = items;
+        isLoading = false;
       });
     }
   }
@@ -61,14 +65,18 @@ class _paymentsPageState extends State<paymentsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: getAppBar(),
-      body: getBody(),
+      body: (isLoading || isLoading2 || isLoading3)
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            )
+          : getBody(),
     );
   }
 
   getAppBar() {
     return Container(
       height: 100,
-      padding: EdgeInsets.only(left: 30, right: 20, top: 20),
+      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
       decoration: BoxDecoration(
           color: appBgColor,
           borderRadius: BorderRadius.only(
@@ -87,26 +95,17 @@ class _paymentsPageState extends State<paymentsPage> {
         children: [
           Container(
             margin: EdgeInsets.only(right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/logo1.png'))),
+            child: IconButton(
+              icon: new Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.black,
+                size: 30,
               ),
-              Text(
-                'MyWallet',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 20,
-                ),
-              ),
-            ]),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
           SizedBox(
-            width: 90,
+            width: 135,
           ),
           Container(
             padding: EdgeInsets.all(5),
@@ -136,7 +135,7 @@ class _paymentsPageState extends State<paymentsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${user['username']}",
+                            "${user['username'].toString()}",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 34, 33, 33),
                                 fontSize: 13),
@@ -170,30 +169,6 @@ class _paymentsPageState extends State<paymentsPage> {
               ),
             ),
           ),
-          // Container(
-          //   padding: EdgeInsets.all(5),
-          //   decoration: BoxDecoration(
-          //     color: Colors.white,
-          //     shape: BoxShape.circle,
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
-          //         spreadRadius: 1,
-          //         blurRadius: 1,
-          //         offset: Offset(1, 1), // changes position of shadow
-          //       ),
-          //     ],
-          //   ),
-
-          //   child: Badge(
-          //       padding: EdgeInsets.all(3),
-          //       position: BadgePosition.topEnd(top: -5, end: 2),
-          //       badgeContent: Text(
-          //         '',
-          //         style: TextStyle(color: Colors.white),
-          //       ),
-          //       child: Icon(Icons.notifications_rounded)),
-          // ),
         ],
       ),
     );
@@ -357,7 +332,8 @@ class _paymentsPageState extends State<paymentsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            child: Text('date',
+                            child: Text(
+                                '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -406,6 +382,7 @@ class _paymentsPageState extends State<paymentsPage> {
 
       setState(() {
         list_shops = items;
+        isLoading2 = false;
       });
     }
   }
@@ -421,10 +398,11 @@ class _paymentsPageState extends State<paymentsPage> {
 
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items['username']);
+      // print(items['username']);
 
       setState(() {
         user = items;
+        isLoading3 = false;
       });
     }
   }
