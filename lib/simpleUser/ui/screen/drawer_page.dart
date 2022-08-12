@@ -52,6 +52,7 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
       print(items['username']);
+      print(items['is_membre']);
 
       SharedPreferences sharedPreferencesUserId =
           await SharedPreferences.getInstance();
@@ -169,23 +170,43 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
                       ],
                     ),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          navigatorTitle(1, "Home", Selected1 ? true : false),
-                          navigatorTitle(
-                              2, "Accounts", Selected2 ? true : false),
-                          navigatorTitle(
-                              3, "Payments", Selected3 ? true : false),
-                          navigatorTitle(
-                              4, "Transactions", Selected4 ? true : false),
-                          navigatorTitle(
-                              5, "Profile", Selected5 ? true : false),
-                          navigatorTitle(
-                              6, "Settings", Selected6 ? true : false),
-                          navigatorTitle(7, "Help", Selected7 ? true : false),
-                        ],
-                      ),
+                      child: (user['is_membre'])
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                navigatorTitle(
+                                    1, "Home", Selected1 ? true : false),
+                                navigatorTitle(
+                                    3, "Payments", Selected3 ? true : false),
+                                navigatorTitle(4, "Transactions",
+                                    Selected4 ? true : false),
+                                navigatorTitle(
+                                    5, "Profile", Selected5 ? true : false),
+                                navigatorTitle(
+                                    6, "Settings", Selected6 ? true : false),
+                                navigatorTitle(
+                                    7, "Help", Selected7 ? true : false),
+                              ],
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                navigatorTitle(
+                                    1, "Home", Selected1 ? true : false),
+                                navigatorTitle(
+                                    2, "Accounts", Selected2 ? true : false),
+                                navigatorTitle(
+                                    3, "Payments", Selected3 ? true : false),
+                                navigatorTitle(4, "Transactions",
+                                    Selected4 ? true : false),
+                                navigatorTitle(
+                                    5, "Profile", Selected5 ? true : false),
+                                navigatorTitle(
+                                    6, "Settings", Selected6 ? true : false),
+                                navigatorTitle(
+                                    7, "Help", Selected7 ? true : false),
+                              ],
+                            ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(20),

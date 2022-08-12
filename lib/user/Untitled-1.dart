@@ -3,17 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/constants/constants.dart';
+import 'package:responsive_admin_dashboard/user/Listmembers.dart';
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:responsive_admin_dashboard/user/create.dart';
 import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/components/UserAccountDash.dart';
 import 'edit.dart';
 
 class IndexPage extends StatefulWidget {
@@ -25,13 +24,8 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   List users = [];
-  List usersOnSearch = [];
-  List superuser = [];
   bool isLoading = false;
-  TextEditingController? _textEditingController = TextEditingController();
-  bool status = false;
-  bool wstat = false;
-  var id_user;
+
   @override
   void initState() {
     super.initState();
@@ -65,11 +59,8 @@ class _IndexPageState extends State<IndexPage> {
 
       setState(() {
         users = items;
-        final superusers = users.where((user) {
-          return user['is_membre'] == false;
-        }).toList();
-        superuser = superusers;
-        print('****************************${superusers[2]}');
+
+        isLoading = false;
       });
 
       return;
@@ -112,7 +103,7 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   Widget getBody() {
-    if (isLoading || superuser.length == 0) {
+    if (isLoading || users.length == 0) {
       return Center(child: CircularProgressIndicator());
     }
     return Scaffold(
@@ -159,21 +150,11 @@ class _IndexPageState extends State<IndexPage> {
                     ),
                     Flexible(
                       child: TextField(
-                        controller: _textEditingController,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: "search for contacts"),
-                        onChanged: (value) {
-                          setState(() {
-                            usersOnSearch = superuser
-                                .where((user) => user['username']
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()))
-                                .toList();
-                          });
-                        },
+                        onChanged: searchUser,
                       ),
                     )
                   ]),
@@ -183,33 +164,11 @@ class _IndexPageState extends State<IndexPage> {
           ),
           Expanded(
               flex: 9,
-              child: _textEditingController!.text.isNotEmpty &&
-                      usersOnSearch.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.search_off,
-                            size: 60,
-                          ),
-                          Text(
-                            'No results found',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _textEditingController!.text.isNotEmpty
-                          ? usersOnSearch.length
-                          : superuser.length,
-                      itemBuilder: (context, index) {
-                        return _textEditingController!.text.isNotEmpty
-                            ? cardItem(usersOnSearch[index])
-                            : cardItem(superuser[index]);
-                      }))
+              child: ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    return cardItem(users[index]);
+                  }))
         ],
       ),
     );
@@ -219,14 +178,6 @@ class _IndexPageState extends State<IndexPage> {
     var username = item['username'];
     var email = item['email'];
     var image = item['image'];
-    var mem_length = item['membre'];
-    List memL = item['membre'];
-    var status_wallet = item['wallet_blocked'];
-    // setState(() {
-    //   id_user = item['id'];
-    // });
-    // print('useeeeeeeeeeeeeeeeeeeeeeeeeeer $id_user');
-
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -263,9 +214,7 @@ class _IndexPageState extends State<IndexPage> {
                           height: 65,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(28),
-                              border: (status_wallet)
-                                  ? Border.all(color: Colors.red)
-                                  : Border.all(color: Colors.black)),
+                              border: Border.all(color: Colors.black)),
                           child: Center(
                               child: Container(
                             width: 60,
@@ -285,41 +234,9 @@ class _IndexPageState extends State<IndexPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                children: [
-                                  Text(username.toString(),
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black)),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 100),
-                                    child: FlutterSwitch(
-                                      activeColor: Colors.red,
-                                      width: 50.0,
-                                      height: 25.0,
-                                      valueFontSize: 20.0,
-                                      toggleSize: 20.0,
-                                      value: status_wallet,
-                                      borderRadius: 20.0,
-                                      padding: 4.0,
-                                      // showOnOff: true,
-                                      onToggle: (val) {
-                                        setState(() {
-                                          status_wallet = val;
-                                          print('ggggggggggggg$id_user ');
-                                          print('ggggggggggggg$id_user ');
-                                          print('ggggggggggggg$id_user ');
-                                          wstat = val;
-                                          id_user = item['id'];
-
-                                          // item['is_disabled'] = val;
-                                          // print(item['is_disabled']);
-                                        });
-                                        ppstWalletStatus(item['id']);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              Text(username.toString(),
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.black)),
                               SizedBox(
                                 height: 5,
                               ),
@@ -328,19 +245,6 @@ class _IndexPageState extends State<IndexPage> {
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black.withOpacity(0.5)),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 130),
-                                child: Text(
-                                  ' ${memL.length.toString()}  members',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color.fromARGB(255, 97, 95, 91)),
-                                ),
                               ),
                             ],
                           ),
@@ -359,11 +263,6 @@ class _IndexPageState extends State<IndexPage> {
                           color: Color(0xffFA1645),
                           icon: Icons.delete,
                           onTap: () => showDeleteAlert(context, item)),
-                      IconSlideAction(
-                          caption: 'account_view',
-                          color: Color.fromARGB(255, 247, 214, 105),
-                          icon: Icons.account_balance_wallet,
-                          onTap: () => getaccount(item)),
                     ],
                   ),
                 ),
@@ -373,35 +272,6 @@ class _IndexPageState extends State<IndexPage> {
         ),
       ),
     );
-  }
-
-  getaccount(item) {
-    var memberId = item['id'].toString();
-
-    print(memberId);
-
-    var username = item['username'].toString();
-    var email = item['email'].toString();
-    var image = item['image'].toString();
-    var firstName = item['first_name'].toString();
-    var lastName = item['last_name'].toString();
-    var phone = item['phone'].toString();
-    var address = item['address'].toString();
-    var membre = item['membre'];
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => userAccountDash(
-                  memberId: memberId,
-                  username: username,
-                  email: email,
-                  phone: phone,
-                  firstName: firstName,
-                  lastName: lastName,
-                  address: address,
-                  image: image,
-                  membre: membre,
-                )));
   }
 
   getmember(item) {
@@ -509,25 +379,21 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 
-  ppstWalletStatus(userId) async {
-    var url = BASE_API + "UpdateWalletStatus/$userId/";
-
-    SharedPreferences access_data = await SharedPreferences.getInstance();
-
-    var response = await http.put(Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json ; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${access_data.getString('access_token')}',
-        },
-        body: (jsonEncode({
-          "is_disabled": wstat.toString(),
-        })));
-    print('$wstat');
-    print('::::::::::::::::::::::::::::::::::');
-    if (response.statusCode != 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("okk !!")));
+  void searchUser(String query) {
+    final suggestions = users.where((user) {
+      final username = user['username'].toString().toLowerCase();
+      final input = query.toLowerCase();
+      return username.contains(input);
+    }).toList();
+    print(suggestions);
+    if (suggestions != []) {
+      setState(() {
+        users = suggestions;
+      });
+    } else {
+      setState(() {
+        users = users;
+      });
     }
   }
 }

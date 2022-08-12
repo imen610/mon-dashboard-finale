@@ -18,7 +18,9 @@ class IndexPageShop extends StatefulWidget {
 
 class _IndexPageShopState extends State<IndexPageShop> {
   List shops = [];
+  List shopsOnSearch = [];
   bool isLoading = false;
+  TextEditingController? _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -128,6 +130,17 @@ class _IndexPageShopState extends State<IndexPageShop> {
                     ),
                     Flexible(
                       child: TextField(
+                        controller: _textEditingController,
+                        onChanged: (value) {
+                          setState(() {
+                            shopsOnSearch = shops
+                                .where((shop) => shop['name_shop']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
+                          });
+                        },
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                             border: InputBorder.none,
@@ -141,11 +154,33 @@ class _IndexPageShopState extends State<IndexPageShop> {
           ),
           Expanded(
               flex: 9,
-              child: ListView.builder(
-                  itemCount: shops.length,
-                  itemBuilder: (context, index) {
-                    return cardItem(shops[index]);
-                  }))
+              child: _textEditingController!.text.isNotEmpty &&
+                      shopsOnSearch.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.search_off,
+                            size: 60,
+                          ),
+                          Text(
+                            'No results found',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: _textEditingController!.text.isNotEmpty
+                          ? shopsOnSearch.length
+                          : shops.length,
+                      itemBuilder: (context, index) {
+                        return _textEditingController!.text.isNotEmpty
+                            ? cardItem(shopsOnSearch[index])
+                            : cardItem(shops[index]);
+                      }))
         ],
       ),
     );

@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:responsive_admin_dashboard/screens/components/send_moneyDash.dart';
 import 'package:responsive_admin_dashboard/simpleUser/ui/screen/drawer_page.dart';
 
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../pages/home.dart';
 
 class SendPageDash extends StatefulWidget {
   //const EditUser({Key? key}) : super(key: key);
@@ -253,13 +256,57 @@ class _SendPageDashState extends State<SendPageDash> {
     print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => DrawerPage()));
-      print(items);
+
+      if (items['account status'] == 'Rblocked') {
+        showMessage(context, items['message']);
+      } else if (items['account status'] == 'Sblocked') {
+        showMessage(context, items['message']);
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => home()));
+        print("######################################");
+        print("######################################");
+        print(items['account status']);
+      }
 
       // setState(() {
       //   //wallet = items;
       // });
+    } else if (response.statusCode == 406) {
+      showMessage(
+          context, 'You do not have enough funds to complete the transfer...');
     }
+  }
+
+  showMessage(BuildContext context, String contentMessage) {
+    // set up the buttons
+    var primary;
+
+    Widget yesButton = FlatButton(
+      child: Text("ok", style: TextStyle(color: primary)),
+      onPressed: () {
+        Navigator.pop(context);
+        // Navigator.of(context).pushAndRemoveUntil(
+        //     MaterialPageRoute(builder: (context) => sendMoneyDash()),
+        //     (Route<dynamic> route) => false);
+        // deleteUser(item['id']);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Message"),
+      content: Text(contentMessage),
+      actions: [
+        yesButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

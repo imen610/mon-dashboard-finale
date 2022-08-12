@@ -9,21 +9,22 @@ import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:responsive_admin_dashboard/user/create.dart';
+import 'package:responsive_admin_dashboard/user/edit.dart';
 import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/components/UserAccountDash.dart';
-import 'edit.dart';
+import '../../addMember.dart';
 
-class IndexPage extends StatefulWidget {
-  const IndexPage({Key? key}) : super(key: key);
-
+class AddMemberPage extends StatefulWidget {
+  // const AddMemberPage({Key? key}) : super(key: key);
+  String id;
+  AddMemberPage({required this.id});
   @override
-  State<IndexPage> createState() => _IndexPageState();
+  State<AddMemberPage> createState() => _AddMemberPageState();
 }
 
-class _IndexPageState extends State<IndexPage> {
+class _AddMemberPageState extends State<AddMemberPage> {
   List users = [];
   List usersOnSearch = [];
   List superuser = [];
@@ -31,7 +32,6 @@ class _IndexPageState extends State<IndexPage> {
   TextEditingController? _textEditingController = TextEditingController();
   bool status = false;
   bool wstat = false;
-  var id_user;
   @override
   void initState() {
     super.initState();
@@ -88,24 +88,13 @@ class _IndexPageState extends State<IndexPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Users",
+          "Add Member",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         leading: BackButton(
           color: Colors.black,
         ),
-        actions: <Widget>[
-          FlatButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => createuser()));
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-              ))
-        ],
       ),
       body: getBody(),
     );
@@ -204,11 +193,11 @@ class _IndexPageState extends State<IndexPage> {
                   : ListView.builder(
                       itemCount: _textEditingController!.text.isNotEmpty
                           ? usersOnSearch.length
-                          : superuser.length,
+                          : 0,
                       itemBuilder: (context, index) {
                         return _textEditingController!.text.isNotEmpty
                             ? cardItem(usersOnSearch[index])
-                            : cardItem(superuser[index]);
+                            : Center(child: Text("no member selected!"));
                       }))
         ],
       ),
@@ -222,10 +211,8 @@ class _IndexPageState extends State<IndexPage> {
     var mem_length = item['membre'];
     List memL = item['membre'];
     var status_wallet = item['wallet_blocked'];
-    // setState(() {
-    //   id_user = item['id'];
-    // });
-    // print('useeeeeeeeeeeeeeeeeeeeeeeeeeer $id_user');
+
+    print('${memL.length}');
 
     return Card(
       child: SingleChildScrollView(
@@ -235,7 +222,7 @@ class _IndexPageState extends State<IndexPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GestureDetector(
-                onTap: () => getmember(item),
+                onTap: () => editUser(item),
                 child: Container(
                   child: Slidable(
                     actionPane: SlidableDrawerActionPane(),
@@ -263,9 +250,7 @@ class _IndexPageState extends State<IndexPage> {
                           height: 65,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(28),
-                              border: (status_wallet)
-                                  ? Border.all(color: Colors.red)
-                                  : Border.all(color: Colors.black)),
+                              border: Border.all(color: Colors.black)),
                           child: Center(
                               child: Container(
                             width: 60,
@@ -290,34 +275,6 @@ class _IndexPageState extends State<IndexPage> {
                                   Text(username.toString(),
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black)),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 100),
-                                    child: FlutterSwitch(
-                                      activeColor: Colors.red,
-                                      width: 50.0,
-                                      height: 25.0,
-                                      valueFontSize: 20.0,
-                                      toggleSize: 20.0,
-                                      value: status_wallet,
-                                      borderRadius: 20.0,
-                                      padding: 4.0,
-                                      // showOnOff: true,
-                                      onToggle: (val) {
-                                        setState(() {
-                                          status_wallet = val;
-                                          print('ggggggggggggg$id_user ');
-                                          print('ggggggggggggg$id_user ');
-                                          print('ggggggggggggg$id_user ');
-                                          wstat = val;
-                                          id_user = item['id'];
-
-                                          // item['is_disabled'] = val;
-                                          // print(item['is_disabled']);
-                                        });
-                                        ppstWalletStatus(item['id']);
-                                      },
-                                    ),
-                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -347,24 +304,6 @@ class _IndexPageState extends State<IndexPage> {
                         )
                       ]),
                     ),
-                    secondaryActions: <Widget>[
-                      IconSlideAction(
-                        caption: 'Edit',
-                        color: Color(0xff16F8FA),
-                        icon: Icons.edit,
-                        onTap: () => editUser(item),
-                      ),
-                      IconSlideAction(
-                          caption: 'Delete',
-                          color: Color(0xffFA1645),
-                          icon: Icons.delete,
-                          onTap: () => showDeleteAlert(context, item)),
-                      IconSlideAction(
-                          caption: 'account_view',
-                          color: Color.fromARGB(255, 247, 214, 105),
-                          icon: Icons.account_balance_wallet,
-                          onTap: () => getaccount(item)),
-                    ],
                   ),
                 ),
               )
@@ -373,61 +312,6 @@ class _IndexPageState extends State<IndexPage> {
         ),
       ),
     );
-  }
-
-  getaccount(item) {
-    var memberId = item['id'].toString();
-
-    print(memberId);
-
-    var username = item['username'].toString();
-    var email = item['email'].toString();
-    var image = item['image'].toString();
-    var firstName = item['first_name'].toString();
-    var lastName = item['last_name'].toString();
-    var phone = item['phone'].toString();
-    var address = item['address'].toString();
-    var membre = item['membre'];
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => userAccountDash(
-                  memberId: memberId,
-                  username: username,
-                  email: email,
-                  phone: phone,
-                  firstName: firstName,
-                  lastName: lastName,
-                  address: address,
-                  image: image,
-                  membre: membre,
-                )));
-  }
-
-  getmember(item) {
-    var memberId = item['id'].toString();
-    var username = item['username'].toString();
-    var email = item['email'].toString();
-    var image = item['image'].toString();
-    var firstName = item['first_name'].toString();
-    var lastName = item['last_name'].toString();
-    var phone = item['phone'].toString();
-    var address = item['address'].toString();
-    var membre = item['membre'];
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => member(
-                  memberId: memberId,
-                  username: username,
-                  email: email,
-                  phone: phone,
-                  firstName: firstName,
-                  lastName: lastName,
-                  address: address,
-                  image: image,
-                  membre: membre,
-                )));
   }
 
   editUser(item) {
@@ -439,10 +323,12 @@ class _IndexPageState extends State<IndexPage> {
     var lastName = item['last_name'].toString();
     var phone = item['phone'].toString();
     var address = item['address'].toString();
+    var Id;
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => EditUser(
+            builder: (context) => addMember(
+                  Id: widget.id,
                   userId: userId,
                   username: username,
                   email: email,
@@ -452,82 +338,5 @@ class _IndexPageState extends State<IndexPage> {
                   address: address,
                   image: image,
                 )));
-  }
-
-  deleteUser(userId) async {
-    print(userId);
-    var url = BASE_API + "users/$userId/";
-    var response = await http.delete(Uri.parse(url), headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    });
-    if (response.statusCode == 200) {
-      this.fetchUsers();
-
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => IndexPage()),
-          (Route<dynamic> route) => false);
-    }
-  }
-
-  showDeleteAlert(BuildContext context, item) {
-    // set up the buttons
-    Widget noButton = FlatButton(
-      child: Text(
-        "No",
-        style: TextStyle(color: primary),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    Widget yesButton = FlatButton(
-      child: Text("Yes", style: TextStyle(color: primary)),
-      onPressed: () {
-        Navigator.pop(context);
-
-        deleteUser(item['id']);
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Message"),
-      content: Text("Would you like to delete this user?"),
-      actions: [
-        noButton,
-        yesButton,
-      ],
-    );
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  ppstWalletStatus(userId) async {
-    var url = BASE_API + "UpdateWalletStatus/$userId/";
-
-    SharedPreferences access_data = await SharedPreferences.getInstance();
-
-    var response = await http.put(Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json ; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${access_data.getString('access_token')}',
-        },
-        body: (jsonEncode({
-          "is_disabled": wstat.toString(),
-        })));
-    print('$wstat');
-    print('::::::::::::::::::::::::::::::::::');
-    if (response.statusCode != 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("okk !!")));
-    }
   }
 }

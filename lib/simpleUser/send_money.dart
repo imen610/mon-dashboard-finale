@@ -10,6 +10,8 @@ import 'package:responsive_admin_dashboard/simpleUser/ui/screen/drawer_page.dart
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'main_page/pages/home_page.dart';
+
 class SendMoney extends StatefulWidget {
   //const EditUser({Key? key}) : super(key: key);
   String userId;
@@ -250,16 +252,59 @@ class _SendMoneyState extends State<SendMoney> {
         },
         body: (jsonEncode({"amount": amount.text, "to_acct": userName})));
     print(userName);
-    print(response.body);
+
+    print(response.body[0]);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => DrawerPage()));
-      print(items);
+      if (items['account status'] == 'Rblocked') {
+        showMessage(context, items['message']);
+      } else if (items['account status'] == 'Sblocked') {
+        showMessage(context, items['message']);
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => DrawerPage()));
+
+        print(items['account status']);
+      }
 
       // setState(() {
       //   //wallet = items;
       // });
+    } else if (response.statusCode == 406) {
+      showMessage(
+          context, 'You do not have enough funds to complete the transfer...');
     }
+  }
+
+  showMessage(BuildContext context, String contentMessage) {
+    // set up the buttons
+    var primary;
+
+    Widget yesButton = FlatButton(
+      child: Text("ok", style: TextStyle(color: primary)),
+      onPressed: () {
+        Navigator.pop(context);
+        // Navigator.of(context).pushAndRemoveUntil(
+        //     MaterialPageRoute(builder: (context) => HomePage()),
+        //     (Route<dynamic> route) => false);
+        // deleteUser(item['id']);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Message"),
+      content: Text(contentMessage),
+      actions: [
+        yesButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

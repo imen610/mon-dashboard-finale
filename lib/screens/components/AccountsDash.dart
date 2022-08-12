@@ -13,6 +13,7 @@ import 'package:responsive_admin_dashboard/user/create.dart';
 import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 import '../../simpleUser/member_account_page.dart';
 import '../../user/edit.dart';
@@ -28,8 +29,11 @@ class AccountsDashPage extends StatefulWidget {
 
 class _AccountsDashPageState extends State<AccountsDashPage> {
   List members = [];
+  var wallet;
   bool isLoading = false;
   var memberId = '';
+  bool status = false;
+  bool wstat = false;
   @override
   void initState() {
     super.initState();
@@ -186,7 +190,9 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
     var username = item['username'];
     var email = item['email'];
     var image = item['image'];
-    print(' imeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeen $image');
+    var status_wallet = item['wallet_blocked'];
+
+    // print(' imeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeen $status_wallet');
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -223,7 +229,9 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
                           height: 65,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
+                              border: (status_wallet)
+                                  ? Border.all(color: Colors.red)
+                                  : Border.all(color: Colors.black)),
                           child: Center(
                               child: Container(
                             width: 60,
@@ -243,36 +251,91 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(username.toString(),
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.black)),
-                              SizedBox(
-                                height: 5,
+                              Row(
+                                children: [
+                                  Text(username.toString(),
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.black)),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 80),
+                                    child: FlutterSwitch(
+                                      activeColor: Colors.red,
+                                      width: 70.0,
+                                      height: 35.0,
+                                      valueFontSize: 30.0,
+                                      toggleSize: 30.0,
+                                      value: status_wallet,
+                                      borderRadius: 30.0,
+                                      padding: 4.0,
+                                      // showOnOff: true,
+                                      onToggle: (val) {
+                                        setState(() {
+                                          status_wallet = val;
+                                          print('ggggggggggggg$val');
+                                          wstat = val;
+
+                                          // item['is_disabled'] = val;
+                                          // print(item['is_disabled']);
+                                        });
+                                        ppstWalletStatus(item['id']);
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
+
                               Text(
                                 email.toString(),
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black.withOpacity(0.5)),
                               ),
+                              // SizedBox(
+                              //   width: 120,
+                              // ),
+                              // Container(
+                              //   margin: EdgeInsets.only(left: 130),
+                              //   child: FlutterSwitch(
+                              //     activeColor: Colors.red,
+                              //     width: 70.0,
+                              //     height: 35.0,
+                              //     valueFontSize: 30.0,
+                              //     toggleSize: 30.0,
+                              //     value: status_wallet,
+                              //     borderRadius: 30.0,
+                              //     padding: 4.0,
+                              //     // showOnOff: true,
+                              //     onToggle: (val) {
+                              //       setState(() {
+                              //         status_wallet = val;
+                              //         print('ggggggggggggg$val');
+                              //         wstat = val;
+
+                              //         // item['is_disabled'] = val;
+                              //         // print(item['is_disabled']);
+                              //       });
+                              //       ppstWalletStatus(item['id']);
+                              //     },
+                              //   ),
+                              // ),
                             ],
                           ),
                         )
                       ]),
                     ),
-                    secondaryActions: <Widget>[
-                      IconSlideAction(
-                        caption: 'Edit',
-                        color: Color(0xff16F8FA),
-                        icon: Icons.edit,
-                        onTap: () => editUser(item),
-                      ),
-                      IconSlideAction(
-                          caption: 'Delete',
-                          color: Color(0xffFA1645),
-                          icon: Icons.delete,
-                          onTap: () => showDeleteAlert(context, item)),
-                    ],
+                    // secondaryActions: <Widget>[
+                    //   IconSlideAction(
+                    //     caption: 'Edit',
+                    //     color: Color(0xff16F8FA),
+                    //     icon: Icons.edit,
+                    //     onTap: () => editUser(item),
+                    //   ),
+                    //   IconSlideAction(
+                    //       caption: 'Delete',
+                    //       color: Color(0xffFA1645),
+                    //       icon: Icons.delete,
+                    //       onTap: () => getwalletStatus(item['id'])),
+                    // ],
                   ),
                 ),
               )
@@ -285,6 +348,9 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
 
   getaccount(item) {
     var memberId = item['id'].toString();
+
+    print(memberId);
+
     var username = item['username'].toString();
     var email = item['email'].toString();
     var image = item['image'].toString();
@@ -405,6 +471,62 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
       setState(() {
         members = members;
       });
+    }
+  }
+
+  getwalletStatus(userId) async {
+    var url = BASE_API + "my-wallet/$userId/";
+
+    print('____________________________');
+    print(userId);
+    print('____________________________');
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}',
+    });
+
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+
+      setState(() {
+        wallet = items;
+        isLoading = false;
+        print(wallet['is_disabled']);
+        status = wallet['is_disabled'];
+      });
+
+      return;
+    } else {
+      setState(() {
+        wallet = [];
+        isLoading = true;
+      });
+    }
+  }
+
+  ppstWalletStatus(userId) async {
+    var url = BASE_API + "UpdateWalletStatus/$userId/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+
+    var response = await http.put(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json ; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${access_data.getString('access_token')}',
+        },
+        body: (jsonEncode({
+          "is_disabled": wstat.toString(),
+        })));
+    print('$wstat');
+    print('::::::::::::::::::::::::::::::::::');
+    if (response.statusCode != 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("okk !!")));
     }
   }
 }

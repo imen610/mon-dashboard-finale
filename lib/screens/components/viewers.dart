@@ -18,7 +18,7 @@ class Viewers extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Viewers',
+            'Transactions',
             style: TextStyle(
               color: textColor,
               fontWeight: FontWeight.w700,

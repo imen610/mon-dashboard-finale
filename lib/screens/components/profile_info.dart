@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../shop/constants/base_api.dart';
+import 'EditUserProfile.dart';
 
 class ProfileInfo extends StatefulWidget {
   const ProfileInfo({Key? key}) : super(key: key);
@@ -86,26 +87,31 @@ class _ProfileInfoState extends State<ProfileInfo> {
       ),
       child: Row(
         children: [
-          Container(
-            width: 55,
-            height: 55,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: Colors.black)),
-            child: Center(
-                child: Container(
-              width: 50,
-              height: 50,
+          InkWell(
+            onTap: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => getUserItem()))
+            },
+            child: Container(
+              width: 55,
+              height: 55,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  image: DecorationImage(
-                      image: NetworkImage(
-                        'http://127.0.0.1:8000' + items['image'].toString(),
-                      ),
-                      fit: BoxFit.cover)),
-            )),
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: Colors.black)),
+              child: Center(
+                  child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    image: DecorationImage(
+                        image: NetworkImage(
+                          'http://127.0.0.1:8000' + items['image'].toString(),
+                        ),
+                        fit: BoxFit.cover)),
+              )),
+            ),
           ),
-        
           if (!Responsive.isMobile(context))
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: appPadding / 2),
@@ -120,5 +126,28 @@ class _ProfileInfoState extends State<ProfileInfo> {
         ],
       ),
     );
+  }
+  getUserItem(){
+    var userId = user['id'].toString();
+    var username = user['username'].toString();
+    var email = user['email'].toString();
+    var image = user['image'].toString();
+    var firstName = user['first_name'].toString();
+    var lastName = user['last_name'].toString();
+    var phone = user['phone'].toString();
+    var address = user['address'].toString();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditProfilePage(
+                  userId: userId,
+                  username: username,
+                  email: email,
+                  phone: phone,
+                  firstName: firstName,
+                  lastName: lastName,
+                  address: address,
+                  image: image,
+                )));
   }
 }

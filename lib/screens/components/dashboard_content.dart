@@ -31,14 +31,14 @@ class DashboardContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      flex: 5,
+                      flex: 3,
                       child: Column(
                         children: [
                           AnalyticCards(),
                           SizedBox(
                             height: appPadding,
                           ),
-                          Users(),
+                          Viewers(),
                           if (Responsive.isMobile(context))
                             SizedBox(
                               height: appPadding,
@@ -80,8 +80,8 @@ class DashboardContent extends StatelessWidget {
                                   width: appPadding,
                                 ),
                               Expanded(
-                                flex: 3,
-                                child: Viewers(),
+                                flex: 5,
+                                child: Users(),
                               ),
                             ],
                             crossAxisAlignment: CrossAxisAlignment.start,

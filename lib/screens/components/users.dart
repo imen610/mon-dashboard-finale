@@ -20,7 +20,7 @@ class Users extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Users",
+            "WristBands",
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 15,

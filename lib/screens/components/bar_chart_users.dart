@@ -15,7 +15,6 @@ class BarChartUsers extends StatefulWidget {
 }
 
 class _BarChartUsersState extends State<BarChartUsers> {
-  @override
   List stats = [];
 
   bool isLoading = false;
@@ -52,7 +51,8 @@ class _BarChartUsersState extends State<BarChartUsers> {
 
       setState(() {
         stats = items;
-
+        print(
+            '::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::$stats');
         isLoading = false;
       });
 
@@ -65,6 +65,7 @@ class _BarChartUsersState extends State<BarChartUsers> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return (isLoading)
         ? Center(

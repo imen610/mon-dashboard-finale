@@ -58,7 +58,7 @@ class _EditUserState extends State<EditUser> {
       _controllerlastName.text = widget.lastName;
       _controllerfirstName.text = widget.firstName;
       _controlleraddress.text = widget.address;
-      image = 'http://127.0.0.1:8000' + widget.image.toString();
+      image = widget.image.toString();
     });
 
     print(widget.userId);
@@ -221,32 +221,6 @@ class _EditUserState extends State<EditUser> {
     }
   }
 
-  // bool isLoading = false;
-
-  // fetchmember() async {
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  //   var url = BASE_API + "usermem/$userId/";
-  //   print(url);
-  //   var response = await http.get(Uri.parse(url));
-  //   // print(response.body);
-  //   if (response.statusCode == 200) {
-  //     var items = jsonDecode(response.body);
-  //     // print(items);
-  //     setState(() {
-  //       members = items;
-  //       isLoading = false;
-  //     });
-  //     return;
-  //   } else {
-  //     setState(() {
-  //       members = [];
-  //       isLoading = true;
-  //     });
-  //   }
-  // }
-
   static Widget picPicker(
     bool isFileSelected,
     String fileName,
@@ -336,6 +310,5 @@ class _EditUserState extends State<EditUser> {
       ],
     );
   }
-
+  
 }
-
