@@ -94,19 +94,19 @@ class _ViewLineChartState extends State<ViewLineChart> {
                   getTitles: (value) {
                     switch (value.toInt()) {
                       case 0:
-                        return 'Sun';
-                      case 1:
                         return 'Mon';
-                      case 2:
+                      case 1:
                         return 'Tue';
-                      case 3:
+                      case 2:
                         return 'Wed';
-                      case 4:
+                      case 3:
                         return 'Thr';
-                      case 5:
+                      case 4:
                         return 'Fri';
-                      case 6:
+                      case 5:
                         return 'Sat';
+                      case 6:
+                        return 'Sun';
                     }
                     return '';
                   }),
@@ -123,13 +123,13 @@ class _ViewLineChartState extends State<ViewLineChart> {
           lineBarsData: [
             LineChartBarData(
                 spots: [
-                  FlSpot(0, stats[6]["count"]),
-                  FlSpot(1, stats[0]["count"]),
-                  FlSpot(2, stats[1]["count"]),
-                  FlSpot(3, stats[2]["count"]),
-                  FlSpot(4, stats[3]["count"]),
-                  FlSpot(5, stats[4]["count"]),
-                  FlSpot(6, stats[5]["count"]),
+                  FlSpot(0, stats[0]["count"]),
+                  FlSpot(1, stats[1]["count"]),
+                  FlSpot(2, stats[2]["count"]),
+                  FlSpot(3, stats[3]["count"]),
+                  FlSpot(4, stats[4]["count"]),
+                  FlSpot(5, stats[5]["count"]),
+                  FlSpot(6, stats[6]["count"]),
                 ],
                 //  FlSpot(stats[0]["jour"], stats[0]["count"]),
                 //   FlSpot(stats[1]["jour"], stats[1]["count"]),
