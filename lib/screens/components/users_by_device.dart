@@ -38,7 +38,7 @@ class _UsersByDeviceState extends State<UsersByDevice> {
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
-        isLoading = false;
+        // isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
       });
     });
@@ -84,7 +84,11 @@ class _UsersByDeviceState extends State<UsersByDevice> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: appPadding),
-      child: Container(
+      child:(isLoading )
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            )
+          : Container(
         height: 350,
         decoration: BoxDecoration(
           color: secondaryColor,
@@ -103,7 +107,7 @@ class _UsersByDeviceState extends State<UsersByDevice> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 25),
+              padding: EdgeInsets.symmetric(vertical: 35),
               child: PieChart(
                 dataMap: {
                   stats[0][0]: stats[0][1],
@@ -117,55 +121,9 @@ class _UsersByDeviceState extends State<UsersByDevice> {
                 chartValuesOptions: ChartValuesOptions(
                   showChartValuesInPercentage: true,
                 ),
-                // totalValue: 20,
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: appPadding),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       Row(
-            //         children: [
-            //           Icon(
-            //             Icons.circle,
-            //             color: primaryColor,
-            //             size: 10,
-            //           ),
-            //           SizedBox(
-            //             width: appPadding / 2,
-            //           ),
-            //           Text(
-            //             'Desktop',
-            //             style: TextStyle(
-            //               color: textColor.withOpacity(0.5),
-            //               fontWeight: FontWeight.bold,
-            //             ),
-            //           )
-            //         ],
-            //       ),
-            //       Row(
-            //         children: [
-            //           Icon(
-            //             Icons.circle,
-            //             color: textColor.withOpacity(0.2),
-            //             size: 10,
-            //           ),
-            //           SizedBox(
-            //             width: appPadding / 2,
-            //           ),
-            //           Text(
-            //             'Mobile',
-            //             style: TextStyle(
-            //               color: textColor.withOpacity(0.5),
-            //               fontWeight: FontWeight.bold,
-            //             ),
-            //           )
-            //         ],
-            //       ),
-            //     ],
-            //   ),
-            // )
+           
           ],
         ),
       ),

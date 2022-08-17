@@ -19,10 +19,12 @@ class ProfileInfo extends StatefulWidget {
 
 class _ProfileInfoState extends State<ProfileInfo> {
   var user;
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
     this.fetchUSER();
+    isLoading = true;
   }
 
   fetchUSER() async {
@@ -42,40 +44,45 @@ class _ProfileInfoState extends State<ProfileInfo> {
       print('http://127.0.0.1:8000' + items['image'].toString());
       setState(() {
         user = items;
+        isLoading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(appPadding),
-          child: Stack(
+    return (isLoading)
+        ? Center(
+            child: CircularProgressIndicator(color: Colors.black),
+          )
+        : Row(
             children: [
-              SvgPicture.asset(
-                "assets/icons/Bell.svg",
-                height: 25,
-                color: textColor.withOpacity(0.8),
-              ),
-              Positioned(
-                right: 0,
-                child: Container(
-                  height: 10,
-                  width: 10,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: red,
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(appPadding),
+                child: Stack(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/Bell.svg",
+                      height: 25,
+                      color: textColor.withOpacity(0.8),
+                    ),
+                    Positioned(
+                      right: 0,
+                      child: Container(
+                        height: 10,
+                        width: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: red,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
+              ),
+              getItems(user)
             ],
-          ),
-        ),
-        getItems(user)
-      ],
-    );
+          );
   }
 
   Widget getItems(items) {
@@ -127,7 +134,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
       ),
     );
   }
-  getUserItem(){
+
+  getUserItem() {
     var userId = user['id'].toString();
     var username = user['username'].toString();
     var email = user['email'].toString();

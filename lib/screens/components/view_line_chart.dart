@@ -34,7 +34,7 @@ class _ViewLineChartState extends State<ViewLineChart> {
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
-        isLoading = false;
+        // isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
       });
     });
@@ -70,86 +70,91 @@ class _ViewLineChartState extends State<ViewLineChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        appPadding,
-        appPadding * 1.5,
-        appPadding,
-        appPadding,
-      ),
-      child: LineChart(LineChartData(
-          gridData: FlGridData(
-            show: false,
-          ),
-          titlesData: FlTitlesData(
-              show: true,
-              bottomTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 22,
-                  getTextStyles: (value) => TextStyle(
-                        color: lightTextColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                  getTitles: (value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return 'Mon';
-                      case 1:
-                        return 'Tue';
-                      case 2:
-                        return 'Wed';
-                      case 3:
-                        return 'Thr';
-                      case 4:
-                        return 'Fri';
-                      case 5:
-                        return 'Sat';
-                      case 6:
-                        return 'Sun';
-                    }
-                    return '';
-                  }),
-              leftTitles: SideTitles(
-                showTitles: false,
-              )),
-          borderData: FlBorderData(
-            show: false,
-          ),
-          minX: 0,
-          maxX: 7,
-          maxY: 10,
-          minY: -1,
-          lineBarsData: [
-            LineChartBarData(
-                spots: [
-                  FlSpot(0, stats[0]["count"]),
-                  FlSpot(1, stats[1]["count"]),
-                  FlSpot(2, stats[2]["count"]),
-                  FlSpot(3, stats[3]["count"]),
-                  FlSpot(4, stats[4]["count"]),
-                  FlSpot(5, stats[5]["count"]),
-                  FlSpot(6, stats[6]["count"]),
-                ],
-                //  FlSpot(stats[0]["jour"], stats[0]["count"]),
-                //   FlSpot(stats[1]["jour"], stats[1]["count"]),
-                //   FlSpot(stats[2]["jour"], stats[2]["count"]),
-                //   FlSpot(stats[3]["jour"], stats[3]["count"]),
-                //   FlSpot(stats[4]["jour"], stats[4]["count"]),
-                //   FlSpot(stats[5]["jour"], stats[5]["count"]),
-                //   FlSpot(stats[6]["jour"], stats[6]["count"]),
-                isCurved: true,
-                colors: [primaryColor],
-                barWidth: 5,
-                isStrokeCapRound: true,
-                dotData: FlDotData(show: false),
-                belowBarData: BarAreaData(
+    return (isLoading)
+        ? Center(
+            child: CircularProgressIndicator(color: Colors.black),
+          )
+        : Container(
+            padding: EdgeInsets.fromLTRB(
+              appPadding,
+              appPadding * 1.5,
+              appPadding,
+              appPadding,
+            ),
+            child: LineChart(LineChartData(
+                gridData: FlGridData(
+                  show: false,
+                ),
+                titlesData: FlTitlesData(
                     show: true,
-                    colors:
-                        gradientColors.map((e) => e.withOpacity(0.3)).toList(),
-                    gradientFrom: Offset(0, 0),
-                    gradientTo: Offset(0, 1.75)))
-          ])),
-    );
+                    bottomTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 22,
+                        getTextStyles: (value) => TextStyle(
+                              color: lightTextColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                        getTitles: (value) {
+                          switch (value.toInt()) {
+                            case 0:
+                              return 'Mon';
+                            case 1:
+                              return 'Tue';
+                            case 2:
+                              return 'Wed';
+                            case 3:
+                              return 'Thr';
+                            case 4:
+                              return 'Fri';
+                            case 5:
+                              return 'Sat';
+                            case 6:
+                              return 'Sun';
+                          }
+                          return '';
+                        }),
+                    leftTitles: SideTitles(
+                      showTitles: false,
+                    )),
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                minX: 0,
+                maxX: 7,
+                maxY: 10,
+                minY: -1,
+                lineBarsData: [
+                  LineChartBarData(
+                      spots: [
+                        FlSpot(0, stats[0]["count"]),
+                        FlSpot(1, stats[1]["count"]),
+                        FlSpot(2, stats[2]["count"]),
+                        FlSpot(3, stats[3]["count"]),
+                        FlSpot(4, stats[4]["count"]),
+                        FlSpot(5, stats[5]["count"]),
+                        FlSpot(6, stats[6]["count"]),
+                      ],
+                      //  FlSpot(stats[0]["jour"], stats[0]["count"]),
+                      //   FlSpot(stats[1]["jour"], stats[1]["count"]),
+                      //   FlSpot(stats[2]["jour"], stats[2]["count"]),
+                      //   FlSpot(stats[3]["jour"], stats[3]["count"]),
+                      //   FlSpot(stats[4]["jour"], stats[4]["count"]),
+                      //   FlSpot(stats[5]["jour"], stats[5]["count"]),
+                      //   FlSpot(stats[6]["jour"], stats[6]["count"]),
+                      isCurved: true,
+                      colors: [primaryColor],
+                      barWidth: 5,
+                      isStrokeCapRound: true,
+                      dotData: FlDotData(show: false),
+                      belowBarData: BarAreaData(
+                          show: true,
+                          colors: gradientColors
+                              .map((e) => e.withOpacity(0.3))
+                              .toList(),
+                          gradientFrom: Offset(0, 0),
+                          gradientTo: Offset(0, 1.75)))
+                ])),
+          );
   }
 }

@@ -30,7 +30,7 @@ class _BarChartUsersState extends State<BarChartUsers> {
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
-        isLoading = false;
+        // isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
       });
     });
