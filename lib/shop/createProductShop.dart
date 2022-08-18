@@ -8,26 +8,24 @@ import 'package:responsive_admin_dashboard/shop/theme/theme_colors.dart';
 import 'constants/base_api.dart';
 import 'constants/util.dart';
 
-class createshop extends StatefulWidget {
-  const createshop({Key? key}) : super(key: key);
-
+class createProductShop extends StatefulWidget {
+  // const createProductShop({Key? key}) : super(key: key);
+  String id;
+  createProductShop({required this.id});
   @override
-  State<createshop> createState() => _createshopState();
+  State<createProductShop> createState() => _createProductShopState();
 }
 
-class _createshopState extends State<createshop> {
-  final TextEditingController _controllershopName = new TextEditingController();
-  final TextEditingController _controllerAddress = new TextEditingController();
-  final TextEditingController _controllerEmail = new TextEditingController();
-  String userId = '';
+class _createProductShopState extends State<createProductShop> {
+  final TextEditingController _controllerproductName =
+      new TextEditingController();
+  final TextEditingController _controllerPrice = new TextEditingController();
   String image = '';
-  String userName = '';
   bool isImageSelected = false;
   bool isLoading = true;
 
   FocusNode _focusNode = new FocusNode();
-  TextEditingController _editingController = new TextEditingController();
-  TextEditingController ToController = new TextEditingController();
+
   bool isAnimating = true;
   bool isFocused = false;
   List members = [];
@@ -36,7 +34,7 @@ class _createshopState extends State<createshop> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    this.CreateNewshop();
+    this.addProduct();
     _focusNode.addListener(onFocusChanged);
   }
 
@@ -100,27 +98,18 @@ class _createshopState extends State<createshop> {
                   ),
                 ),
                 TextField(
-                  controller: _controllershopName,
+                  controller: _controllerproductName,
                   decoration: InputDecoration(
-                    hintText: "shopname",
+                    hintText: "productname",
                   ),
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 TextField(
-                  controller: _controllerAddress,
+                  controller: _controllerPrice,
                   decoration: InputDecoration(
-                    hintText: "address",
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                TextField(
-                  controller: _controllerEmail,
-                  decoration: InputDecoration(
-                    hintText: "Email",
+                    hintText: "price",
                   ),
                 ),
                 SizedBox(
@@ -145,7 +134,7 @@ class _createshopState extends State<createshop> {
             ),
           ),
         ));
-  }
+  }   
 
   Widget buildButton() {
     return OutlinedButton(
@@ -171,7 +160,7 @@ class _createshopState extends State<createshop> {
           await Future.delayed(Duration(seconds: 2));
           setState(() {
             state = ButtonState.done;
-            CreateNewshop();
+            addProduct();
           });
           await Future.delayed(Duration(seconds: 3));
           setState(() {
@@ -197,18 +186,16 @@ class _createshopState extends State<createshop> {
     );
   }
 
-  CreateNewshop() async {
-    var shopName = _controllershopName.text;
-    var address = _controllerAddress.text;
-    var email = _controllerEmail.text;
+  addProduct() async {
+    var productName = _controllerproductName.text;
+    var price = _controllerPrice.text;
 
-    if (shopName.isNotEmpty && address.isNotEmpty) {
-      var url = BASE_API + "shops/";
+    if (productName.isNotEmpty && price.isNotEmpty) {
+      var url = BASE_API + "proshop/5/";
       print('url =============> $url');
       var bodyData = json.encode({
-        "name_shop": shopName,
-        "address_shop": address,
-        "email_shop": email,
+        "name_product": productName,
+        "price_product": price,
       });
       var response = await http.post(Uri.parse(url),
           headers: {
@@ -226,8 +213,8 @@ class _createshopState extends State<createshop> {
           var messageSuccess = "";
           showMessage(context, messageSuccess);
 
-          _controllershopName.text = "";
-          _controllerAddress.text = "";
+          _controllerproductName.text = "";
+          _controllerPrice.text = "";
         });
       } else {
         var message = 'success';

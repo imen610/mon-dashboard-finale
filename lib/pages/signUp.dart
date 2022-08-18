@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:responsive_admin_dashboard/pages/home.dart';
 
+import 'login.dart';
+
 class signUp extends StatefulWidget {
   const signUp({Key? key}) : super(key: key);
 
@@ -232,6 +234,33 @@ class _signUpState extends State<signUp> {
                       ],
                     )),
                   ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'I have an account ! ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 56, 56, 54),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => login()))
+                      },
+                      child: Text(
+                        'Login now',
+                        style: TextStyle(
+                            color: Color(0xffffac30),
+                            fontWeight: FontWeight.w500),
+                      ),
+                    )
+                  ],
                 ),
                 Container(
                   width: 100,

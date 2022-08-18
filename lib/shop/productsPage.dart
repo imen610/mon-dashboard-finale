@@ -1,81 +1,62 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
-import 'package:responsive_admin_dashboard/constants/constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
-import 'package:responsive_admin_dashboard/user/create.dart';
-import 'package:responsive_admin_dashboard/user/edit.dart';
-import 'package:responsive_admin_dashboard/user/member.dart';
-import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../addMember.dart';
+import '../screens/components/UserAccountDash.dart';
+import '../shop/constants/util.dart';
+import 'createProductShop.dart';
 
-class AddMemberPage extends StatefulWidget {
-  // const AddMemberPage({Key? key}) : super(key: key);
-  String id;
-  AddMemberPage({required this.id});
+class products extends StatefulWidget {
+  //const EditUser({Key? key}) : super(key: key);
+  String shopId;
+
+  products({required this.shopId});
+
   @override
-  State<AddMemberPage> createState() => _AddMemberPageState();
+  State<products> createState() => _productsState();
 }
 
-class _AddMemberPageState extends State<AddMemberPage> {
-  List users = [];
-  List usersOnSearch = [];
-  List superuser = [];
+class _productsState extends State<products> {
+  List products = [];
+  List productsOnSearch = [];
   bool isLoading = false;
   TextEditingController? _textEditingController = TextEditingController();
-  bool status = false;
-  bool wstat = false;
+
   @override
   void initState() {
     super.initState();
-    this.fetchUsers();
+    this.fetchproducts();
   }
 
-  fetchUsers() async {
-    String? token;
-    SharedPreferences.getInstance().then((sharedPrefValue) {
-      setState(() {
-        isLoading = false;
-        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-        // print('Bearer $token');
-        // print(token);
-      });
+  fetchproducts() async {
+    setState(() {
+      isLoading = false;
     });
-
-    var url = BASE_API + "users/";
-    //String? token;
+    var url = BASE_API + "proshop/${widget.shopId}/";
     print(url);
-    SharedPreferences access_data = await SharedPreferences.getInstance();
-
-    var response = await http.get(Uri.parse(url), headers: {
-      'Content-Type': 'application/json ; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${access_data.getString('access_token')}',
-    });
-
+    var response = await http.get(Uri.parse(url));
+    // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-
+      // print(items);
       setState(() {
-        users = items;
-        final superusers = users.where((user) {
-          return user['is_membre'] == false;
-        }).toList();
-        superuser = superusers;
-        print('****************************${superusers[2]}');
-      });
+        products = items;
 
+        isLoading = false;
+      });
       return;
     } else {
       setState(() {
-        users = [];
+        products = [];
         isLoading = true;
       });
     }
@@ -88,20 +69,35 @@ class _AddMemberPageState extends State<AddMemberPage> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Add Member",
+          "Products",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         leading: BackButton(
           color: Colors.black,
         ),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {
+                
+
+
+                
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => createProductShop(id:widget.shopId,)));
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ))
+        ],
       ),
       body: getBody(),
     );
   }
 
   Widget getBody() {
-    if (isLoading || superuser.length == 0) {
+    if (isLoading || products.length == 0) {
       return Center(child: CircularProgressIndicator());
     }
     return Scaffold(
@@ -112,7 +108,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
             flex: 1,
             child: Column(
               children: [
-               
                 Container(
                   width: double.infinity,
                   height: 48,
@@ -143,20 +138,20 @@ class _AddMemberPageState extends State<AddMemberPage> {
                     Flexible(
                       child: TextField(
                         controller: _textEditingController,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "search for contacts"),
                         onChanged: (value) {
                           setState(() {
-                            usersOnSearch = superuser
-                                .where((user) => user['username']
+                            productsOnSearch = products
+                                .where((shop) => shop['name_product']
                                     .toString()
                                     .toLowerCase()
                                     .contains(value.toLowerCase()))
                                 .toList();
                           });
                         },
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "search for contacts"),
                       ),
                     )
                   ]),
@@ -167,7 +162,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
           Expanded(
               flex: 9,
               child: _textEditingController!.text.isNotEmpty &&
-                      usersOnSearch.isEmpty
+                      productsOnSearch.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -186,12 +181,12 @@ class _AddMemberPageState extends State<AddMemberPage> {
                     )
                   : ListView.builder(
                       itemCount: _textEditingController!.text.isNotEmpty
-                          ? usersOnSearch.length
-                          : 0,
+                          ? productsOnSearch.length
+                          : products.length,
                       itemBuilder: (context, index) {
                         return _textEditingController!.text.isNotEmpty
-                            ? cardItem(usersOnSearch[index])
-                            : Center(child: Text("no member selected!"));
+                            ? cardItem(productsOnSearch[index])
+                            : cardItem(products[index]);
                       }))
         ],
       ),
@@ -199,15 +194,9 @@ class _AddMemberPageState extends State<AddMemberPage> {
   }
 
   Widget cardItem(item) {
-    var username = item['username'];
-    var email = item['email'];
-    var image = item['image'];
-    var mem_length = item['membre'];
-    List memL = item['membre'];
-    var status_wallet = item['wallet_blocked'];
-
-    print('${memL.length}');
-
+    var name_product = item['name_product'];
+    var price_product = item['price_product'];
+    var image_product = item['image_product'];
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -216,7 +205,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GestureDetector(
-                onTap: () => editUser(item),
+                onTap: () {},
                 child: Container(
                   child: Slidable(
                     actionPane: SlidableDrawerActionPane(),
@@ -252,7 +241,9 @@ class _AddMemberPageState extends State<AddMemberPage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(image.toString()),
+                                    image: NetworkImage(
+                                        "http://127.0.0.1:8000" +
+                                            image_product.toString()),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -264,40 +255,39 @@ class _AddMemberPageState extends State<AddMemberPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                children: [
-                                  Text(username.toString(),
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black)),
-                                ],
-                              ),
+                              Text(name_product.toString(),
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.black)),
                               SizedBox(
                                 height: 5,
                               ),
                               Text(
-                                email.toString(),
+                                price_product.toString(),
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.black.withOpacity(0.5)),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 130),
-                                child: Text(
-                                  ' ${memL.length.toString()}  members',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color.fromARGB(255, 97, 95, 91)),
-                                ),
                               ),
                             ],
                           ),
                         )
                       ]),
                     ),
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Edit',
+                        color: Color(0xff16F8FA),
+                        icon: Icons.edit,
+                        onTap: () {},
+                        // => editShop(item),
+                      ),
+                      IconSlideAction(
+                          caption: 'Delete',
+                          color: Color(0xffFA1645),
+                          icon: Icons.delete,
+                          onTap: () {}
+                          // => showDeleteAlert(context, item)
+                          ),
+                    ],
                   ),
                 ),
               )
@@ -306,31 +296,5 @@ class _AddMemberPageState extends State<AddMemberPage> {
         ),
       ),
     );
-  }
-
-  editUser(item) {
-    var userId = item['id'].toString();
-    var username = item['username'].toString();
-    var email = item['email'].toString();
-    var image = item['image'].toString();
-    var firstName = item['first_name'].toString();
-    var lastName = item['last_name'].toString();
-    var phone = item['phone'].toString();
-    var address = item['address'].toString();
-    var Id;
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => addMember(
-                  Id: widget.id,
-                  userId: userId,
-                  username: username,
-                  email: email,
-                  phone: phone,
-                  firstName: firstName,
-                  lastName: lastName,
-                  address: address,
-                  image: image,
-                )));
   }
 }

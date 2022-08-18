@@ -5,6 +5,7 @@ import 'package:responsive_admin_dashboard/screens/components/paymentsDash%20cop
 import 'package:responsive_admin_dashboard/screens/components/send_moneyDash.dart';
 import 'package:responsive_admin_dashboard/screens/components/transactionsDash.dart';
 
+import '../../product/index.dart';
 import '../../shop/index.dart';
 import '../../user/index.dart';
 
@@ -52,7 +53,6 @@ class DrawerMenu extends StatelessWidget {
                   context, MaterialPageRoute(builder: (context) => IndexPage()))
             },
           ),
-         
           DrawerListTile(
             title: 'charge the wristband',
             svgSrc: 'assets/icons/Statistics.svg',
@@ -88,9 +88,13 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
-              title: 'Products',
-              svgSrc: 'assets/icons/Statistics.svg',
-              tap: () {}),
+            title: 'Products',
+            svgSrc: 'assets/icons/Statistics.svg',
+            tap: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => IndexPageProduct()))
+            },
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: appPadding * 2),
             child: Divider(

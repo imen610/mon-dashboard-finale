@@ -2,58 +2,56 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:responsive_admin_dashboard/shop/index.dart';
+import 'package:responsive_admin_dashboard/product/index.dart';
 import 'dart:io';
 
 import '../user/constants/base_api.dart';
 import 'constants/base_api.dart';
 
-class EditShop extends StatefulWidget {
-  // const EditShop({Key? key}) : super(key: key);
+class Editproduct extends StatefulWidget {
+  // const Editproduct({Key? key}) : super(key: key);
 
-  String shopId;
-  String ShopName;
-  String ShopEmail;
-  String ShopAddress;
-  String ShopImage;
-  List products;
+  String productId;
+  String productName;
+  String productPrice;
 
-  EditShop(
-      {required this.shopId,
-      required this.ShopName,
-      required this.ShopEmail,
-      required this.ShopImage,
-      required this.products,
-      required this.ShopAddress});
+  String productImage;
+
+  Editproduct({
+    required this.productId,
+    required this.productName,
+    required this.productPrice,
+    required this.productImage,
+  });
 
   @override
-  State<EditShop> createState() => _EditShopState();
+  State<Editproduct> createState() => _EditproductState();
 }
 
-class _EditShopState extends State<EditShop> {
-  final TextEditingController _controllerShopName = new TextEditingController();
-  final TextEditingController _controllerShopEmail =
+class _EditproductState extends State<Editproduct> {
+  final TextEditingController _controllerproductName =
       new TextEditingController();
-  final TextEditingController _controllerShopAddress =
+  final TextEditingController _controllerproductprice =
       new TextEditingController();
-  String shopId = '';
-  String ShopImage = '';
+  final TextEditingController _controllerproductAddress =
+      new TextEditingController();
+  String productId = '';
+  String productImage = '';
   bool isImageSelected = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
-      shopId = widget.shopId;
-      _controllerShopName.text = widget.ShopName;
-      _controllerShopEmail.text = widget.ShopEmail;
-      _controllerShopAddress.text = widget.ShopAddress;
-      ShopImage = widget.ShopImage;
+      productId = widget.productId;
+      _controllerproductName.text = widget.productName;
+      _controllerproductprice.text = widget.productPrice;
+
+      productImage = widget.productImage;
     });
-    print(widget.ShopName);
-    print(widget.ShopEmail);
-    print(widget.ShopAddress);
-    print(widget.ShopImage);
+    print(widget.productName);
+
+    print(widget.productImage);
   }
 
   @override
@@ -70,14 +68,14 @@ class _EditShopState extends State<EditShop> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 picPicker(isImageSelected,
-                    "http://127.0.0.1:8000" + ShopImage.toString(), (file) {
+                    "http://127.0.0.1:8000" + productImage.toString(), (file) {
                   setState(() {
-                    ShopImage = file.path;
+                    productImage = file.path;
                     isImageSelected = true;
                   });
                 }),
                 Text(
-                  widget.ShopName,
+                  widget.productName,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -100,28 +98,22 @@ class _EditShopState extends State<EditShop> {
           height: 30,
         ),
         TextField(
-          controller: _controllerShopName,
+          controller: _controllerproductName,
           decoration: InputDecoration(
-            hintText: "shopName",
+            hintText: "productName",
           ),
         ),
         SizedBox(
           height: 30,
         ),
         TextField(
-          controller: _controllerShopEmail,
+          controller: _controllerproductprice,
           decoration: InputDecoration(
-            hintText: "email",
+            hintText: "price",
           ),
         ),
         SizedBox(
           height: 30,
-        ),
-        TextField(
-          controller: _controllerShopAddress,
-          decoration: InputDecoration(
-            hintText: "Address",
-          ),
         ),
         SizedBox(
           height: 30,
@@ -129,7 +121,7 @@ class _EditShopState extends State<EditShop> {
         FlatButton(
             color: Color.fromARGB(255, 233, 181, 38),
             onPressed: () {
-              EditShop();
+              Editproduct();
             },
             child: Text(
               "done",
@@ -142,19 +134,18 @@ class _EditShopState extends State<EditShop> {
     );
   }
 
-  EditShop() async {
-    var url = BASE_API + "shops/$shopId/";
+  Editproduct() async {
+    var url = BASE_API + "products/$productId/";
     print(url);
-    var ShopName = _controllerShopName.text;
-    var ShopEmail = _controllerShopEmail.text;
-    var ShopAddress = _controllerShopAddress.text;
+    var productName = _controllerproductName.text;
+    var productprice = _controllerproductprice.text;
+    var productAddress = _controllerproductAddress.text;
 
-    if (ShopName.isNotEmpty && ShopEmail.isNotEmpty) {
+    if (productName.isNotEmpty && productprice.isNotEmpty) {
       var bodyData = json.encode({
-        "name_shop": ShopName,
-        "email_shop": ShopEmail,
+        "name_product": productName,
+        "price_product": productprice,
         // "image": image,
-        "address_shop": ShopAddress,
       });
       var response = await http.put(Uri.parse(url),
           headers: {
@@ -166,15 +157,15 @@ class _EditShopState extends State<EditShop> {
       print(response.statusCode);
       if (response.statusCode == 200) {
         var messageSuccess = "success";
-        showMessageShop(context, messageSuccess);
+        showMessageProd(context, messageSuccess);
       } else {
         var messageError = "Error";
-        showMessageShop(context, messageError);
+        showMessageProd(context, messageError);
       }
     }
   }
 
-  showMessageShop(BuildContext context, String contentMessage) {
+  showMessageProd(BuildContext context, String contentMessage) {
     // set up the buttons
     var primary;
 
@@ -183,7 +174,7 @@ class _EditShopState extends State<EditShop> {
       onPressed: () {
         Navigator.pop(context);
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => IndexPageShop()),
+            MaterialPageRoute(builder: (context) => IndexPageProduct()),
             (Route<dynamic> route) => false);
         // deleteUser(item['id']);
       },

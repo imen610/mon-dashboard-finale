@@ -5,6 +5,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/shop/constants/base_api.dart';
 import 'package:responsive_admin_dashboard/shop/create.dart';
+import 'package:responsive_admin_dashboard/shop/productsPage.dart';
 import 'package:responsive_admin_dashboard/shop/theme/theme_colors.dart';
 
 import 'edit.dart';
@@ -41,6 +42,7 @@ class _IndexPageShopState extends State<IndexPageShop> {
       // print(items);
       setState(() {
         shops = items;
+
         isLoading = false;
       });
       return;
@@ -94,13 +96,6 @@ class _IndexPageShopState extends State<IndexPageShop> {
             flex: 1,
             child: Column(
               children: [
-                // Text(
-                //   "Users",
-                //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
                 Container(
                   width: double.infinity,
                   height: 48,
@@ -199,84 +194,88 @@ class _IndexPageShopState extends State<IndexPageShop> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                child: Slidable(
-                  actionPane: SlidableDrawerActionPane(),
-                  actionExtentRatio: 0.25,
-                  child: Container(
-                    height: 100,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color.fromARGB(255, 204, 200, 200)
-                                  .withOpacity(0.15),
-                              spreadRadius: 2,
-                              blurRadius: 3,
-                              offset: Offset(0, 1))
-                        ],
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(33)),
-                    child: Row(children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(
-                        width: 65,
-                        height: 65,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(28),
-                            border: Border.all(color: Colors.black)),
-                        child: Center(
-                            child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              image: DecorationImage(
-                                  image: NetworkImage("http://127.0.0.1:8000" +
-                                      image_shop.toString()),
-                                  fit: BoxFit.cover)),
-                        )),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(name_shop.toString(),
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              address_shop.toString(),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black.withOpacity(0.5)),
-                            ),
+              GestureDetector(
+                onTap: () => getproducts(item),
+                child: Container(
+                  child: Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    actionExtentRatio: 0.25,
+                    child: Container(
+                      height: 100,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromARGB(255, 204, 200, 200)
+                                    .withOpacity(0.15),
+                                spreadRadius: 2,
+                                blurRadius: 3,
+                                offset: Offset(0, 1))
                           ],
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(33)),
+                      child: Row(children: [
+                        SizedBox(
+                          width: 20,
                         ),
-                      )
-                    ]),
-                  ),
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      caption: 'Edit',
-                      color: Color(0xff16F8FA),
-                      icon: Icons.edit,
-                      onTap: () => editShop(item),
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(28),
+                              border: Border.all(color: Colors.black)),
+                          child: Center(
+                              child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        "http://127.0.0.1:8000" +
+                                            image_shop.toString()),
+                                    fit: BoxFit.cover)),
+                          )),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(name_shop.toString(),
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.black)),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                address_shop.toString(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black.withOpacity(0.5)),
+                              ),
+                            ],
+                          ),
+                        )
+                      ]),
                     ),
-                    IconSlideAction(
-                        caption: 'Delete',
-                        color: Color(0xffFA1645),
-                        icon: Icons.delete,
-                        onTap: () => showDeleteAlert(context, item)),
-                  ],
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Edit',
+                        color: Color(0xff16F8FA),
+                        icon: Icons.edit,
+                        onTap: () => editShop(item),
+                      ),
+                      IconSlideAction(
+                          caption: 'Delete',
+                          color: Color(0xffFA1645),
+                          icon: Icons.delete,
+                          onTap: () => showDeleteAlert(context, item)),
+                    ],
+                  ),
                 ),
               )
             ],
@@ -284,6 +283,17 @@ class _IndexPageShopState extends State<IndexPageShop> {
         ),
       ),
     );
+  }
+
+  getproducts(item) {
+    var shopId = item['id'].toString();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => products(
+                  shopId: shopId,
+                )));
   }
 
   editShop(item) {
