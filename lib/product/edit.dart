@@ -121,7 +121,7 @@ class _EditproductState extends State<Editproduct> {
         FlatButton(
             color: Color.fromARGB(255, 233, 181, 38),
             onPressed: () {
-              Editproduct();
+              editproduct();
             },
             child: Text(
               "done",
@@ -134,7 +134,7 @@ class _EditproductState extends State<Editproduct> {
     );
   }
 
-  Editproduct() async {
+  editproduct() async {
     var url = BASE_API + "products/$productId/";
     print(url);
     var productName = _controllerproductName.text;

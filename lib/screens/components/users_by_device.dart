@@ -74,59 +74,58 @@ class _UsersByDeviceState extends State<UsersByDevice> {
   }
 
   final colorList = <Color>[
-    Colors.greenAccent,
-    Colors.yellowAccent,
-    Colors.orangeAccent,
-    Colors.redAccent,
+    Color.fromARGB(255, 240, 192, 33),
+    Color.fromARGB(255, 235, 235, 40),
+    Color.fromARGB(255, 238, 213, 71),
+    Color.fromARGB(255, 236, 224, 110),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: appPadding),
-      child:(isLoading )
+      child: (isLoading)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
             )
           : Container(
-        height: 350,
-        decoration: BoxDecoration(
-          color: secondaryColor,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: EdgeInsets.all(appPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Users by device',
-              style: TextStyle(
-                color: textColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
+              height: 350,
+              decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.all(appPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Top shops',
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 70),
+                    child: PieChart(
+                      dataMap: {
+                        stats[0][0]: stats[0][1],
+                        stats[1][0]: stats[1][1],
+                        stats[2][0]: stats[2][1],
+                        stats[3][0]: stats[3][1],
+                      },
+                      chartType: ChartType.ring,
+                      baseChartColor: Colors.grey[50]!.withOpacity(0.15),
+                      colorList: colorList,
+                      chartValuesOptions: ChartValuesOptions(
+                        showChartValuesInPercentage: true,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 35),
-              child: PieChart(
-                dataMap: {
-                  stats[0][0]: stats[0][1],
-                  stats[1][0]: stats[1][1],
-                  stats[2][0]: stats[2][1],
-                  stats[3][0]: stats[3][1],
-                },
-                chartType: ChartType.ring,
-                baseChartColor: Colors.grey[50]!.withOpacity(0.15),
-                colorList: colorList,
-                chartValuesOptions: ChartValuesOptions(
-                  showChartValuesInPercentage: true,
-                ),
-              ),
-            ),
-           
-          ],
-        ),
-      ),
     );
   }
 }

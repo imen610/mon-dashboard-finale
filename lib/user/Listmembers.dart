@@ -38,13 +38,7 @@ class ListMember extends StatefulWidget {
 }
 
 class _ListMemberState extends State<ListMember> {
-  final TextEditingController _controllerUserName = new TextEditingController();
-  final TextEditingController _controllerEmail = new TextEditingController();
-  final TextEditingController _controllerphone = new TextEditingController();
-  final TextEditingController _controllerfirstName =
-      new TextEditingController();
-  final TextEditingController _controllerlastName = new TextEditingController();
-  final TextEditingController _controlleraddress = new TextEditingController();
+  
   String userId = '';
   String image = '';
   bool isImageSelected = false;

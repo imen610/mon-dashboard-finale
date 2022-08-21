@@ -1,54 +1,29 @@
 import 'dart:convert';
+import 'package:responsive_admin_dashboard/constants/constants.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:responsive_admin_dashboard/addMember.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:responsive_admin_dashboard/addMember.dart';
+import 'package:responsive_admin_dashboard/shop/theme/theme_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../product/constants/util.dart';
+import '../shop/constants/base_api.dart';
+import 'constants/util.dart';
 
-import '../../pages/home.dart';
-import '../../shop/constants/base_api.dart';
-import '../../shop/constants/util.dart';
+class userProfilePage extends StatefulWidget {
+  const userProfilePage({Key? key}) : super(key: key);
 
-class EditProfilePage extends StatefulWidget {
-  // const EditProfilePage({Key? key}) : super(key: key);
-  String userId;
-  String username;
-  String email;
-  String image;
-  String phone;
-  String firstName;
-  String lastName;
-  String address;
-
-  EditProfilePage(
-      {required this.userId,
-      required this.username,
-      required this.email,
-      required this.phone,
-      required this.firstName,
-      required this.lastName,
-      required this.address,
-      required this.image});
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
+  State<userProfilePage> createState() => _userProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
-  bool isObscuredPassword = true;
-  final TextEditingController _controllerUserName = new TextEditingController();
-  final TextEditingController _controllerEmail = new TextEditingController();
-  final TextEditingController _controllerphone = new TextEditingController();
-  final TextEditingController _controllerfirstName =
-      new TextEditingController();
-  final TextEditingController _controllerlastName = new TextEditingController();
-  final TextEditingController _controlleraddress = new TextEditingController();
-
+class _userProfilePageState extends State<userProfilePage> {
   String userId = '';
   String image = '';
+  String userName = '';
   bool isImageSelected = false;
+  bool isLoading = true;
 
   FocusNode _focusNode = new FocusNode();
 
@@ -59,33 +34,62 @@ class _EditProfilePageState extends State<EditProfilePage> {
   var id;
   bool isSelected = false;
   bool progress = false;
+
+  final TextEditingController _controllerUserName = new TextEditingController();
+  final TextEditingController _controllerEmail = new TextEditingController();
+  final TextEditingController _controllerphone = new TextEditingController();
+  final TextEditingController _controllerfirstName =
+      new TextEditingController();
+  final TextEditingController _controllerlastName = new TextEditingController();
+  final TextEditingController _controlleraddress = new TextEditingController();
+
   @override
   void initState() {
     _focusNode.addListener(onFocusChanged);
+    this.fetchUSER();
 
     // TODO: implement initState
     super.initState();
     // this.fetchmember();
-    setState(() {
-      userId = widget.userId;
-      _controllerUserName.text = widget.username;
-      _controllerEmail.text = widget.email;
-      _controllerphone.text = widget.phone;
-      _controllerlastName.text = widget.lastName;
-      _controllerfirstName.text = widget.firstName;
-      _controlleraddress.text = widget.address;
-      _controllerphone.text = widget.phone;
-      image = widget.image.toString();
+  }
+
+  fetchUSER() async {
+    var url = BASE_API + "current/";
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
     });
 
-    print(widget.userId);
-    print(widget.username);
-    print(widget.email);
-    print(widget.image);
-    print(widget.phone);
-    print(widget.lastName);
-    print(widget.firstName);
-    print(widget.address);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      print(items['username']);
+      print(items['is_membre']);
+
+      SharedPreferences sharedPreferencesUserId =
+          await SharedPreferences.getInstance();
+      sharedPreferencesUserId.setString(
+          appConstants.USER_ID, items['id'].toString());
+      SharedPreferences.getInstance().then((sharedPrefValue) {
+        setState(() {
+          id = sharedPrefValue.getString(appConstants.USER_ID);
+          print('token  $id');
+        });
+      });
+
+      setState(() {
+        user = items;
+        print(user);
+        _controllerUserName.text = user['username'];
+        _controllerEmail.text = user['email'];
+        _controllerphone.text = user['phone_number'];
+        _controllerlastName.text = user['last_name'];
+        _controllerfirstName.text = user['first_name'];
+        _controlleraddress.text = user['address'];
+        progress = false;
+      });
+    }
   }
 
   void onFocusChanged() {
@@ -97,6 +101,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   ButtonState state = ButtonState.init;
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width * 0.75;
@@ -144,7 +149,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
                                 image: NetworkImage('http://127.0.0.1:8000' +
-                                    widget.image.toString()),
+                                    user['image'].toString()),
                                 fit: BoxFit.cover)),
                       )),
                     ),
@@ -290,11 +295,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   editUser() async {
-    SharedPreferences ID_USER = await SharedPreferences.getInstance();
-    var x = ID_USER.getString('user_id');
-    print('id get from constant $x');
-
-    var url = BASE_API + "users/$userId/";
+    var url = BASE_API + "users/$id/";
     print(url);
     var username = _controllerUserName.text;
     var email = _controllerEmail.text;
@@ -323,24 +324,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
       print(response.statusCode);
       if (response.statusCode == 200) {
         var messageSuccess = "success";
-        showMsg(context, messageSuccess);
+        showMessageUP(context, messageSuccess);
       } else {
         var messageError = "Error";
-        showMsg(context, messageError);
+        showMessageUP(context, messageError);
       }
     }
   }
 
-  showMsg(BuildContext context, String contentMessage) {
+  showMessageUP(BuildContext context, String contentMessage) {
     // set up the buttons
     var primary;
 
     Widget yesButton = FlatButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => home()));
-        // deleteUser(item['id']);
+        Navigator.pop(context);
+        // Navigator.of(context).pushAndRemoveUntil(
+        //     MaterialPageRoute(builder: (context) => IndexPageShop()),
+        //     (Route<dynamic> route) => false);
+        // // deleteUser(item['id']);
       },
     );
 

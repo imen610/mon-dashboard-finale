@@ -15,6 +15,7 @@ import '../../accounts.dart';
 import '../../listTransactions.dart';
 import '../../list_payments.dart';
 import '../../main_page/pages/home.dart';
+import '../../user_profile.dart';
 
 class DrawerPage extends StatefulWidget {
   const DrawerPage({Key? key}) : super(key: key);
@@ -347,7 +348,7 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
             Selected6 = false;
             Selected7 = false;
           } else if (id == 5) {
-            Current_page = bracelet();
+            Current_page = userProfilePage();
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Current_page));
             Selected1 = false;

@@ -61,7 +61,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "shops",
+          "Products",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -129,7 +129,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
                         onChanged: (value) {
                           setState(() {
                             shopsOnSearch = products
-                                .where((shop) => shop['name_shop']
+                                .where((product) => product['name_product']
                                     .toString()
                                     .toLowerCase()
                                     .contains(value.toLowerCase()))
@@ -184,7 +184,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
   Widget cardItem(item) {
     var name_product = item['name_product'];
     var price_product = item['price_product'];
-  
+
     var image_product = item['image_product'];
     return Card(
       child: SingleChildScrollView(
@@ -299,9 +299,9 @@ class _IndexPageProductState extends State<IndexPageProduct> {
     var productId = item['id'].toString();
     var productName = item['name_product'].toString();
     var productPrice = item['price_product'].toString();
-    
+
     var productImage = item['image_product'].toString();
-   
+
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -309,7 +309,6 @@ class _IndexPageProductState extends State<IndexPageProduct> {
                   productId: productId,
                   productName: productName,
                   productPrice: productPrice,
-              
                   productImage: productImage,
                 )));
   }

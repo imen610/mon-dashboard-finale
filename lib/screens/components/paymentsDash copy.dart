@@ -182,6 +182,7 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
     String amount = list_payments[item]['amount'];
     String type = list_payments[item]['type'];
     String name2 = list_payments[item]['to'];
+    print('xxxxxxxxxxxxxxxxxxxxx${list_payments[item]['list_products_id']}');
 
     print(type);
     print(name2);

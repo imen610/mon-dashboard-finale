@@ -8,6 +8,7 @@ import 'package:responsive_admin_dashboard/constants/constants.dart';
 import '../shop/constants/base_api.dart';
 import 'package:http/http.dart' as http;
 
+import 'list_product_paied.dart';
 import 'main_page/theme/colors.dart';
 
 class paymentsPage extends StatefulWidget {
@@ -52,7 +53,7 @@ class _paymentsPageState extends State<paymentsPage> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des payments $items');
+      // print(' voici la liste des payments $items');
       setState(() {
         list_payments = items;
         isLoading = false;
@@ -219,6 +220,18 @@ class _paymentsPageState extends State<paymentsPage> {
                 child: TransactionItems(index))));
   }
 
+  getproducts(item) {
+    String listId = list_payments[item]['product']['id'].toString();
+    print(listId);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => listProducts(
+                  listId: listId,
+                )));
+  }
+
   Widget TransactionItems(item) {
     String img = list_payments[item]['account']['image_shop'].toString();
     String name = list_payments[item]['account']['name_shop'];
@@ -232,8 +245,9 @@ class _paymentsPageState extends State<paymentsPage> {
         if (shop["name_shop"] == name2) shop['image_shop']
     ];
     print(result);
+    print(result);
     String image2 = result.isEmpty ? null : result.first;
-    print(image2);
+    print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
     return GestureDetector(
       // onTap: widget.onTap,
       child: Container(
@@ -251,110 +265,114 @@ class _paymentsPageState extends State<paymentsPage> {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            SizedBox(height: 2),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  child: type == 'Inflow'
-                      ? Container(
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 45,
-                            height: 45,
+        child: InkWell(
+          onTap: () => getproducts(item),
+          child: Column(
+            children: [
+              SizedBox(height: 2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: type == 'Inflow'
+                        ? Container(
+                            width: 55,
+                            height: 55,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' + img),
-                                    fit: BoxFit.cover)),
-                          )),
-                        )
-                      : Container(
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 45,
-                            height: 45,
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://127.0.0.1:8000' + img),
+                                      fit: BoxFit.cover)),
+                            )),
+                          )
+                        : Container(
+                            width: 55,
+                            height: 55,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' + image2),
-                                    fit: BoxFit.cover)),
-                          )),
-                        ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Container(
-                                child: type == 'Inflow'
-                                    ? Text(name,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700))
-                                    : Text(name2,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700)))),
-                        SizedBox(width: 5),
-                        Container(
-                            child: Text(amount,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600)))
-                      ],
-                    ),
-                    SizedBox(height: 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                            child: Text(
-                                '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey))),
-                        Container(
-                            child: type == 'Inflow'
-                                ? Icon(
-                                    Icons.download_rounded,
-                                    color: Colors.green,
-                                  )
-                                : Icon(
-                                    Icons.upload_rounded,
-                                    color: Colors.red,
-                                  )),
-                      ],
-                    ),
-                  ],
-                )),
-              ],
-            ),
-          ],
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://127.0.0.1:8000' + image2),
+                                      fit: BoxFit.cover)),
+                            )),
+                          ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Container(
+                                  child: type == 'Inflow'
+                                      ? Text(name,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700))
+                                      : Text(name2,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700)))),
+                          SizedBox(width: 5),
+                          Container(
+                              child: Text(amount,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)))
+                        ],
+                      ),
+                      SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              child: Text(
+                                  '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey))),
+                          Container(
+                              child: type == 'Inflow'
+                                  ? Icon(
+                                      Icons.download_rounded,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(
+                                      Icons.upload_rounded,
+                                      color: Colors.red,
+                                    )),
+                        ],
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

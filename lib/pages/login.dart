@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/components/AddMember.dart';
 import '../simpleUser/ui/screen/drawer_page.dart';
+import 'SendEmailRestPassword.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -186,6 +187,25 @@ class _loginState extends State<login> {
                     )),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => sendMailPage()))
+                      },
+                      child: Text(
+                        'Forgot password?',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 51, 49, 47),
+                            fontWeight: FontWeight.w500),
+                      ),
+                    )
+                  ],
+                ),
                 Container(
                   width: 100,
                   color: Colors.white,
@@ -230,7 +250,7 @@ class _loginState extends State<login> {
             //  home() ===> admin
             // and DrawerPage() =====> simple user
             context,
-            MaterialPageRoute(builder: (context) => home()));
+            MaterialPageRoute(builder: (context) => DrawerPage()));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
