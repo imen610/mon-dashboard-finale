@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import '../../pages/home.dart';
 import '../../shop/constants/base_api.dart';
 import '../../shop/constants/util.dart';
+import '../../simpleUser/main_page/theme/colors.dart';
 
 class EditProfilePage extends StatefulWidget {
   // const EditProfilePage({Key? key}) : super(key: key);
@@ -96,22 +97,67 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final isStretched = state == ButtonState.init;
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(0, 247, 187, 48),
-          elevation: 0,
-          title: Text(
-            '',
-            style: TextStyle(color: Colors.black),
-          ),
-          leading: IconButton(
-            icon: new Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
-              size: 30,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(100),
+            child: Container(
+              height: 90,
+              padding: EdgeInsets.only(left: 15, right: 20, top: 5),
+              decoration: BoxDecoration(
+                  color: appBgColor,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: shadowColor.withOpacity(0.1),
+                        blurRadius: .5,
+                        spreadRadius: .5,
+                        offset: Offset(0, 1))
+                  ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 20),
+                    child: IconButton(
+                      icon: new Icon(
+                        Icons.arrow_back_rounded,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 175,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image:
+                                        AssetImage('assets/images/logo1.png'))),
+                          ),
+                          Text(
+                            'MyWallet',
+                            style: TextStyle(
+                              fontFamily: 'Ubuntu',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ]),
+                  ),
+                ],
+              ),
+            )),
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(left: 30, right: 30),

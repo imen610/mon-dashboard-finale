@@ -117,29 +117,25 @@ class _HomePageState extends State<HomePage> {
             width: 160,
           ),
           Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
-                ),
-              ],
-            ),
-            // child: Icon(Icons.notifications_rounded)
-            child: Badge(
-                padding: EdgeInsets.all(3),
-                position: BadgePosition.topEnd(top: -5, end: 2),
-                badgeContent: Text(
-                  '',
-                  style: TextStyle(color: Colors.white),
-                ),
-                child: Icon(Icons.notifications_rounded)),
-          ),
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: Offset(1, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              // child: Icon(Icons.notifications_rounded)
+
+              child: Icon(
+                Icons.bubble_chart_rounded,
+                size: 35,
+              )),
         ],
       ),
     );
@@ -327,7 +323,6 @@ class _HomePageState extends State<HomePage> {
             )),
           ),
         ),
-        
         SizedBox(
           height: 8,
         ),

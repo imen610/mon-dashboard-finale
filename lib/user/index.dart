@@ -123,13 +123,6 @@ class _IndexPageState extends State<IndexPage> {
             flex: 1,
             child: Column(
               children: [
-                // Text(
-                //   "Users",
-                //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
                 Container(
                   width: double.infinity,
                   height: 48,
@@ -332,7 +325,7 @@ class _IndexPageState extends State<IndexPage> {
                                 height: 10,
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: 130),
+                                // margin: EdgeInsets.only(),
                                 child: Text(
                                   ' ${memL.length.toString()}  members',
                                   style: TextStyle(
@@ -343,27 +336,80 @@ class _IndexPageState extends State<IndexPage> {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        Container(
+                            child: popUpMen(
+                          menuList: [
+                            PopupMenuItem(
+                                child: InkWell(
+                              onTap: () => editUser(item),
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.edit,
+                                  color: Color(0xff16F8FA),
+                                ),
+                                title: Text(
+                                  'edit',
+                                  style: TextStyle(
+                                    color: Color(0xff16F8FA),
+                                  ),
+                                ),
+                              ),
+                            )),
+                            PopupMenuItem(
+                                child: InkWell(
+                              onTap: () => showDeleteAlert(context, item),
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.delete,
+                                  color: Color(0xffFA1645),
+                                ),
+                                title: Text('delete',
+                                    style: TextStyle(
+                                      color: Color(0xffFA1645),
+                                    )),
+                              ),
+                            )),
+                            PopupMenuItem(
+                                child: InkWell(
+                              onTap: () => getaccount(item),
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.account_balance_wallet,
+                                  color: Color.fromARGB(255, 255, 206, 43),
+                                ),
+                                title: Text('account_view',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 206, 43),
+                                    )),
+                              ),
+                            )),
+                          ],
+                          icon: Icon(
+                            Icons.more_vert_rounded,
+                            size: 30,
+                          ),
+                        ))
                       ]),
                     ),
-                    secondaryActions: <Widget>[
-                      IconSlideAction(
-                        caption: 'Edit',
-                        color: Color(0xff16F8FA),
-                        icon: Icons.edit,
-                        onTap: () => editUser(item),
-                      ),
-                      IconSlideAction(
-                          caption: 'Delete',
-                          color: Color(0xffFA1645),
-                          icon: Icons.delete,
-                          onTap: () => showDeleteAlert(context, item)),
-                      IconSlideAction(
-                          caption: 'account_view',
-                          color: Color.fromARGB(255, 255, 206, 43),
-                          icon: Icons.account_balance_wallet,
-                          onTap: () => getaccount(item)),
-                    ],
+                    // secondaryActions: <Widget>[
+                    //   IconSlideAction(
+                    //     caption: 'Edit',
+                    //     color: Color(0xff16F8FA),
+                    //     icon: Icons.edit,
+                    //     onTap: () => editUser(item),
+                    //   ),
+                    //   IconSlideAction(
+                    //       caption: 'Delete',
+                    //       color: Color(0xffFA1645),
+                    //       icon: Icons.delete,
+                    //       onTap: () => showDeleteAlert(context, item)),
+                    //   IconSlideAction(
+                    //       caption: 'account_view',
+                    //       color: Color.fromARGB(255, 255, 206, 43),
+                    //       icon: Icons.account_balance_wallet,
+                    //       onTap: () => getaccount(item)),
+                    // ],
                   ),
                 ),
               )
@@ -529,5 +575,17 @@ class _IndexPageState extends State<IndexPage> {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("okk !!")));
     }
+  }
+}
+
+class popUpMen extends StatelessWidget {
+  final List<PopupMenuEntry> menuList;
+  final Widget? icon;
+  const popUpMen({Key? key, required this.menuList, required this.icon})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(itemBuilder: ((context) => menuList), icon: icon);
   }
 }

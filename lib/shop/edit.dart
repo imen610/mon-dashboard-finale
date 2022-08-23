@@ -60,7 +60,7 @@ class _EditShopState extends State<EditShop> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(180),
+        preferredSize: Size.fromHeight(240),
         child: AppBar(
           elevation: 0,
           backgroundColor: Color.fromARGB(255, 233, 181, 38),
@@ -207,15 +207,15 @@ class _EditShopState extends State<EditShop> {
                   )
                 : SizedBox(
                     child: Container(
-                      width: 75,
-                      height: 75,
+                      width: 135,
+                      height: 135,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(28),
                           border: Border.all(color: Colors.black)),
                       child: Center(
                           child: Container(
-                        width: 70,
-                        height: 70,
+                        width: 130,
+                        height: 130,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(

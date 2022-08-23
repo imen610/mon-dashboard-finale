@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/screens/components/drawer_list_tile.dart';
-import 'package:responsive_admin_dashboard/screens/components/paymentsDash%20copy.dart';
+import 'package:responsive_admin_dashboard/screens/components/paymentsDash%20.dart';
 import 'package:responsive_admin_dashboard/screens/components/send_moneyDash.dart';
 import 'package:responsive_admin_dashboard/screens/components/transactionsDash.dart';
 

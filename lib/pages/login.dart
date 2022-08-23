@@ -219,6 +219,7 @@ class _loginState extends State<login> {
       ),
     );
   }
+
   Future<void> login_func() async {
     if (passController.text.isNotEmpty && emailController.text.isNotEmpty) {
       var response = await http.post(
@@ -252,7 +253,7 @@ class _loginState extends State<login> {
         print('HHHHHHHHHHHHHHHH${access_token['is_admin']}');
         SharedPreferences Is_ADMIN = await SharedPreferences.getInstance();
         var x = Is_ADMIN.getString('is_admin');
-      
+
         (access_token['is_admin'])
             ? Navigator.push(
                 //  home() ===> admin
