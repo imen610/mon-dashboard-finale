@@ -21,4 +21,5 @@ const appPadding = 16.0;
 class appConstants {
   static const String KEY_ACCESS_TOKEN = "access_token";
   static const String USER_ID = 'user_id';
+  static const String IS_ADMIN = 'is_admin';
 }

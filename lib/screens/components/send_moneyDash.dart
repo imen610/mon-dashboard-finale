@@ -180,7 +180,7 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -250,19 +250,6 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
                         )
                       ]),
                     ),
-                    // secondaryActions: <Widget>[
-                    //   IconSlideAction(
-                    //     caption: 'Edit',
-                    //     color: Color(0xff16F8FA),
-                    //     icon: Icons.edit,
-                    //     onTap: () => editUser(item),
-                    //   ),
-                    //   IconSlideAction(
-                    //       caption: 'Delete',
-                    //       color: Color(0xffFA1645),
-                    //       icon: Icons.delete,
-                    //       onTap: () => showDeleteAlert(context, item)),
-                    // ],
                   ),
                 ),
               )

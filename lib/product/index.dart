@@ -189,7 +189,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

@@ -222,7 +222,7 @@ class _paymentsPageState extends State<paymentsPage> {
 
   getproducts(item) {
     String listId = list_payments[item]['product']['id'].toString();
-    print(listId);
+    // print(listId);
 
     Navigator.push(
         context,
@@ -244,7 +244,7 @@ class _paymentsPageState extends State<paymentsPage> {
       for (var shop in list_shops)
         if (shop["name_shop"] == name2) shop['image_shop']
     ];
-    print(result);
+    // print(result);
     print(result);
     String image2 = result.isEmpty ? null : result.first;
     print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
@@ -396,7 +396,7 @@ class _paymentsPageState extends State<paymentsPage> {
     // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      // print(items);
 
       setState(() {
         list_shops = items;

@@ -39,12 +39,10 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
       isLoading = false;
     });
     var url = BASE_API + "shops/";
-    print(url);
+
     var response = await http.get(Uri.parse(url));
-    // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      // print(items);
       setState(() {
         shops = items;
         isLoading = false;
@@ -64,14 +62,11 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
       setState(() {
         isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-        // print('Bearer $token');
-        // print(token);
       });
     });
 
     var url = BASE_API + "users/";
     //String? token;
-    print(url);
     SharedPreferences access_data = await SharedPreferences.getInstance();
 
     var response = await http.get(Uri.parse(url), headers: {
@@ -119,7 +114,6 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
       });
@@ -147,7 +141,6 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des payments $items');
       setState(() {
         list_payments = items;
       });
@@ -179,6 +172,7 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
         duration: Duration(milliseconds: 275),
         height: hovered ? 160.0 : 155.0,
         width: hovered ? 200.0 : 195.0,
+        margin: EdgeInsets.all(2.5),
         padding: EdgeInsets.symmetric(
           horizontal: appPadding,
           vertical: appPadding / 2,
@@ -195,10 +189,6 @@ class _AnalyticInfoCardState extends State<AnalyticInfoCard> {
             ]),
         child: InkWell(
           onTap: () {},
-          // => {
-          //   Navigator.push(context,
-          //       MaterialPageRoute(builder: (context) => widget.info.route))
-          // },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

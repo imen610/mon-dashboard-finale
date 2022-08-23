@@ -45,7 +45,6 @@ class _UsersByDeviceState extends State<UsersByDevice> {
 
     var url = BASE_API + "TopFourShops/";
 
-    print(url);
     SharedPreferences access_data = await SharedPreferences.getInstance();
 
     var response = await http.get(Uri.parse(url), headers: {
@@ -59,8 +58,7 @@ class _UsersByDeviceState extends State<UsersByDevice> {
 
       setState(() {
         stats = items;
-        print(
-            '::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::$stats');
+
         isLoading = false;
       });
 

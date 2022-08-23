@@ -77,15 +77,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _controllerphone.text = widget.phone;
       image = widget.image.toString();
     });
-
-    print(widget.userId);
-    print(widget.username);
-    print(widget.email);
-    print(widget.image);
-    print(widget.phone);
-    print(widget.lastName);
-    print(widget.firstName);
-    print(widget.address);
   }
 
   void onFocusChanged() {
@@ -112,8 +103,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
             '',
             style: TextStyle(color: Colors.black),
           ),
-          leading: BackButton(
-            color: Colors.black,
+          leading: IconButton(
+            icon: new Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.black,
+              size: 30,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         body: SingleChildScrollView(

@@ -49,9 +49,9 @@ class _EditproductState extends State<Editproduct> {
 
       productImage = widget.productImage;
     });
-    print(widget.productName);
+    // print(widget.productName);
 
-    print(widget.productImage);
+    // print(widget.productImage);
   }
 
   @override

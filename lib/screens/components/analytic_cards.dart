@@ -45,8 +45,8 @@ class AnalyticInfoCardGridView extends StatelessWidget {
       itemCount: analyticData.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
-        crossAxisSpacing: appPadding,
-        mainAxisSpacing: appPadding,
+        crossAxisSpacing: appPadding / 1.5,
+        mainAxisSpacing: appPadding / 1.5,
         childAspectRatio: childAspectRatio,
       ),
       itemBuilder: (context, index) => AnalyticInfoCard(

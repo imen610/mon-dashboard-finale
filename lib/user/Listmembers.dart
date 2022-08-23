@@ -175,7 +175,7 @@ class _ListMemberState extends State<ListMember> {
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -265,70 +265,6 @@ class _ListMemberState extends State<ListMember> {
     );
   }
 
-  // getmember(item) {
-  //   var memberId = item['id'].toString();
-  //   var username = item['username'].toString();
-  //   var email = item['email'].toString();
-  //   var image = item['image'].toString();
-  //   var firstName = item['first_name'].toString();
-  //   var lastName = item['last_name'].toString();
-  //   var phone = item['phone'].toString();
-  //   var address = item['address'].toString();
-  //   var membre = item['membre'];
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) => member(
-  //                 memberId: memberId,
-  //                 username: username,
-  //                 email: email,
-  //                 phone: phone,
-  //                 firstName: firstName,
-  //                 lastName: lastName,
-  //                 address: address,
-  //                 image: image,
-  //                 membre: membre,
-  //               )));
-  // }
-
-  // EditUser() async {
-  //   var url = BASE_API + "users/$userId/";
-  //   print(url);
-  //   var username = _controllerUserName.text;
-  //   var email = _controllerEmail.text;
-  //   var firstName = _controllerfirstName.text;
-  //   var lastName = _controllerlastName.text;
-  //   var phone = _controllerphone.text;
-  //   var address = _controlleraddress.text;
-  //   if (username.isNotEmpty && email.isNotEmpty) {
-  //     var bodyData = json.encode({
-  //       "username": username,
-  //       "email": email,
-  //       // "image": image,
-  //       "first_name": firstName,
-  //       "last_name": lastName,
-  //       "phone": int.parse(phone),
-  //       "address": address,
-  //       // "image_User": null
-  //     });
-  //     var response = await http.put(Uri.parse(url),
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "Accept": "application/json",
-  //         },
-  //         body: bodyData);
-  //     print(url);
-  //     print(response.statusCode);
-  //     if (response.statusCode == 200) {
-  //       var messageSuccess = "success";
-  //       showMessage(context, messageSuccess);
-  //     } else {
-  //       var messageError = "Error";
-  //       showMessage(context, messageError);
-  //     }
-  //   }
-  // }
-
   List members = [];
   bool isLoading = false;
 
@@ -389,11 +325,7 @@ class _ListMemberState extends State<ListMember> {
                                 fit: BoxFit.cover)),
                       )),
                     ),
-                    // child: Image.network(
-                    //   fileName,
-                    //   width: 20,
-                    //   height: 20,
-                    //   fit: BoxFit.scaleDown,),
+             
                   )
             : SizedBox(
                 child: Image.network(
@@ -463,7 +395,7 @@ class _ListMemberState extends State<ListMember> {
       onPressed: () {
         Navigator.pop(context);
 
-        //deleteUser(item['id']);
+     
       },
     );
 

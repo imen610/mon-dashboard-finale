@@ -135,7 +135,7 @@ class _IndexPageState extends State<IndexPage> {
                   height: 48,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
                             color: Colors.grey.withOpacity(0.1),
@@ -230,7 +230,7 @@ class _IndexPageState extends State<IndexPage> {
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -290,6 +290,7 @@ class _IndexPageState extends State<IndexPage> {
                                   Text(username.toString(),
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black)),
+                                  Spacer(),
                                   Container(
                                     margin: EdgeInsets.only(left: 100),
                                     child: FlutterSwitch(
@@ -305,8 +306,6 @@ class _IndexPageState extends State<IndexPage> {
                                       onToggle: (val) {
                                         setState(() {
                                           status_wallet = val;
-                                          print('ggggggggggggg$id_user ');
-                                          print('ggggggggggggg$id_user ');
                                           print('ggggggggggggg$id_user ');
                                           wstat = val;
                                           id_user = item['id'];
@@ -361,7 +360,7 @@ class _IndexPageState extends State<IndexPage> {
                           onTap: () => showDeleteAlert(context, item)),
                       IconSlideAction(
                           caption: 'account_view',
-                          color: Color.fromARGB(255, 247, 214, 105),
+                          color: Color.fromARGB(255, 255, 206, 43),
                           icon: Icons.account_balance_wallet,
                           onTap: () => getaccount(item)),
                     ],
@@ -526,6 +525,7 @@ class _IndexPageState extends State<IndexPage> {
     print('$wstat');
     print('::::::::::::::::::::::::::::::::::');
     if (response.statusCode != 200) {
+      fetchUsers();
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("okk !!")));
     }

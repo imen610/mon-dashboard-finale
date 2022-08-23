@@ -8,6 +8,7 @@ import 'package:responsive_admin_dashboard/pages/home.dart';
 import 'package:responsive_admin_dashboard/pages/signUp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../product/constants/base_api.dart';
 import '../screens/components/AddMember.dart';
 import '../simpleUser/ui/screen/drawer_page.dart';
 import 'SendEmailRestPassword.dart';
@@ -24,6 +25,7 @@ class _loginState extends State<login> {
   var emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // print(user);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Row(
@@ -217,7 +219,6 @@ class _loginState extends State<login> {
       ),
     );
   }
-
   Future<void> login_func() async {
     if (passController.text.isNotEmpty && emailController.text.isNotEmpty) {
       var response = await http.post(
@@ -228,9 +229,10 @@ class _loginState extends State<login> {
             "password": passController.text
           })));
       String email = emailController.text;
+
       var access_token = json.decode(response.body);
       String? token;
-      print('hello');
+
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       sharedPreferences.setString(
@@ -238,19 +240,30 @@ class _loginState extends State<login> {
       SharedPreferences.getInstance().then((sharedPrefValue) {
         setState(() {
           token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-          print('token  $token');
+          // print('tokenuuuuuuuuuuuuu  $token');
         });
       });
-      print('$email');
+
       if (response.statusCode != 200) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("invalid")));
       } else {
-        Navigator.push(
-            //  home() ===> admin
-            // and DrawerPage() =====> simple user
-            context,
-            MaterialPageRoute(builder: (context) => DrawerPage()));
+        print('hello');
+        print('HHHHHHHHHHHHHHHH${access_token['is_admin']}');
+        SharedPreferences Is_ADMIN = await SharedPreferences.getInstance();
+        var x = Is_ADMIN.getString('is_admin');
+      
+        (access_token['is_admin'])
+            ? Navigator.push(
+                //  home() ===> admin
+                // and DrawerPage() =====> simple user
+                context,
+                MaterialPageRoute(builder: (context) => home()))
+            : Navigator.push(
+                //  home() ===> admin
+                // and DrawerPage() =====> simple user
+                context,
+                MaterialPageRoute(builder: (context) => DrawerPage()));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

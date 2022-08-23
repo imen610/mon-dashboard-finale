@@ -52,24 +52,15 @@ class _addMemberState extends State<addMember> {
   List members = [];
   @override
   void initState() {
+    this.GetMembers();
     // TODO: implement initState
     super.initState();
-    this.GetMembers();
     _focusNode.addListener(onFocusChanged);
     setState(() {
       userId = widget.userId;
       image = widget.image.toString();
       userName = widget.username;
     });
-
-    print(widget.userId);
-    print(widget.username);
-    print(widget.email);
-    print(widget.image);
-    print(widget.phone);
-    print(widget.lastName);
-    print(widget.firstName);
-    print(widget.address);
   }
 
   void onFocusChanged() {
@@ -130,18 +121,6 @@ class _addMemberState extends State<addMember> {
                               fit: BoxFit.cover)),
                     )),
                   ),
-                  // child: Container(
-                  //   width: 130,
-                  //   height: 130,
-                  //   padding: EdgeInsets.all(8),
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(100),
-                  //   ),
-                  //   child: ClipRRect(
-                  //       borderRadius: BorderRadius.circular(50),
-                  //       child:
-                  //           Image.network(image.toString(), fit: BoxFit.cover)),
-                  // ),
                 ),
                 SizedBox(
                   height: 50,
@@ -188,47 +167,7 @@ class _addMemberState extends State<addMember> {
                       child: isStretched
                           ? buildButton()
                           : buildSmallButton(isDone)),
-
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     if (isLoading) return;
-                  //     setState(() {
-                  //       isLoading = true;
-                  //     });
-                  //     await Future.delayed(Duration(seconds: 5));
-                  //     setState(() {
-                  //       isLoading = false;
-                  //     });
-                  //     SendMoneyToMember();
-                  //   },
-                  //   child: isLoading
-                  //       ? Row(
-                  //           mainAxisAlignment: MainAxisAlignment.center,
-                  //           children: [
-                  //             CircularProgressIndicator(
-                  //               color: Colors.white,
-                  //             ),
-                  //             const SizedBox(
-                  //               width: 24,
-                  //             ),
-                  //             Text('Please Wait ...'),
-                  //           ],
-                  //         )
-                  //       : Text('Add'),
-                  //   style: ElevatedButton.styleFrom(
-                  //     primary: Color.fromARGB(255, 252, 193, 75),
-                  //     textStyle: TextStyle(fontSize: 24),
-                  //     minimumSize: Size.fromHeight(72),
-                  //     shape: StadiumBorder(),
-                  //   ),
-                  // ),
                 ),
-                // Expanded(child: ListView.builder(
-                //       itemCount: members.length,
-                //       itemBuilder: (context, index) {
-                //         return
-
-                //       }))
               ],
             ),
           ),
@@ -257,12 +196,17 @@ class _addMemberState extends State<addMember> {
             state = ButtonState.loading;
           });
           await Future.delayed(Duration(seconds: 2));
+
           setState(() {
             state = ButtonState.done;
             addMemberToUser();
+          });
+          await Future.delayed(Duration(seconds: 3));
+          setState(() {
+            state = ButtonState.init;
+            GetMembers();
+            print('apres l ajout $members');
             for (var item in members) {
-              print('##############');
-              print('###################${item['id']}');
               var memberId = item['id'].toString();
               var username = item['username'].toString();
               var email = item['email'].toString();
@@ -272,7 +216,6 @@ class _addMemberState extends State<addMember> {
               var phone = item['phone'].toString();
               var address = item['address'].toString();
               var membre = item['membre'];
-              print(item);
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -288,10 +231,6 @@ class _addMemberState extends State<addMember> {
                             membre: membre,
                           )));
             }
-          });
-          await Future.delayed(Duration(seconds: 3));
-          setState(() {
-            state = ButtonState.init;
           });
         });
   }
@@ -315,7 +254,7 @@ class _addMemberState extends State<addMember> {
 
   Future<void> addMemberToUser() async {
     var url = BASE_API + "usermem/${widget.Id}/";
-    print(url);
+    // print(url);
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.post(Uri.parse(url),
@@ -325,12 +264,12 @@ class _addMemberState extends State<addMember> {
           'Authorization': 'Bearer ${access_data.getString('access_token')}'
         },
         body: (jsonEncode({"id": userId})));
-    print(userName);
+    // print(userName);
 
-    print(response.body[0]);
+    // print(response.body[0]);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      GetMembers();
     }
   }
 
@@ -340,13 +279,10 @@ class _addMemberState extends State<addMember> {
       setState(() {
         isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-        // print('Bearer $token');
-        // print(token);
       });
     });
 
     var url = BASE_API + "usermem/${widget.Id}/";
-    //String? token;
     print(url);
     SharedPreferences access_data = await SharedPreferences.getInstance();
 
@@ -355,7 +291,7 @@ class _addMemberState extends State<addMember> {
       'Accept': 'application/json',
       'Authorization': 'Bearer ${access_data.getString('access_token')}',
     });
-    print(response.statusCode);
+    // print(response.statusCode);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
 

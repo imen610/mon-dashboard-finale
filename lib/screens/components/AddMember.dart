@@ -1,17 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
-import 'package:responsive_admin_dashboard/user/create.dart';
-import 'package:responsive_admin_dashboard/user/edit.dart';
-import 'package:responsive_admin_dashboard/user/member.dart';
-import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../addMember.dart';
@@ -65,11 +59,13 @@ class _AddMemberPageState extends State<AddMemberPage> {
 
       setState(() {
         users = items;
+
         final superusers = users.where((user) {
-          return user['is_membre'] == false;
+          List meml = user['membre'];
+          return (user['is_membre'] == false && meml.length == 0);
         }).toList();
         superuser = superusers;
-        print('****************************${superusers[2]}');
+        // print('****************************${superusers[2]}');
       });
 
       return;
@@ -112,7 +108,6 @@ class _AddMemberPageState extends State<AddMemberPage> {
             flex: 1,
             child: Column(
               children: [
-               
                 Container(
                   width: double.infinity,
                   height: 48,
@@ -187,11 +182,11 @@ class _AddMemberPageState extends State<AddMemberPage> {
                   : ListView.builder(
                       itemCount: _textEditingController!.text.isNotEmpty
                           ? usersOnSearch.length
-                          : 0,
+                          : superuser.length,
                       itemBuilder: (context, index) {
                         return _textEditingController!.text.isNotEmpty
                             ? cardItem(usersOnSearch[index])
-                            : Center(child: Text("no member selected!"));
+                            : cardItem(superuser[index]);
                       }))
         ],
       ),
@@ -206,12 +201,12 @@ class _AddMemberPageState extends State<AddMemberPage> {
     List memL = item['membre'];
     var status_wallet = item['wallet_blocked'];
 
-    print('${memL.length}');
+    // print('${memL.length}');
 
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

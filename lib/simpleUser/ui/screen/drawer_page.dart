@@ -52,8 +52,7 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
 
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items['username']);
-      print(items['is_membre']);
+    
 
       SharedPreferences sharedPreferencesUserId =
           await SharedPreferences.getInstance();

@@ -56,7 +56,7 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
+      // print(' voici la liste des transactions $items');
       setState(() {
         list_payments = items;
       });
@@ -182,18 +182,15 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
     String amount = list_payments[item]['amount'];
     String type = list_payments[item]['type'];
     String name2 = list_payments[item]['to'];
-    print('xxxxxxxxxxxxxxxxxxxxx${list_payments[item]['list_products_id']}');
+    // print('xxxxxxxxxxxxxxxxxxxxx${list_payments[item]['list_products_id']}');
 
-    print(type);
-    print(name2);
-
+  
     var result = [
       for (var user in list_shops)
         if (user["name_shop"] == name2) user['image_shop']
     ];
     print(result);
     String image2 = result.isEmpty ? null : result.first;
-    print(image2);
     return GestureDetector(
       // onTap: widget.onTap,
       child: Container(
@@ -235,7 +232,7 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
                   )),
                 ),
                 SizedBox(width: 20),
-                Expanded(
+                Flexible(
                     child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [

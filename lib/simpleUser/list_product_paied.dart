@@ -48,12 +48,12 @@ class _listProductsState extends State<listProducts> {
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
         id = widget.listId.toString();
-        print('<<<<<<<<<$id');
+        // print('<<<<<<<<<$id');
         // isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
       });
     });
-    print('!!!!!!!!!!!!!$id');
+    // print('!!!!!!!!!!!!!$id');
     var url = BASE_API + "listProdPaied/${widget.listId}/";
     print(url);
 
@@ -68,7 +68,7 @@ class _listProductsState extends State<listProducts> {
       // print(' voici la liste des products $items');
       setState(() {
         list_products = items['product'];
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$list_products');
+        // print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$list_products');
         // isLoading = false;
       });
     }

@@ -40,9 +40,9 @@ class _AccountsPageState extends State<AccountsPage> {
   fetchMembers() async {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
     var x = ID_USER.getString('user_id');
-    print('id get from constant $x');
+    // print('id get from constant $x');
     var url = BASE_API + "usermem/$x/";
-    print(x);
+    // print(x);
 
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
@@ -189,7 +189,7 @@ class _AccountsPageState extends State<AccountsPage> {
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -335,7 +335,7 @@ class _AccountsPageState extends State<AccountsPage> {
   }
 
   deleteUser(userId) async {
-    print(userId);
+    // print(userId);
     var url = BASE_API + "users/$userId/";
     var response = await http.delete(Uri.parse(url), headers: {
       "Content-Type": "application/json",
@@ -343,7 +343,7 @@ class _AccountsPageState extends State<AccountsPage> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      // print(items);
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => AccountsPage()),
@@ -391,13 +391,13 @@ class _AccountsPageState extends State<AccountsPage> {
   }
 
   void searchMember(String query) {
-    print(query);
+    // print(query);
     final suggestions = members.where((user) {
       final username = user['username'].toString().toLowerCase();
       final input = query.toLowerCase();
       return username.contains(input);
     }).toList();
-    print(suggestions);
+    // print(suggestions);
     if (suggestions != []) {
       setState(() {
         members = suggestions;

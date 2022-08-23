@@ -217,9 +217,9 @@ class _createshopState extends State<createshop> {
           },
           body: bodyData);
       print(response.statusCode);
-      print(response.body);
+      // print(response.body);
       var pro = json.decode(response.body)['shopname'];
-      print(pro);
+      // print(pro);
 
       if (response.statusCode == 200) {
         setState(() {

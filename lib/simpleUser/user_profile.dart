@@ -64,8 +64,8 @@ class _userProfilePageState extends State<userProfilePage> {
 
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items['username']);
-      print(items['is_membre']);
+      // print(items['username']);
+      // print(items['is_membre']);
 
       SharedPreferences sharedPreferencesUserId =
           await SharedPreferences.getInstance();
@@ -80,7 +80,7 @@ class _userProfilePageState extends State<userProfilePage> {
 
       setState(() {
         user = items;
-        print(user);
+        // print(user);
         _controllerUserName.text = user['username'];
         _controllerEmail.text = user['email'];
         _controllerphone.text = user['phone_number'];
@@ -97,7 +97,7 @@ class _userProfilePageState extends State<userProfilePage> {
       isFocused = _focusNode.hasFocus;
     });
 
-    print('focus changed.');
+    // print('focus changed.');
   }
 
   ButtonState state = ButtonState.init;
@@ -321,7 +321,7 @@ class _userProfilePageState extends State<userProfilePage> {
           },
           body: bodyData);
       print(url);
-      print(response.statusCode);
+      // print(response.statusCode);
       if (response.statusCode == 200) {
         var messageSuccess = "success";
         showMessageUP(context, messageSuccess);
