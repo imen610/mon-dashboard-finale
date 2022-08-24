@@ -265,6 +265,29 @@ class _loginState extends State<login> {
                 // and DrawerPage() =====> simple user
                 context,
                 MaterialPageRoute(builder: (context) => DrawerPage()));
+        (access_token['wallet_blocked'])
+            ? Future.delayed(
+                Duration(seconds: 3),
+                () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Alert'),
+                    content: const Text(
+                        'your account is blocked please consult the administrator to activate your account'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'Cancel'),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : print('your account is enabled :)');
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
