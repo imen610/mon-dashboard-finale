@@ -121,67 +121,96 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: getAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150.0), // here the desired height
+        child: getAppBar(),
+      ),
       body: getBody(),
     );
   }
 
   getAppBar() {
-    return Container(
-      height: 90,
-      padding: EdgeInsets.only(left: 15, right: 20, top: 5),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: new Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SizedBox(
-            width: 175,
-          ),
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(
+      children: [
+        Container(
+          height: 90,
+          padding: EdgeInsets.only(left: 15, right: 20, top: 5),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/logo1.png'))),
-              ),
-              Text(
-                'MyWallet',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 20,
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
-            ]),
+              SizedBox(
+                width: 175,
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/logo1.png'))),
+                      ),
+                      Text(
+                        'MyWallet',
+                        style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ]),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    "Payments",
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            )),
+        SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 
@@ -189,29 +218,6 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "Transactions",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
           Padding(
             padding: EdgeInsets.only(left: 15),
             child: getTransanctions(),
@@ -282,42 +288,46 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
             SizedBox(
               width: 7,
             ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Text(name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w700)),
-                    SizedBox(
-                      width: 3,
-                    ),
-                    Icon(
-                      Icons.fast_forward_outlined,
-                      color: Colors.green,
-                    ),
-                    SizedBox(
-                      width: 3,
-                    ),
-                    Text(name2,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w700)),
-                  ],
-                ),
-                SizedBox(
-                  height: 9,
-                ),
-                Container(
-                    child: Text(
-                        '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12, color: Colors.grey))),
-              ],
+            Flexible(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w700)),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      Icon(
+                        Icons.fast_forward_outlined,
+                        color: Colors.green,
+                      ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      Flexible(
+                        child: Text(name2,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 9,
+                  ),
+                  Container(
+                      child: Text(
+                          '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12, color: Colors.grey))),
+                ],
+              ),
             ),
             SizedBox(
               width: 7,

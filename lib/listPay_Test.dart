@@ -26,15 +26,12 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
     super.initState();
     this.fetchtransactions();
     this.getusers();
-    this.getShops();
-    // isLoading1 = true;
-    // isLoading2 = true;
   }
 
   var user;
 
   List list_shops = [];
-  List list_payments = [];
+  List list_transactions = [];
   List list_users = [];
   fetchtransactions() async {
     String? token;
@@ -45,7 +42,7 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
       });
     });
 
-    var url = BASE_API + "PaymentShopsAdminDashView/";
+    var url = BASE_API + "TransactionsAdminDashListView/";
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url), headers: {
@@ -57,7 +54,7 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
       var items = jsonDecode(response.body);
       // print(' voici la liste des transactions $items');
       setState(() {
-        list_payments = items;
+        list_transactions = items;
       });
     }
   }
@@ -120,67 +117,98 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: getAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150.0), // here the desired height
+        child: getAppBar(),
+      ),
+
+      // getAppBar(),
       body: getBody(),
     );
   }
 
   getAppBar() {
-    return Container(
-      height: 90,
-      padding: EdgeInsets.only(left: 15, right: 20, top: 5),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: new Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SizedBox(
-            width: 175,
-          ),
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(
+      children: [
+        Container(
+          height: 90,
+          padding: EdgeInsets.only(left: 15, right: 20, top: 5),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/logo1.png'))),
-              ),
-              Text(
-                'MyWallet',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 20,
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
-            ]),
+              SizedBox(
+                width: 175,
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/logo1.png'))),
+                      ),
+                      Text(
+                        'MyWallet',
+                        style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ]),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    "Transactions",
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            )),
+        SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 
@@ -188,29 +216,6 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "Transactions",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
           Padding(
             padding: EdgeInsets.only(left: 15),
             child: getTransanctions(),
@@ -223,23 +228,23 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
   getTransanctions() {
     return Column(
         children: List.generate(
-            list_payments.length,
+            list_transactions.length,
             (index) => Container(
                 margin: const EdgeInsets.only(right: 15),
                 child: TransactionItems(index))));
   }
 
   Widget TransactionItems(item) {
-    String img = list_payments[item]['account']['image'].toString();
-    String name = list_payments[item]['account']['username'];
-    String amount = list_payments[item]['amount'];
-    String type = list_payments[item]['type'];
-    String name2 = list_payments[item]['to'];
-    // print('xxxxxxxxxxxxxxxxxxxxx${list_payments[item]['list_products_id']}');
+    String img = list_transactions[item]['account']['image'].toString();
+    String name = list_transactions[item]['account']['username'];
+    String amount = list_transactions[item]['amount'];
+    String type = list_transactions[item]['type'];
+    String name2 = list_transactions[item]['to'];
+    // print('xxxxxxxxxxxxxxxxxxxxx${list_transactions[item]['list_products_id']}');
 
     var result = [
-      for (var user in list_shops)
-        if (user["name_shop"] == name2) user['image_shop']
+      for (var user in list_users)
+        if (user["username"] == name2) user['image']
     ];
     print(result);
     String image2 = result.isEmpty ? null : result.first;
@@ -312,7 +317,7 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
                 ),
                 Container(
                     child: Text(
-                        '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
+                        '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_transactions[item]['timestamp']))}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12, color: Colors.grey))),
@@ -335,8 +340,7 @@ class _listPay_InterfaceState extends State<listPay_Interface> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://127.0.0.1:8000' + image2),
-                        fit: BoxFit.cover)),
+                        image: NetworkImage(image2), fit: BoxFit.cover)),
               )),
             ),
             SizedBox(

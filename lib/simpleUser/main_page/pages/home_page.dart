@@ -9,11 +9,14 @@ import 'package:responsive_admin_dashboard/simpleUser/main_page/widgets/transact
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../shop/constants/base_api.dart';
+import '../../list_product_paied.dart';
 import '../../send_money.dart';
 import '../theme/colors.dart';
+
 import '../widgets/action_box.dart';
 import '../widgets/avatar_image.dart';
 import '../widgets/balance_card.dart';
+import 'package:responsive_admin_dashboard/constants/constants.dart';
 
 class HomePage extends StatefulWidget {
   //const HomePage({Key? key}) : super(key: key);
@@ -24,17 +27,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var list_members = [];
+  var list_products = [];
   bool isLoading2 = false;
   bool isLoading3 = false;
+  bool pay = false;
+  bool trans = false;
   @override
   void initState() {
     super.initState();
+    this.getShops();
     this.getMembers();
     this.getTransaction();
+    this.fetchpayments();
     isLoading2 = true;
     isLoading3 = true;
   }
 
+  bool isLoading = false;
+  List list_payments = [];
+  List list_shops = [];
   List list_transactions = [];
 
   getTransaction() async {
@@ -48,14 +59,36 @@ class _HomePageState extends State<HomePage> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
-      // print(items['timestamp'].toString());
-      // var formatter = new DateFormat('yyyy-MM-dd');
-      // String formatted = formatter.format(items['timestamp']);
-      // print('formatted $formatted');
+
       setState(() {
         list_transactions = items;
         isLoading2 = false;
+      });
+    }
+  }
+
+  fetchpayments() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+      });
+    });
+
+    var url = BASE_API + "transactionsShop/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      setState(() {
+        list_payments = items;
+        isLoading = false;
       });
     }
   }
@@ -192,7 +225,12 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      setState(() {
+                        pay = false;
+                        trans = true;
+                      });
+                    },
                     child: Text(
                       "Transactions",
                       style:
@@ -202,38 +240,229 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: 160,
                   ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {},
-                      child: Text(
-                        "payments",
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w600),
-                      ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        pay = true;
+                        trans = false;
+                      });
+                    },
+                    child: Text(
+                      "payments",
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                     ),
-                    //  Container(
-                    //     alignment: Alignment.centerRight,
-                    //     child: Text(
-                    //       "Today",
-                    //       style: TextStyle(
-                    //           fontSize: 14, fontWeight: FontWeight.w500),
-                    //     ))
                   ),
-                  // Icon(Icons.expand_more_rounded),
                 ],
               )),
           SizedBox(
             height: 15,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: (list_transactions.length != 0 || isLoading2 == false)
-                ? getTransanctions()
-                : Center(child: Text('No Transactions')),
-          ),
+          (trans == true || pay == false)
+              ? Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: (list_transactions.length != 0 || isLoading2 == false)
+                      ? getTransanctions()
+                      : Center(child: Text('No Transactions')),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: (list_payments.length != 0)
+                      ? getPayments()
+                      : Center(child: Text('No Transactions')),
+                ),
         ],
       ),
     );
+  }
+
+  getproducts(item) {
+    String listId = list_payments[item]['product']['id'].toString();
+    // print(listId);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => listProducts(
+                  listId: listId,
+                )));
+  }
+
+  getPayments() {
+    return Column(
+        children: List.generate(
+            list_payments.length,
+            (index) => Container(
+                margin: const EdgeInsets.only(right: 15),
+                child: PaymentsItems(index))));
+  }
+
+  Widget PaymentsItems(item) {
+    String img1 = list_payments[item]['account']['image_shop'].toString();
+    String name1 = list_payments[item]['account']['name_shop'];
+    String amount = list_payments[item]['amount'];
+    String type = list_payments[item]['type'];
+    String name2 = list_payments[item]['to'];
+
+    print(type);
+    var result = [
+      for (var shop in list_shops)
+        if (shop["name_shop"] == name2) shop['image_shop']
+    ];
+    // print(result);
+    print(result);
+    String image2 = result.isEmpty ? null : result.first;
+    print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: secondary,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: shadowColor.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: Offset(1, 1), // changes position of shadow
+            ),
+          ],
+        ),
+        child: InkWell(
+          onTap: () => getproducts(item),
+          child: Column(
+            children: [
+              SizedBox(height: 2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: type == 'Inflow'
+                        ? Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://127.0.0.1:8000' + img1),
+                                      fit: BoxFit.cover)),
+                            )),
+                          )
+                        : Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://127.0.0.1:8000' + image2),
+                                      fit: BoxFit.cover)),
+                            )),
+                          ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Container(
+                                  child: type == 'Inflow'
+                                      ? Text(name1,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700))
+                                      : Text(name2,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700)))),
+                          SizedBox(width: 5),
+                          Container(
+                              child: Text(amount,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)))
+                        ],
+                      ),
+                      SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              child: Text(
+                                  '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey))),
+                          Container(
+                              child: type == 'Inflow'
+                                  ? Icon(
+                                      Icons.download_rounded,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(
+                                      Icons.upload_rounded,
+                                      color: Colors.red,
+                                    )),
+                        ],
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  getShops() async {
+    var url2 = BASE_API + "shops/";
+    print(url2);
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url2), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+
+    // print(response.body);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      // print(items);
+
+      setState(() {
+        list_shops = items;
+        isLoading2 = false;
+      });
+    }
   }
 
   getActions() {
@@ -247,7 +476,7 @@ class _HomePageState extends State<HomePage> {
             child: ActionBox(
           title: "Send",
           icon: Icons.send_rounded,
-          bgColor: green,
+          bgColor: Colors.green,
         )),
         SizedBox(
           width: 15,
@@ -262,7 +491,9 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
             child: ActionBox(
-                title: "More", icon: Icons.widgets_rounded, bgColor: purple)),
+                title: "More",
+                icon: Icons.widgets_rounded,
+                bgColor: Colors.purple)),
         SizedBox(
           width: 15,
         ),
@@ -496,11 +727,11 @@ class _HomePageState extends State<HomePage> {
                             child: type == 'Inflow'
                                 ? Icon(
                                     Icons.download_rounded,
-                                    color: green,
+                                    color: Colors.green,
                                   )
                                 : Icon(
                                     Icons.upload_rounded,
-                                    color: red,
+                                    color: Colors.red,
                                   )),
                       ],
                     ),

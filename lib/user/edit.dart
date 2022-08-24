@@ -75,7 +75,7 @@ class _EditUserState extends State<EditUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(180),
+        preferredSize: Size.fromHeight(240),
         child: AppBar(
           elevation: 0,
           backgroundColor: Color(0xff89e6f5),
@@ -238,15 +238,15 @@ class _EditUserState extends State<EditUser> {
                   )
                 : SizedBox(
                     child: Container(
-                      width: 75,
-                      height: 75,
+                      width: 135,
+                      height: 135,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(28),
                           border: Border.all(color: Colors.black)),
                       child: Center(
                           child: Container(
-                        width: 70,
-                        height: 70,
+                        width: 130,
+                        height: 130,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
@@ -310,5 +310,4 @@ class _EditUserState extends State<EditUser> {
       ],
     );
   }
-  
 }

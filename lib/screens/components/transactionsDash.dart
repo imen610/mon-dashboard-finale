@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +10,7 @@ import 'package:http/http.dart' as http;
 import '../../simpleUser/main_page/theme/colors.dart';
 
 class transactionsDashPage extends StatefulWidget {
-  const transactionsDashPage({Key? key}) : super(key: key);
+  transactionsDashPage({Key? key}) : super(key: key);
 
   @override
   State<transactionsDashPage> createState() => _transactionsDashPageState();
@@ -27,11 +26,11 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     super.initState();
     this.fetchtransactions();
     this.getusers();
-    // isLoading1 = true;
-    // isLoading2 = true;
   }
 
   var user;
+
+  List list_shops = [];
   List list_transactions = [];
   List list_users = [];
   fetchtransactions() async {
@@ -53,9 +52,63 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
+      // print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
+      });
+    }
+  }
+
+  getusers() async {
+    // SharedPreferences ID_USER = await SharedPreferences.getInstance();
+    // var x = ID_USER.getString('user_id');
+    // print('id get from constant $x');
+    var url2 = BASE_API + "users/";
+    // print(x);
+    // print(url2);
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url2), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+
+    // print(response.body);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      // print(items);
+
+      setState(() {
+        list_users = items;
+        isLoading2 = false;
+      });
+    }
+  }
+
+  getShops() async {
+    SharedPreferences ID_USER = await SharedPreferences.getInstance();
+    var x = ID_USER.getString('user_id');
+    // print('id get from constant $x');
+    var url2 = BASE_API + "shops/";
+    // print(x);
+    // print(url2);
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url2), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+
+    // print(response.body);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      // print(items);
+
+      setState(() {
+        list_shops = items;
+        isLoading2 = false;
       });
     }
   }
@@ -64,67 +117,98 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: getAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150.0), // here the desired height
+        child: getAppBar(),
+      ),
+
+      // getAppBar(),
       body: getBody(),
     );
   }
 
   getAppBar() {
-    return Container(
-      height: 90,
-      padding: EdgeInsets.only(left: 15, right: 20, top: 5),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: new Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SizedBox(
-            width: 175,
-          ),
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(
+      children: [
+        Container(
+          height: 90,
+          padding: EdgeInsets.only(left: 15, right: 20, top: 5),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/logo1.png'))),
-              ),
-              Text(
-                'MyWallet',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 20,
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
-            ]),
+              SizedBox(
+                width: 175,
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/logo1.png'))),
+                      ),
+                      Text(
+                        'MyWallet',
+                        style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ]),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    "Transactions",
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            )),
+        SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 
@@ -132,29 +216,28 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "Transactions",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
+          // Container(
+          //     padding: EdgeInsets.only(left: 20, right: 15),
+          //     alignment: Alignment.centerLeft,
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         InkWell(
+          //           onTap: () {},
+          //           child: Text(
+          //             "Transactions",
+          //             style:
+          //                 TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+          //           ),
+          //         ),
+          //       ],
+          //     )),
+          // SizedBox(
+          //   height: 15,
+          // ),
+          // Container(
+          //   height: 25,
+          // ),
           Padding(
             padding: EdgeInsets.only(left: 15),
             child: getTransanctions(),
@@ -180,19 +263,13 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     String type = list_transactions[item]['type'];
     String name2 = list_transactions[item]['to'];
 
-    print(type);
-    print(name2);
-
     var result = [
       for (var user in list_users)
         if (user["username"] == name2) user['image']
     ];
     print(result);
     String image2 = result.isEmpty ? null : result.first;
-    print(image2);
-    return GestureDetector(
-      // onTap: widget.onTap,
-      child: Container(
+    return Container(
         margin: EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -207,196 +284,96 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
             ),
           ],
         ),
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 2),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            Container(
+              width: 55,
+              height: 55,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: Colors.black)),
+              child: Center(
+                  child: Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    image: DecorationImage(
+                        image: NetworkImage('http://127.0.0.1:8000' + img),
+                        fit: BoxFit.cover)),
+              )),
+            ),
+            SizedBox(
+              width: 7,
+            ),
+            Column(
               children: [
-                Container(
-                  child: type == 'Inflow'
-                      ? Container(
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 45,
-                            height: 45,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' + img),
-                                    fit: BoxFit.cover)),
-                          )),
-                        )
-                      : Container(
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 45,
-                            height: 45,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' + image2),
-                                    fit: BoxFit.cover)),
-                          )),
-                        ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                Row(
                   children: [
-                    Row(
-                      children: <Widget>[
-                        Container(
-                            child: Row(
-                          children: [
-                            Text(name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w700)),
-                            SizedBox(
-                              width: 3,
-                            ),
-                            Icon(
-                              Icons.fast_forward_outlined,
-                              color: Colors.green,
-                            ),
-                            SizedBox(
-                              width: 3,
-                            ),
-                            Text(name2,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w700)),
-
-                            // fast_forward_outlined constant
-                          ],
-                        )
-                            // : Row(
-                            //     children: [
-                            //       Text(name2,
-                            //           maxLines: 1,
-                            //           overflow: TextOverflow.ellipsis,
-                            //           style: TextStyle(
-                            //               fontSize: 16,
-                            //               fontWeight: FontWeight.w700)),
-                            //     ],
-                            //   )
-                            ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 3),
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 45,
-                            height: 45,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(image2),
-                                    fit: BoxFit.cover)),
-                          )),
-                        ),
-                        SizedBox(width: 12),
-                        Container(
-                            child: Text(amount,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w600)))
-                      ],
+                    Text(name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
+                    SizedBox(
+                      width: 3,
                     ),
-                    SizedBox(height: 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                            child: Text(
-                                '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_transactions[item]['timestamp']))}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey))),
-                        Container(
-                          height: 10,
-                        ),
-                      ],
+                    Icon(
+                      Icons.fast_forward_outlined,
+                      color: Colors.green,
                     ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(name2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
                   ],
-                )),
+                ),
+                SizedBox(
+                  height: 9,
+                ),
+                Container(
+                    child: Text(
+                        '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_transactions[item]['timestamp']))}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 12, color: Colors.grey))),
               ],
             ),
+            SizedBox(
+              width: 7,
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 3),
+              width: 55,
+              height: 55,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: Colors.black)),
+              child: Center(
+                  child: Container(
+                width: 45,
+                height: 45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    image: DecorationImage(
+                        image: NetworkImage(image2), fit: BoxFit.cover)),
+              )),
+            ),
+            SizedBox(
+              width: 7,
+            ),
+            Container(
+                child: Text(amount,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.w600)))
           ],
-        ),
-      ),
-    );
+        ));
   }
-
-  getusers() async {
-    // SharedPreferences ID_USER = await SharedPreferences.getInstance();
-    // var x = ID_USER.getString('user_id');
-    // print('id get from constant $x');
-    var url2 = BASE_API + "users/";
-    // print(x);
-    // print(url2);
-
-    SharedPreferences access_data = await SharedPreferences.getInstance();
-    var response = await http.get(Uri.parse(url2), headers: {
-      'Content-Type': 'application/json ; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${access_data.getString('access_token')}'
-    });
-
-    // print(response.body);
-    if (response.statusCode == 200) {
-      var items = jsonDecode(response.body);
-      print(items);
-
-      setState(() {
-        list_users = items;
-        isLoading2 = false;
-      });
-    }
-  }
-
-  // fetchUSER() async {
-  //   var url = BASE_API + "current/";
-  //   SharedPreferences access_data = await SharedPreferences.getInstance();
-  //   var response = await http.get(Uri.parse(url), headers: {
-  //     'Content-Type': 'application/json ; charset=UTF-8',
-  //     'Accept': 'application/json',
-  //     'Authorization': 'Bearer ${access_data.getString('access_token')}'
-  //   });
-
-  //   if (response.statusCode == 200) {
-  //     var items = jsonDecode(response.body);
-  //     print(items['username']);
-
-  //     setState(() {
-  //       user = items;
-  //       isLoading3 = false;
-  //     });
-  //   }
-  // }
 }
