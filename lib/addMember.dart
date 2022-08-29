@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class addMember extends StatefulWidget {
   String firstName;
   String lastName;
   String address;
+  List membre;
 
   addMember(
       {required this.userId,
@@ -30,6 +32,7 @@ class addMember extends StatefulWidget {
       required this.firstName,
       required this.lastName,
       required this.address,
+      required this.membre,
       required this.image});
   @override
   State<addMember> createState() => _addMemberState();
@@ -43,6 +46,15 @@ class _addMemberState extends State<addMember> {
   String userName = '';
   bool isImageSelected = false;
   bool isLoading = true;
+  var mId;
+  var mname;
+  var memail;
+  var mimage;
+  var mfirstName;
+  var mlastName;
+  var mphone;
+  var maddress;
+  var mmembre;
 
   FocusNode _focusNode = new FocusNode();
   TextEditingController _editingController = new TextEditingController();
@@ -50,9 +62,11 @@ class _addMemberState extends State<addMember> {
   bool isAnimating = true;
   bool isFocused = false;
   List members = [];
+  List list = [];
   @override
   void initState() {
-    this.GetMembers();
+    // this.GetMembers();
+    this.addMemberToUser();
     // TODO: implement initState
     super.initState();
     _focusNode.addListener(onFocusChanged);
@@ -200,37 +214,32 @@ class _addMemberState extends State<addMember> {
           setState(() {
             state = ButtonState.done;
             addMemberToUser();
+            this.GetMembers();
           });
           await Future.delayed(Duration(seconds: 3));
           setState(() {
             state = ButtonState.init;
-            GetMembers();
-            print('apres l ajout $members');
-            for (var item in members) {
-              var memberId = item['id'].toString();
-              var username = item['username'].toString();
-              var email = item['email'].toString();
-              var image = item['image'].toString();
-              var firstName = item['first_name'].toString();
-              var lastName = item['last_name'].toString();
-              var phone = item['phone'].toString();
-              var address = item['address'].toString();
-              var membre = item['membre'];
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => member(
-                            memberId: memberId,
-                            username: username,
-                            email: email,
-                            image: image,
-                            phone: phone,
-                            firstName: firstName,
-                            lastName: lastName,
-                            address: address,
-                            membre: membre,
-                          )));
-            }
+            // GetMembers();
+            print('xxxxxxxxxxxxxxxx');
+            print('xxxxxxxxxxxxxxxx');
+            print('xxxxxxxxxxxxxxxx');
+            print(widget.membre);
+            print(list);
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => member(
+                          memberId: widget.Id,
+                          username: widget.username,
+                          email: widget.email,
+                          image: widget.image,
+                          phone: widget.phone,
+                          firstName: widget.firstName,
+                          lastName: widget.lastName,
+                          address: widget.address,
+                          membre: members,
+                        )));
           });
         });
   }
@@ -269,7 +278,7 @@ class _addMemberState extends State<addMember> {
     // print(response.body[0]);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      GetMembers();
+      this.GetMembers();
     }
   }
 
@@ -283,7 +292,11 @@ class _addMemberState extends State<addMember> {
     });
 
     var url = BASE_API + "usermem/${widget.Id}/";
+    print("<<<<<<<<<<<<<");
     print(url);
+
+    print(widget.Id);
+    print(widget.userId);
     SharedPreferences access_data = await SharedPreferences.getInstance();
 
     var response = await http.get(Uri.parse(url), headers: {
@@ -297,9 +310,17 @@ class _addMemberState extends State<addMember> {
 
       setState(() {
         members = items;
-        print('qqqqqqqqqqqqqqqqqqqq$members');
       });
-
+      for (var item in members) {
+        print('qqqqqqqqqqqqqqqqqqqq');
+        print('${item['username']}');
+        list.add(item['id']);
+      }
+      list.add(widget.userId);
+      print(list);
+      print('qqqqqqqqqqqqqqqqqqqq');
+      print('qqqqqqqqqqqqqqqqqqqq');
+      print('qqqqqqqqqqqqqqqqqqqq');
       return;
     } else {
       setState(() {

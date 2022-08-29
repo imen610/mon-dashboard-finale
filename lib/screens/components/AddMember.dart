@@ -312,6 +312,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
     var lastName = item['last_name'].toString();
     var phone = item['phone'].toString();
     var address = item['address'].toString();
+    var membre = item['membre'];
     var Id;
     Navigator.push(
         context,
@@ -326,6 +327,7 @@ class _AddMemberPageState extends State<AddMemberPage> {
                   lastName: lastName,
                   address: address,
                   image: image,
+                  membre: membre,
                 )));
   }
 }

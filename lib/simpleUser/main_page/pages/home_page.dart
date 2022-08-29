@@ -97,7 +97,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: getAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(445.0), // here the desired height
+        child: getAppBar(),
+      ),
       body: (isLoading2 == true && isLoading3 == true)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
@@ -107,120 +110,105 @@ class _HomePageState extends State<HomePage> {
   }
 
   getAppBar() {
-    return Container(
-      height: 100,
-      padding: EdgeInsets.only(left: 30, right: 20, top: 20),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(
+      children: [
+        Container(
+          height: 100,
+          padding: EdgeInsets.only(left: 30, right: 20, top: 20),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/logo1.png'))),
+                margin: EdgeInsets.only(right: 20),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/logo1.png'))),
+                      ),
+                      Text(
+                        'MyWallet',
+                        style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ]),
               ),
-              Text(
-                'MyWallet',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 20,
-                ),
+              SizedBox(
+                width: 160,
               ),
-            ]),
-          ),
-          SizedBox(
-            width: 160,
-          ),
-          Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                    offset: Offset(1, 1), // changes position of shadow
+              Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: Offset(1, 1),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              // child: Icon(Icons.notifications_rounded)
-
-              child: Icon(
-                Icons.bubble_chart_rounded,
-                size: 35,
-              )),
-        ],
-      ),
-    );
-  }
-
-  getBody() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
+                  child: Icon(
+                    Icons.fiber_smart_record_rounded,
+                    size: 35,
+                  )),
+            ],
           ),
-          Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  BalanceCard(),
-                  Positioned(
-                      top: 100,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: secondary,
-                              shape: BoxShape.circle,
-                              border: Border.all()),
-                          child: Icon(Icons.add)))
-                ],
-              )),
-          Container(
-              padding: EdgeInsets.only(left: 20),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-              )),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: getRecentUsers(),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                BalanceCard(),
+              ],
+            )),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            )),
+        SizedBox(
+          height: 15,
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 15),
+          child: getRecentUsers(),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            alignment: Alignment.centerLeft,
+            child: Flexible(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -254,10 +242,19 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
+              ),
+            )),
+        SizedBox(
+          height: 15,
+        ),
+      ],
+    );
+  }
+
+  getBody() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
           (trans == true || pay == false)
               ? Padding(
                   padding: EdgeInsets.only(left: 15),
@@ -304,15 +301,15 @@ class _HomePageState extends State<HomePage> {
     String type = list_payments[item]['type'];
     String name2 = list_payments[item]['to'];
 
-    print(type);
+    // print(type);
     var result = [
       for (var shop in list_shops)
         if (shop["name_shop"] == name2) shop['image_shop']
     ];
     // print(result);
-    print(result);
+    // print(result);
     String image2 = result.isEmpty ? null : result.first;
-    print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
+    // print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
     return GestureDetector(
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
@@ -444,7 +441,7 @@ class _HomePageState extends State<HomePage> {
 
   getShops() async {
     var url2 = BASE_API + "shops/";
-    print(url2);
+    // print(url2);
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url2), headers: {
@@ -463,42 +460,6 @@ class _HomePageState extends State<HomePage> {
         isLoading2 = false;
       });
     }
-  }
-
-  getActions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-            child: ActionBox(
-          title: "Send",
-          icon: Icons.send_rounded,
-          bgColor: Colors.green,
-        )),
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-            child: ActionBox(
-                title: "Request",
-                icon: Icons.arrow_circle_down_rounded,
-                bgColor: yellow)),
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-            child: ActionBox(
-                title: "More",
-                icon: Icons.widgets_rounded,
-                bgColor: Colors.purple)),
-        SizedBox(
-          width: 15,
-        ),
-      ],
-    );
   }
 
   getRecentUsers() {
@@ -602,17 +563,6 @@ class _HomePageState extends State<HomePage> {
     String type = list_transactions[item]['type'];
     String name2 = list_transactions[item]['to'];
 
-    print(
-        'timestamp___________________________ ${list_transactions[item]['timestamp']}');
-    print(DateFormat.yMMMd()
-        .format(DateTime.tryParse(list_transactions[item]['timestamp'])));
-    // var x =
-    //     DateFormat("dd-MM-yyyy").parse(list_transactions[item]['timestamp']);
-    // print('xxxxxxxx___________________________$x');
-    // var formatter = new DateFormat('yyyy-MM-dd');
-    // String formatted = formatter.format(list_transactions[item]['timestamp']);
-    // print('formatted $formatted');
-    print(type);
     var result = [
       for (var member in list_members)
         if (member["username"] == name2) member['image']
@@ -763,7 +713,7 @@ class _HomePageState extends State<HomePage> {
     // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      // print(items);
 
       setState(() {
         list_members = items;
@@ -782,7 +732,7 @@ class _HomePageState extends State<HomePage> {
     var lastName = index['last_name'].toString();
     var phone = index['phone'].toString();
     var address = index['address'].toString();
-    print(image);
+    // print(image);
     Navigator.push(
         context,
         MaterialPageRoute(

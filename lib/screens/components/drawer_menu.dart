@@ -4,7 +4,9 @@ import 'package:responsive_admin_dashboard/screens/components/drawer_list_tile.d
 import 'package:responsive_admin_dashboard/screens/components/paymentsDash%20.dart';
 import 'package:responsive_admin_dashboard/screens/components/send_moneyDash.dart';
 import 'package:responsive_admin_dashboard/screens/components/transactionsDash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../pages/login.dart';
 import '../../product/index.dart';
 import '../../shop/index.dart';
 import '../../user/index.dart';
@@ -107,7 +109,14 @@ class DrawerMenu extends StatelessWidget {
               svgSrc: 'assets/icons/Setting.svg',
               tap: () {}),
           DrawerListTile(
-              title: 'Logout', svgSrc: 'assets/icons/Logout.svg', tap: () {}),
+              title: 'Logout',
+              svgSrc: 'assets/icons/Logout.svg',
+              tap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove('email');
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (BuildContext ctx) => login()));
+              }),
         ],
       ),
     );

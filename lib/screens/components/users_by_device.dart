@@ -14,14 +14,7 @@ class UsersByDevice extends StatefulWidget {
 }
 
 class _UsersByDeviceState extends State<UsersByDevice> {
-  // const UsersByDevice({Key? key}) : super(key: key);
-  // final dataMap = <String, double>{
-  //   "Flutter": 5,
-  //   "dart": 2,
-  //   "django": 2,
-  //   "python": 3,
-
-  // };
+ 
 
   List stats = [];
 

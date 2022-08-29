@@ -78,22 +78,9 @@ class _memberState extends State<member> {
       // _controllerfirstName.text = widget.firstName;
       // _controlleraddress.text = widget.address;
       image = widget.image;
+      print(
+          '::::::::::::::::::::::::::::::::::${image.substring(0, 4).toString()}');
     });
-
-    print(widget.memberId);
-    print(widget.username);
-    print(widget.email);
-    print(widget.image);
-    print(widget.phone);
-    print(widget.lastName);
-    print(widget.firstName);
-    print(widget.address);
-    print("hello imen");
-    print(widget.membre);
-    print("users  ");
-    var name = widget.membre.length;
-
-    print(name);
   }
 
   @override
@@ -274,9 +261,14 @@ class _memberState extends State<member> {
                       height: 60,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          image: DecorationImage(
-                              image: NetworkImage(image.toString()),
-                              fit: BoxFit.cover)),
+                          image: (image.substring(0, 4).toString() == "http")
+                              ? DecorationImage(
+                                  image: NetworkImage(image.toString()),
+                                  fit: BoxFit.cover)
+                              : DecorationImage(
+                                  image: NetworkImage('http://127.0.0.1:8000' +
+                                      image.toString()),
+                                  fit: BoxFit.cover)),
                     )),
                   ),
                   SizedBox(
@@ -394,7 +386,7 @@ class _memberState extends State<member> {
   getaccount(item) {
     var memberId = item['id'].toString();
 
-    print(memberId);
+    // print(memberId);
 
     var username = item['username'].toString();
     var email = item['email'].toString();
@@ -435,7 +427,7 @@ class _memberState extends State<member> {
           "is_disabled": wstat.toString(),
         })));
     print('$wstat');
-    print('::::::::::::::::::::::::::::::::::');
+
     if (response.statusCode != 200) {
       fetchUsers();
       ScaffoldMessenger.of(context)
@@ -528,13 +520,11 @@ class _memberState extends State<member> {
       setState(() {
         isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-        // print('Bearer $token');
-        // print(token);
       });
     });
     List users = [];
     var url = BASE_API + "users/";
-    //String? token;
+
     print(url);
     SharedPreferences access_data = await SharedPreferences.getInstance();
 
@@ -549,11 +539,6 @@ class _memberState extends State<member> {
 
       setState(() {
         users = items;
-        // final superusers = users.where((user) {
-        //   return user['is_membre'] == false;
-        // }).toList();
-        // superuser = superusers;
-        // print('****************************${superusers[2]}');
       });
 
       return;

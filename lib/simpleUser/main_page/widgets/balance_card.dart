@@ -61,24 +61,11 @@ class _BalanceCardState extends State<BalanceCard> {
                   //
                   color: Color.fromARGB(255, 252, 193, 75),
                   borderRadius: BorderRadius.circular(30),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: shadowColor.withOpacity(0.1),
-                  //     spreadRadius: 1,
-                  //     blurRadius: 1,
-                  //     offset: Offset(1, 1), // changes position of shadow
-                  //   ),
-                  // ],
-                  // image: DecorationImage(
-                  //   colorFilter: new ColorFilter.mode(
-                  //       Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                  //   image: AssetImage(""),
-                  // )
                 ),
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 25,
+                      height: 10,
                     ),
                     Text(
                       "Your Balance",
@@ -97,20 +84,40 @@ class _BalanceCardState extends State<BalanceCard> {
                           fontSize: 18,
                           fontWeight: FontWeight.w600),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Amount allowed",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "${wallet['maxAmount']} DT",
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ],
                 ),
               ),
-              Positioned(
-                  top: 100,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: secondary,
-                          shape: BoxShape.circle,
-                          border: Border.all()),
-                      child: Icon(Icons.add)))
+              // Positioned(
+              //     top: 100,
+              //     left: 0,
+              //     right: 0,
+              //     child: Container(
+              //         padding: EdgeInsets.all(5),
+              //         decoration: BoxDecoration(
+              //             color: secondary,
+              //             shape: BoxShape.circle,
+              //             border: Border.all()),
+              //         child: Icon(Icons.add)))
             ],
           );
   }

@@ -55,7 +55,7 @@ class _transactionsPageState extends State<transactionsPage> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
+      // print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
       });
@@ -67,6 +67,10 @@ class _transactionsPageState extends State<transactionsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: getAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(160.0), // here the desired height
+        child: getAppBar(),
+      ),
       body: (isLoading1 || isLoading2 || isLoading3)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
@@ -76,103 +80,129 @@ class _transactionsPageState extends State<transactionsPage> {
   }
 
   getAppBar() {
-    return Container(
-      height: 100,
-      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: new Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SizedBox(
-            width: 135,
-          ),
-          Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+    return Column(
+      children: [
+        Container(
+          height: 100,
+          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
               boxShadow: [
                 BoxShadow(
-                  color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+              SizedBox(
+                width: 135,
+              ),
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: Offset(1, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                // child: Icon(Icons.notifications_rounded)
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(top: 30),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${user['username']}",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 34, 33, 33),
+                                    fontSize: 13),
+                              )
+                            ]),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(color: Colors.black)),
+                        child: Center(
+                            child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                    'http://127.0.0.1:8000' +
+                                        user['image'].toString(),
+                                  ),
+                                  fit: BoxFit.cover)),
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    "Transactions",
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ],
-            ),
-            // child: Icon(Icons.notifications_rounded)
-            child: Container(
-              padding: EdgeInsets.all(3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(top: 30),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${user['username']}",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 34, 33, 33),
-                                fontSize: 13),
-                          )
-                        ]),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: 65,
-                    height: 65,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
-                        border: Border.all(color: Colors.black)),
-                    child: Center(
-                        child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                'http://127.0.0.1:8000' +
-                                    user['image'].toString(),
-                              ),
-                              fit: BoxFit.cover)),
-                    )),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+            )),
+        SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 
@@ -180,29 +210,6 @@ class _transactionsPageState extends State<transactionsPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "Transactions",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
           Padding(
             padding: EdgeInsets.only(left: 15),
             child: getTransanctions(),

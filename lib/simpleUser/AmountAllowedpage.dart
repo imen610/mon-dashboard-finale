@@ -6,28 +6,75 @@ import 'package:responsive_admin_dashboard/addMember.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 
+import '../product/constants/base_api.dart';
 import '../simpleUser/main_page/theme/colors.dart';
-import 'login.dart';
+import 'member_account_page.dart';
 
-class sendMailPage extends StatefulWidget {
-  sendMailPage({Key? key}) : super(key: key);
+class AmountAllowedPage extends StatefulWidget {
+  // AmountAllowedPage({Key? key}) : super(key: key);
+  String id;
+  String username;
+  String email;
+  String image;
+  String phone;
+  String firstName;
+  String lastName;
+  String address;
+  List membre;
+  AmountAllowedPage(
+      {required this.id,
+      required this.username,
+      required this.email,
+      required this.phone,
+      required this.firstName,
+      required this.lastName,
+      required this.address,
+      required this.image,
+      required this.membre});
 
   @override
-  State<sendMailPage> createState() => _sendMailPageState();
+  State<AmountAllowedPage> createState() => _AmountAllowedPageState();
 }
 
-// http://127.0.0.1:8000/auth/request-reset-email/
-class _sendMailPageState extends State<sendMailPage> {
-  TextEditingController _controllerEmail = TextEditingController();
+class _AmountAllowedPageState extends State<AmountAllowedPage> {
+  TextEditingController _controllerMaxAmount = TextEditingController();
+  var id;
+  var username;
+  var email;
+  var phone;
+  var firstName;
+  var lastName;
+  var address;
+  var image;
+  var membre;
 
-  Future<void> sendEmail() async {
-    if (_controllerEmail.text.isNotEmpty) {
-      var response = await http.post(
-          Uri.parse("http://127.0.0.1:8000/auth/request-reset-email/"),
-          headers: {"Content-Type": "application/json"},
-          body: (jsonEncode({
-            "email": _controllerEmail.text,
-          })));
+  Future<void> Upadateamount() async {
+    setState(() {
+      id = widget.id;
+      username = widget.username;
+      email = widget.email;
+      phone = widget.phone;
+      firstName = widget.firstName;
+      lastName = widget.lastName;
+      address = widget.address;
+      image = widget.image;
+      membre = widget.membre;
+    });
+    print(image);
+    print(image);
+    print(image);
+    print(image);
+    print(image);
+    print(image);
+    print(image);
+    print(image);
+    if (_controllerMaxAmount.text.isNotEmpty) {
+      var response =
+          await http.post(Uri.parse(BASE_API + "MaxAmountView/${widget.id}/"),
+              headers: {"Content-Type": "application/json"},
+              body: (jsonEncode({
+                "maxAmount": _controllerMaxAmount.text,
+              })));
       var access_token = json.decode(response.body);
       String? token;
       print('hello');
@@ -63,6 +110,8 @@ class _sendMailPageState extends State<sendMailPage> {
 
   bool isFocused = false;
   FocusNode _focusNode = new FocusNode();
+  var result;
+
   @override
   void initState() {
     _focusNode.addListener(onFocusChanged);
@@ -131,10 +180,10 @@ class _sendMailPageState extends State<sendMailPage> {
                   height: 60,
                 ),
                 TextField(
-                  controller: _controllerEmail,
+                  controller: _controllerMaxAmount,
                   decoration: InputDecoration(
-                      labelText: 'Email',
-                      hintText: "Email",
+                      labelText: 'Amount Allowed',
+                      hintText: "Amount Allowed",
                       border: OutlineInputBorder()),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
@@ -187,11 +236,24 @@ class _sendMailPageState extends State<sendMailPage> {
           await Future.delayed(Duration(seconds: 2));
           setState(() {
             state = ButtonState.done;
-            sendEmail();
+            Upadateamount();
           });
           await Future.delayed(Duration(seconds: 3));
           setState(() {
             state = ButtonState.init;
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MemberAccount(
+                        memberId: id,
+                        username: username,
+                        email: email,
+                        image: image.substring(21).toString(),
+                        phone: phone,
+                        firstName: firstName,
+                        lastName: lastName,
+                        address: address,
+                        membre: membre)));
           });
         });
   }
@@ -212,54 +274,6 @@ class _sendMailPageState extends State<sendMailPage> {
               : CircularProgressIndicator(color: Colors.white)),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: [
-  //         TextField(
-  //           controller: _controllerEmail,
-  //           decoration: InputDecoration(
-  //             hintText: "email",
-  //           ),
-  //         ),
-  //         SizedBox(
-  //           height: 30,
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             sendEmail();
-  //           },
-  //           child: Container(
-  //             padding: EdgeInsets.all(15),
-  //             decoration: BoxDecoration(
-  //                 color: Color(0xffffac30),
-  //                 borderRadius: BorderRadius.circular(20)),
-  //             child: Center(
-  //                 child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: [
-  //                 Text(
-  //                   'Send',
-  //                   style: TextStyle(
-  //                     fontSize: 14,
-  //                     fontWeight: FontWeight.w500,
-  //                   ),
-  //                 ),
-  //                 Icon(
-  //                   Icons.arrow_forward,
-  //                   size: 17,
-  //                 )
-  //               ],
-  //             )),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   showMessage(BuildContext context, String contentMessage) {
     // set up the buttons

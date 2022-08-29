@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/constants/constants.dart';
@@ -37,6 +38,9 @@ class _AccountsPageState extends State<AccountsPage> {
     isLoading = true;
   }
 
+  bool status = false;
+  bool wstat = false;
+  var id_user;
   fetchMembers() async {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
     var x = ID_USER.getString('user_id');
@@ -186,6 +190,7 @@ class _AccountsPageState extends State<AccountsPage> {
     var username = item['username'];
     var email = item['email'];
     var image = item['image'];
+    var status_wallet = item['wallet_blocked'];
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -193,89 +198,154 @@ class _AccountsPageState extends State<AccountsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              GestureDetector(
-                onTap: () => getaccount(item),
-                child: Container(
-                  child: Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.25,
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromARGB(255, 204, 200, 200)
-                                    .withOpacity(0.15),
-                                spreadRadius: 2,
-                                blurRadius: 3,
-                                offset: Offset(0, 1))
-                          ],
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(33)),
-                      child: Row(children: [
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'http://127.0.0.1:8000' +
-                                            image.toString()),
-                                    fit: BoxFit.cover)),
-                          )),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(username.toString(),
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.black)),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                email.toString(),
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black.withOpacity(0.5)),
-                              ),
-                            ],
-                          ),
-                        )
-                      ]),
-                    ),
-                    secondaryActions: <Widget>[
-                      IconSlideAction(
-                        caption: 'Edit',
-                        color: Color(0xff16F8FA),
-                        icon: Icons.edit,
-                        onTap: () => editUser(item),
-                      ),
-                      IconSlideAction(
-                          caption: 'Delete',
-                          color: Color(0xffFA1645),
-                          icon: Icons.delete,
-                          onTap: () => showDeleteAlert(context, item)),
+              Container(
+                height: 100,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color.fromARGB(255, 204, 200, 200)
+                              .withOpacity(0.15),
+                          spreadRadius: 2,
+                          blurRadius: 3,
+                          offset: Offset(0, 1))
                     ],
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(33)),
+                child: Row(children: [
+                  SizedBox(
+                    width: 20,
                   ),
-                ),
+                  Container(
+                    width: 65,
+                    height: 65,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: Colors.black)),
+                    child: Center(
+                        child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  'http://127.0.0.1:8000' + image.toString()),
+                              fit: BoxFit.cover)),
+                    )),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(username.toString(),
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black)),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              email.toString(),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                            Spacer(),
+                            Container(
+                              // margin: EdgeInsets.only(left: 100),
+                              child: FlutterSwitch(
+                                activeColor: Colors.red,
+                                width: 50.0,
+                                height: 25.0,
+                                valueFontSize: 20.0,
+                                toggleSize: 20.0,
+                                value: status_wallet,
+                                borderRadius: 20.0,
+                                padding: 4.0,
+                                // showOnOff: true,
+                                onToggle: (val) {
+                                  setState(() {
+                                    status_wallet = val;
+                                    print('ggggggggggggg$id_user ');
+                                    wstat = val;
+                                    id_user = item['id'];
+
+                                    // item['is_disabled'] = val;
+                                    // print(item['is_disabled']);
+                                  });
+                                  ppstWalletStatus(item['id']);
+                                },
+                              ),
+                            ),
+                            Container(
+                                child: popUpMen(
+                              menuList: [
+                                PopupMenuItem(
+                                    child: InkWell(
+                                  onTap: () => editUser(item),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.edit,
+                                      color: Color(0xff16F8FA),
+                                    ),
+                                    title: Text(
+                                      'edit',
+                                      style: TextStyle(
+                                        color: Color(0xff16F8FA),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                                PopupMenuItem(
+                                    child: InkWell(
+                                  onTap: () => showDeleteAlert(context, item),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.delete,
+                                      color: Color(0xffFA1645),
+                                    ),
+                                    title: Text('delete',
+                                        style: TextStyle(
+                                          color: Color(0xffFA1645),
+                                        )),
+                                  ),
+                                )),
+                                PopupMenuItem(
+                                    child: InkWell(
+                                  onTap: () => getaccount(item),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.account_balance_wallet,
+                                      color: Color.fromARGB(255, 255, 206, 43),
+                                    ),
+                                    title: Text('account_view',
+                                        style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 255, 206, 43),
+                                        )),
+                                  ),
+                                )),
+                              ],
+                              icon: Icon(
+                                Icons.more_vert_rounded,
+                                size: 30,
+                              ),
+                            ))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [],
+                  ),
+                ]),
               )
             ],
           ),
@@ -388,6 +458,29 @@ class _AccountsPageState extends State<AccountsPage> {
         return alert;
       },
     );
+  }
+
+  ppstWalletStatus(userId) async {
+    var url = BASE_API + "UpdateWalletStatus/$userId/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+
+    var response = await http.put(Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json ; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${access_data.getString('access_token')}',
+        },
+        body: (jsonEncode({
+          "is_disabled": wstat.toString(),
+        })));
+    print('$wstat');
+    print('::::::::::::::::::::::::::::::::::');
+    if (response.statusCode != 200) {
+      fetchMembers();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("okk !!")));
+    }
   }
 
   void searchMember(String query) {

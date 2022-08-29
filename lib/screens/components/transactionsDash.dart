@@ -216,28 +216,7 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Container(
-          //     padding: EdgeInsets.only(left: 20, right: 15),
-          //     alignment: Alignment.centerLeft,
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         InkWell(
-          //           onTap: () {},
-          //           child: Text(
-          //             "Transactions",
-          //             style:
-          //                 TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-          //           ),
-          //         ),
-          //       ],
-          //     )),
-          // SizedBox(
-          //   height: 15,
-          // ),
-          // Container(
-          //   height: 25,
-          // ),
+       
           Padding(
             padding: EdgeInsets.only(left: 15),
             child: getTransanctions(),

@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../../shop/constants/base_api.dart';
 
+import '../../simpleUser/AmountAllowedpage.dart';
 import '../../simpleUser/main_page/theme/colors.dart';
 import '../../simpleUser/main_page/widgets/balance_card.dart';
 
@@ -246,17 +247,17 @@ class _userAccountDashState extends State<userAccountDash> {
                 clipBehavior: Clip.none,
                 children: [
                   getBalanceCard(),
-                  Positioned(
-                      top: 100,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: secondary,
-                              shape: BoxShape.circle,
-                              border: Border.all()),
-                          child: Icon(Icons.add)))
+                  // Positioned(
+                  //     top: 100,
+                  //     left: 0,
+                  //     right: 0,
+                  //     child: Container(
+                  //         padding: EdgeInsets.all(5),
+                  //         decoration: BoxDecoration(
+                  //             color: secondary,
+                  //             shape: BoxShape.circle,
+                  //             border: Border.all()),
+                  //         child: Icon(Icons.add)))
                 ],
               )),
           Container(
@@ -521,7 +522,7 @@ class _userAccountDashState extends State<userAccountDash> {
           child: Column(
             children: [
               SizedBox(
-                height: 25,
+                height: 10,
               ),
               Text(
                 "Your Balance",
@@ -540,23 +541,64 @@ class _userAccountDashState extends State<userAccountDash> {
                     fontSize: 18,
                     fontWeight: FontWeight.w600),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AmountAllowedPage(
+                              id: widget.memberId,
+                              username: widget.username,
+                              email: widget.email,
+                              image: widget.image,
+                              phone: widget.phone,
+                              firstName: widget.firstName,
+                              lastName: widget.lastName,
+                              address: widget.address,
+                              membre: widget.membre)))
+                },
+                //  {
+                //   print('hello');
+                //   AmountAllowedPage(id: widget.memberId);
+                // },
+                child: Text(
+                  "Amount allowed",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "${wallet['maxAmount']} DT",
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ),
-        Positioned(
-            top: 100,
-            left: 0,
-            right: 0,
-            child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: secondary,
-                    shape: BoxShape.circle,
-                    border: Border.all()),
-                child: InkWell(
-                  onTap: () {},
-                  child: Icon(Icons.add),
-                )))
+        // Positioned(
+        //     top: 100,
+        //     left: 0,
+        //     right: 0,
+        //     child: Container(
+        //         padding: EdgeInsets.all(5),
+        //         decoration: BoxDecoration(
+        //             color: secondary,
+        //             shape: BoxShape.circle,
+        //             border: Border.all()),
+        //         child: InkWell(
+        //           onTap: () {},
+        //           child: Icon(Icons.add),
+        //         )))
       ],
     );
   }

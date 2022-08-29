@@ -283,43 +283,25 @@ class _IndexPageState extends State<IndexPage> {
                                   Text(username.toString(),
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black)),
-                                  Spacer(),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 100),
-                                    child: FlutterSwitch(
-                                      activeColor: Colors.red,
-                                      width: 50.0,
-                                      height: 25.0,
-                                      valueFontSize: 20.0,
-                                      toggleSize: 20.0,
-                                      value: status_wallet,
-                                      borderRadius: 20.0,
-                                      padding: 4.0,
-                                      // showOnOff: true,
-                                      onToggle: (val) {
-                                        setState(() {
-                                          status_wallet = val;
-                                          print('ggggggggggggg$id_user ');
-                                          wstat = val;
-                                          id_user = item['id'];
-
-                                          // item['is_disabled'] = val;
-                                          // print(item['is_disabled']);
-                                        });
-                                        ppstWalletStatus(item['id']);
-                                      },
-                                    ),
-                                  ),
                                 ],
                               ),
                               SizedBox(
                                 height: 5,
                               ),
-                              Text(
-                                email.toString(),
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black.withOpacity(0.5)),
+                              Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        email.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Colors.black.withOpacity(0.5)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                               SizedBox(
                                 height: 10,
@@ -392,24 +374,6 @@ class _IndexPageState extends State<IndexPage> {
                         ))
                       ]),
                     ),
-                    // secondaryActions: <Widget>[
-                    //   IconSlideAction(
-                    //     caption: 'Edit',
-                    //     color: Color(0xff16F8FA),
-                    //     icon: Icons.edit,
-                    //     onTap: () => editUser(item),
-                    //   ),
-                    //   IconSlideAction(
-                    //       caption: 'Delete',
-                    //       color: Color(0xffFA1645),
-                    //       icon: Icons.delete,
-                    //       onTap: () => showDeleteAlert(context, item)),
-                    //   IconSlideAction(
-                    //       caption: 'account_view',
-                    //       color: Color.fromARGB(255, 255, 206, 43),
-                    //       icon: Icons.account_balance_wallet,
-                    //       onTap: () => getaccount(item)),
-                    // ],
                   ),
                 ),
               )

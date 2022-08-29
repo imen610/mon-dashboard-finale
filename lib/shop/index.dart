@@ -210,92 +210,94 @@ class _IndexPageShopState extends State<IndexPageShop> {
                       ],
                       color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(33)),
-                  child: Row(children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      width: 65,
-                      height: 65,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(28),
-                          border: Border.all(color: Colors.black)),
-                      child: Center(
-                          child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            image: DecorationImage(
-                                image: NetworkImage("http://127.0.0.1:8000" +
-                                    image_shop.toString()),
-                                fit: BoxFit.cover)),
-                      )),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(name_shop.toString(),
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.black)),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            address_shop.toString(),
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
-                        ],
+                  child: Flexible(
+                    child: Row(children: [
+                      SizedBox(
+                        width: 20,
                       ),
-                    ),
-                    Spacer(),
-                    Container(
-                        child: popUpMen(
-                      menuList: [
-                        PopupMenuItem(
-                            child: InkWell(
-                          onTap: () => editShop(item),
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.edit,
-                              color: Color(0xff16F8FA),
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(color: Colors.black)),
+                        child: Center(
+                            child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              image: DecorationImage(
+                                  image: NetworkImage("http://127.0.0.1:8000" +
+                                      image_shop.toString()),
+                                  fit: BoxFit.cover)),
+                        )),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(name_shop.toString(),
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black)),
+                            SizedBox(
+                              height: 5,
                             ),
-                            title: Text(
-                              'edit',
+                            Text(
+                              address_shop.toString(),
                               style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                          child: popUpMen(
+                        menuList: [
+                          PopupMenuItem(
+                              child: InkWell(
+                            onTap: () => editShop(item),
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.edit,
                                 color: Color(0xff16F8FA),
                               ),
-                            ),
-                          ),
-                        )),
-                        PopupMenuItem(
-                            child: InkWell(
-                          onTap: () => showDeleteAlert(context, item),
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.delete,
-                              color: Color(0xffFA1645),
-                            ),
-                            title: Text('delete',
+                              title: Text(
+                                'edit',
                                 style: TextStyle(
-                                  color: Color(0xffFA1645),
-                                )),
-                          ),
-                        )),
-                      ],
-                      icon: Icon(
-                        Icons.more_vert_rounded,
-                        size: 23,
-                      ),
-                    ))
-                  ]),
+                                  color: Color(0xff16F8FA),
+                                ),
+                              ),
+                            ),
+                          )),
+                          PopupMenuItem(
+                              child: InkWell(
+                            onTap: () => showDeleteAlert(context, item),
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.delete,
+                                color: Color(0xffFA1645),
+                              ),
+                              title: Text('delete',
+                                  style: TextStyle(
+                                    color: Color(0xffFA1645),
+                                  )),
+                            ),
+                          )),
+                        ],
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                          size: 23,
+                        ),
+                      ))
+                    ]),
+                  ),
                 ),
               )
             ],

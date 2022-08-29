@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../shop/constants/base_api.dart';
 
+import 'AmountAllowedpage.dart';
+import 'list_product_paied.dart';
 import 'main_page/theme/colors.dart';
 import 'main_page/widgets/balance_card.dart';
 
@@ -55,31 +57,24 @@ class _MemberAccountState extends State<MemberAccount> {
     this.getMembers();
     this.fetchwallet();
     this.getTransaction();
+    this.fetchpayments();
+    this.getShops();
     isLoading1 = true;
     isLoading2 = true;
     isLoading3 = true;
     setState(() {
       image = widget.image;
     });
-    print(widget.memberId);
-    print(widget.username);
-    print(widget.email);
-    print(widget.image);
-    print(widget.phone);
-    print(widget.lastName);
-    print(widget.firstName);
-    print(widget.address);
-    print("hello ACCOUNT MEMBER YEAAAH !!!!!");
-    print(widget.membre);
-    print("users  ");
-    var name = widget.membre.length;
-
-    print(name);
   }
 
+  List list_payments = [];
+  List list_shops = [];
+  bool pay = false;
+  bool trans = false;
   bool isLoading1 = false;
   bool isLoading2 = false;
   bool isLoading3 = false;
+  bool isLoading = false;
   List list_transactions = [];
   fetchwallet() async {
     var url = BASE_API + "my-wallet/${widget.memberId}/";
@@ -92,6 +87,7 @@ class _MemberAccountState extends State<MemberAccount> {
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
       print(items['balance']);
+      print('ttttttttttttttttttttttttttt${items['maxAmount']}');
       setState(() {
         wallet = items;
         isLoading1 = false;
@@ -101,7 +97,7 @@ class _MemberAccountState extends State<MemberAccount> {
 
   getTransaction() async {
     var url = BASE_API + "transactions/${widget.memberId}/${widget.username}/";
-    print('this is our url');
+    // print('this is our url');
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json ; charset=UTF-8',
@@ -110,10 +106,38 @@ class _MemberAccountState extends State<MemberAccount> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
+      // print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
         isLoading2 = false;
+      });
+    }
+  }
+
+  fetchpayments() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+      });
+    });
+
+    var url = BASE_API + "payments/${widget.memberId}/${widget.username}/";
+    print('cccccccccccccccccccccc$url');
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+
+      setState(() {
+        list_payments = items;
+        print(list_payments);
+        isLoading = false;
       });
     }
   }
@@ -123,6 +147,10 @@ class _MemberAccountState extends State<MemberAccount> {
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: getAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(340.0), // here the desired height
+        child: getAppBar(),
+      ),
       body: (isLoading1 || isLoading2 || isLoading3)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
@@ -132,103 +160,175 @@ class _MemberAccountState extends State<MemberAccount> {
   }
 
   getAppBar() {
-    return Container(
-      height: 100,
-      padding: EdgeInsets.only(left: 30, right: 20, top: 20),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: new Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SizedBox(
-            width: 130,
-          ),
-          Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+    return Column(
+      children: [
+        Container(
+          height: 100,
+          padding: EdgeInsets.only(left: 30, right: 20, top: 20),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
               boxShadow: [
                 BoxShadow(
-                  color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-              ],
-            ),
-            // child: Icon(Icons.notifications_rounded)
-            child: Container(
-              padding: EdgeInsets.all(3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(top: 30),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${widget.username}",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 34, 33, 33),
-                                fontSize: 13),
-                          )
-                        ]),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: 55,
-                    height: 55,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
-                        border: Border.all(color: Colors.black)),
-                    child: Center(
-                        child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                'http://127.0.0.1:8000' +
-                                    widget.image.toString(),
-                              ),
-                              fit: BoxFit.cover)),
-                    )),
-                  ),
-                ],
               ),
-            ),
+              SizedBox(
+                width: 130,
+              ),
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: Offset(1, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                // child: Icon(Icons.notifications_rounded)
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(top: 30),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${widget.username}",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 34, 33, 33),
+                                    fontSize: 13),
+                              )
+                            ]),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 55,
+                        height: 55,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(color: Colors.black)),
+                        child: Center(
+                            child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                    'http://127.0.0.1:8000' +
+                                        widget.image.toString(),
+                                  ),
+                                  fit: BoxFit.cover)),
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                getBalanceCard(),
+              ],
+            )),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            )),
+        SizedBox(
+          height: 15,
+        ),
+        // Padding(
+        //   padding: EdgeInsets.only(left: 15),
+        //   child: getRecentUsers(),
+        // ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 15),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    pay = false;
+                    trans = true;
+                  });
+                },
+                child: Text(
+                  "Transactions",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                ),
+              ),
+              SizedBox(
+                width: 160,
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    pay = true;
+                    trans = false;
+                  });
+                },
+                child: Text(
+                  "payments",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 
@@ -236,79 +336,211 @@ class _MemberAccountState extends State<MemberAccount> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  getBalanceCard(),
-                  Positioned(
-                      top: 100,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: secondary,
-                              shape: BoxShape.circle,
-                              border: Border.all()),
-                          child: Icon(Icons.add)))
-                ],
-              )),
-          Container(
-              padding: EdgeInsets.only(left: 20),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-              )),
-          SizedBox(
-            height: 15,
-          ),
-          // Padding(
-          //   padding: EdgeInsets.only(left: 15),
-          //   child: getRecentUsers(),
-          // ),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Transactions",
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                  ),
-                  Expanded(
-                      child: Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "Today",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ))),
-                  Icon(Icons.expand_more_rounded),
-                ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: (list_transactions.length != 0)
-                ? getTransanctions()
-                : Center(child: Text('No Transactions')),
-          ),
+          (trans == true || pay == false)
+              ? Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: (list_transactions.length != 0 || isLoading2 == false)
+                      ? getTransanctions()
+                      : Center(child: Text('No Transactions')),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: (list_payments.length != 0)
+                      ? getPayments()
+                      : Center(child: Text('No Transactions')),
+                ),
         ],
       ),
     );
+  }
+
+  getPayments() {
+    return Column(
+        children: List.generate(
+            list_payments.length,
+            (index) => Container(
+                margin: const EdgeInsets.only(right: 15),
+                child: PaymentsItems(index))));
+  }
+
+  Widget PaymentsItems(item) {
+    String img1 = list_payments[item]['account']['image_shop'].toString();
+    String name1 = list_payments[item]['account']['name_shop'];
+    String amount = list_payments[item]['amount'];
+    String type = list_payments[item]['type'];
+    String name2 = list_payments[item]['to'];
+
+    // print(type);
+    var result = [
+      for (var shop in list_shops)
+        if (shop["name_shop"] == name2) shop['image_shop']
+    ];
+    // print(result);
+    // print(result);
+    String image2 = result.isEmpty ? null : result.first;
+    // print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: secondary,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: shadowColor.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: Offset(1, 1), // changes position of shadow
+            ),
+          ],
+        ),
+        child: InkWell(
+          onTap: () => getproducts(item),
+          child: Column(
+            children: [
+              SizedBox(height: 2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: type == 'Inflow'
+                        ? Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://127.0.0.1:8000' + img1),
+                                      fit: BoxFit.cover)),
+                            )),
+                          )
+                        : Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://127.0.0.1:8000' + image2),
+                                      fit: BoxFit.cover)),
+                            )),
+                          ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Container(
+                                  child: type == 'Inflow'
+                                      ? Text(name1,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700))
+                                      : Text(name2,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700)))),
+                          SizedBox(width: 5),
+                          Container(
+                              child: Text(amount,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)))
+                        ],
+                      ),
+                      SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              child: Text(
+                                  '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey))),
+                          Container(
+                              child: type == 'Inflow'
+                                  ? Icon(
+                                      Icons.download_rounded,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(
+                                      Icons.upload_rounded,
+                                      color: Colors.red,
+                                    )),
+                        ],
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  getproducts(item) {
+    String listId = list_payments[item]['product']['id'].toString();
+    // print(listId);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => listProducts(
+                  listId: listId,
+                )));
+  }
+
+  getShops() async {
+    var url2 = BASE_API + "shops/";
+    // print(url2);
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url2), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+
+    // print(response.body);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      // print(items);
+
+      setState(() {
+        list_shops = items;
+        isLoading2 = false;
+      });
+    }
   }
 
   getSearchBox() {
@@ -348,14 +580,14 @@ class _MemberAccountState extends State<MemberAccount> {
     String type = list_transactions[item]['type'];
     String name2 = list_transactions[item]['to'];
 
-    print(type);
-    print(name2);
+    // print(type);
+    // print(name2);
     var result = [
       for (var member in list_members)
         if (member["username"] == name2) member['image']
     ];
     String image2 = result.isEmpty ? null : result.first;
-    print(image2);
+    // print(image2);
     return GestureDetector(
       // onTap: widget.onTap,
       child: Container(
@@ -485,8 +717,8 @@ class _MemberAccountState extends State<MemberAccount> {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
     var x = ID_USER.getString('user_id');
     var url2 = BASE_API + "users/";
-    print(x);
-    print(url2);
+    // print(x);
+    // print(url2);
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url2), headers: {
@@ -498,7 +730,7 @@ class _MemberAccountState extends State<MemberAccount> {
     // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      // print(items);
 
       setState(() {
         list_members = items;
@@ -521,7 +753,7 @@ class _MemberAccountState extends State<MemberAccount> {
           child: Column(
             children: [
               SizedBox(
-                height: 25,
+                height: 10,
               ),
               Text(
                 "Your Balance",
@@ -540,20 +772,62 @@ class _MemberAccountState extends State<MemberAccount> {
                     fontSize: 18,
                     fontWeight: FontWeight.w600),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AmountAllowedPage(
+                              id: widget.memberId,
+                              username: widget.username,
+                              email: widget.email,
+                              image: widget.image,
+                              phone: widget.phone,
+                              firstName: widget.firstName,
+                              lastName: widget.lastName,
+                              address: widget.address,
+                              membre: widget.membre)))
+                },
+                //  {
+                //   print('hello');
+                //   AmountAllowedPage(id: widget.memberId);
+                // },
+                child: Text(
+                  "Amount allowed",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "${wallet['maxAmount']} DT",
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
             ],
           ),
         ),
-        Positioned(
-            top: 100,
-            left: 0,
-            right: 0,
-            child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: secondary,
-                    shape: BoxShape.circle,
-                    border: Border.all()),
-                child: Icon(Icons.add)))
+        // Positioned(
+        //     top: 100,
+        //     left: 0,
+        //     right: 0,
+        //     child: Container(
+        //         padding:
+        //             EdgeInsets.only(left: 15, top: 5, right: 15, bottom: 5),
+        //         decoration: BoxDecoration(
+        //             color: secondary,
+        //             shape: BoxShape.circle,
+        //             border: Border.all()),
+        //         child: Icon(Icons.add)))
       ],
     );
   }

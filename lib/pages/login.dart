@@ -21,8 +21,30 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+  bool is_adm = false;
   var passController = TextEditingController();
   var emailController = TextEditingController();
+  // @override
+  // void initState() {
+  //   this.valide();
+  //   super.initState();
+  // }
+  // @override
+  // void initState() {
+  //   this.valide();
+  //   super.initState();
+  // }
+
+  // Future<void> valide() async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var email = prefs.getString('email');
+  //   print('WWWWWWWWWWWWWWWWWWWWWWWWWWW$is_adm');
+  //   this.login_func();
+
+  //   runApp(MaterialApp(home: email == null ? login() : home()));
+  // }
+
   @override
   Widget build(BuildContext context) {
     // print(user);
@@ -134,8 +156,18 @@ class _loginState extends State<login> {
                           border: InputBorder.none),
                     )),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     login_func();
+
+                    // SharedPreferences prefs =
+                    //     await SharedPreferences.getInstance();
+                    // prefs.setString('email', emailController.text);
+                    // print('$is_adm');
+                    // // Navigator.pushReplacement(
+                    // //     context,
+                    // //     MaterialPageRoute(
+                    // //         builder: (BuildContext ctx) =>
+                    // //             (is_adm) ? home() : DrawerPage()));
                   },
                   child: Container(
                     padding: EdgeInsets.all(15),
@@ -239,6 +271,7 @@ class _loginState extends State<login> {
       sharedPreferences.setString(
           appConstants.KEY_ACCESS_TOKEN, access_token['access'].toString());
       SharedPreferences.getInstance().then((sharedPrefValue) {
+        if (!mounted) return;
         setState(() {
           token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
           // print('tokenuuuuuuuuuuuuu  $token');
@@ -250,9 +283,14 @@ class _loginState extends State<login> {
             .showSnackBar(const SnackBar(content: Text("invalid")));
       } else {
         print('hello');
-        print('HHHHHHHHHHHHHHHH${access_token['is_admin']}');
-        SharedPreferences Is_ADMIN = await SharedPreferences.getInstance();
-        var x = Is_ADMIN.getString('is_admin');
+
+        if (access_token['is_admin'] == true) {
+          setState(() {
+            is_adm = true;
+          });
+        }
+
+        print('$is_adm');
 
         (access_token['is_admin'])
             ? Navigator.push(

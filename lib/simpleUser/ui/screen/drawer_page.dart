@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../bracelet.dart';
+import '../../../pages/login.dart';
 import '../../../shop/constants/base_api.dart';
 import '../../../user/index.dart';
 import '../../accounts.dart';
@@ -52,17 +53,20 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
 
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-    
 
       SharedPreferences sharedPreferencesUserId =
           await SharedPreferences.getInstance();
       sharedPreferencesUserId.setString(
           appConstants.USER_ID, items['id'].toString());
       SharedPreferences.getInstance().then((sharedPrefValue) {
-        setState(() {
-          id = sharedPrefValue.getString(appConstants.USER_ID);
-          print('token  $id');
-        });
+        if (this.mounted) {
+          // check whethxer the state object is in tree
+          setState(() {
+            id = sharedPrefValue.getString(appConstants.USER_ID);
+            print('id_____  $id');
+          });
+          
+        }
       });
 
       setState(() {
@@ -208,24 +212,35 @@ class _DrawerPageState extends State<DrawerPage> with TickerProviderStateMixin {
                               ],
                             ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.power_settings_new,
-                            size: 24,
-                            color: Theme.of(context).iconTheme.color,
-                            // color: sideBarActive ? Colors.black : Colors.white,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Logout",
-                            style: Theme.of(context).textTheme.headline6,
-                          )
-                        ],
+                    InkWell(
+                      onTap: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.remove('email');
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext ctx) => login()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.power_settings_new,
+                              size: 24,
+                              color: Theme.of(context).iconTheme.color,
+                              // color: sideBarActive ? Colors.black : Colors.white,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Logout",
+                              style: Theme.of(context).textTheme.headline6,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
