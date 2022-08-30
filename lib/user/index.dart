@@ -436,7 +436,7 @@ class _IndexPageState extends State<IndexPage> {
                   address: address,
                   image: image,
                   membre: membre,
-                )));
+                ))).then((value) => fetchUsers());
   }
 
   editUser(item) {

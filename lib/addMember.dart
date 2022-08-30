@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -225,21 +224,34 @@ class _addMemberState extends State<addMember> {
             print('xxxxxxxxxxxxxxxx');
             print(widget.membre);
             print(list);
-
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => member(
-                          memberId: widget.Id,
-                          username: widget.username,
-                          email: widget.email,
-                          image: widget.image,
-                          phone: widget.phone,
-                          firstName: widget.firstName,
-                          lastName: widget.lastName,
-                          address: widget.address,
-                          membre: members,
-                        )));
+            Map<String, dynamic> params = {};
+            params.putIfAbsent('id', () => widget.Id);
+            params.putIfAbsent('username', () => widget.username);
+            params.putIfAbsent('email', () => widget.email);
+            params.putIfAbsent('image', () => widget.image);
+            params.putIfAbsent('phone', () => widget.phone);
+            params.putIfAbsent('firstName', () => widget.firstName);
+            params.putIfAbsent('lastName', () => widget.lastName);
+            params.putIfAbsent('address', () => widget.address);
+            params.putIfAbsent('members', () => members);
+            Navigator.pop(
+              context, params
+            );
+            // Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => member(
+            //               memberId: widget.Id,
+            //               username: widget.username,
+            //               email: widget.email,
+            //               image: widget.image,
+            //               phone: widget.phone,
+            //               firstName: widget.firstName,
+            //               lastName: widget.lastName,
+            //               address: widget.address,
+            //               membre: members,
+            //             )),
+            //     ModalRoute.withName('/'));
           });
         });
   }

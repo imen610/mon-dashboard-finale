@@ -328,6 +328,10 @@ class _AddMemberPageState extends State<AddMemberPage> {
                   address: address,
                   image: image,
                   membre: membre,
-                )));
+                ))).then((value) {
+      if (value != null) {
+        Navigator.pop(context, value);
+      }
+    });
   }
 }

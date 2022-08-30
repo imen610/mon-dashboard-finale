@@ -1,21 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/screens/components/UserAccountDash.dart';
-import 'package:responsive_admin_dashboard/user/Listmembers.dart';
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:responsive_admin_dashboard/user/create.dart';
-import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
-import '../../simpleUser/member_account_page.dart';
 import '../../user/edit.dart';
 
 // import 'edit.dart';
@@ -54,12 +48,10 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
         isLoading = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
 
-        // print('Bearer $token');
-        // print(token);
       });
     });
 
-    //String? token;
+    
     print(url);
     SharedPreferences access_data = await SharedPreferences.getInstance();
 
@@ -192,7 +184,6 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
     var image = item['image'];
     var status_wallet = item['wallet_blocked'];
 
-    // print(' imeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeen $status_wallet');
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -203,9 +194,7 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
               GestureDetector(
                 onTap: () => getaccount(item),
                 child: Container(
-                  child: Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.25,
+                 
                     child: Container(
                       height: 100,
                       width: double.infinity,
@@ -290,53 +279,14 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
                                     fontSize: 14,
                                     color: Colors.black.withOpacity(0.5)),
                               ),
-                              // SizedBox(
-                              //   width: 120,
-                              // ),
-                              // Container(
-                              //   margin: EdgeInsets.only(left: 130),
-                              //   child: FlutterSwitch(
-                              //     activeColor: Colors.red,
-                              //     width: 70.0,
-                              //     height: 35.0,
-                              //     valueFontSize: 30.0,
-                              //     toggleSize: 30.0,
-                              //     value: status_wallet,
-                              //     borderRadius: 30.0,
-                              //     padding: 4.0,
-                              //     // showOnOff: true,
-                              //     onToggle: (val) {
-                              //       setState(() {
-                              //         status_wallet = val;
-                              //         print('ggggggggggggg$val');
-                              //         wstat = val;
-
-                              //         // item['is_disabled'] = val;
-                              //         // print(item['is_disabled']);
-                              //       });
-                              //       ppstWalletStatus(item['id']);
-                              //     },
-                              //   ),
-                              // ),
+                              
                             ],
                           ),
                         )
                       ]),
                     ),
-                    // secondaryActions: <Widget>[
-                    //   IconSlideAction(
-                    //     caption: 'Edit',
-                    //     color: Color(0xff16F8FA),
-                    //     icon: Icons.edit,
-                    //     onTap: () => editUser(item),
-                    //   ),
-                    //   IconSlideAction(
-                    //       caption: 'Delete',
-                    //       color: Color(0xffFA1645),
-                    //       icon: Icons.delete,
-                    //       onTap: () => getwalletStatus(item['id'])),
-                    // ],
-                  ),
+                  
+                
                 ),
               )
             ],

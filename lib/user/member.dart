@@ -101,9 +101,29 @@ class _memberState extends State<member> {
           FlatButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddMemberPage(id: memberId)));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddMemberPage(id: memberId)))
+                    .then((value) {
+                  if (value != null) {
+                    Map<String, dynamic> returnedValues =
+                        value as Map<String, dynamic>;
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => member(
+                                  memberId: returnedValues.values.first,
+                                  username: returnedValues.values.elementAt(1),
+                                  email: returnedValues.values.elementAt(2),
+                                  image: returnedValues.values.elementAt(3),
+                                  phone: returnedValues.values.elementAt(4),
+                                  firstName: returnedValues.values.elementAt(5),
+                                  lastName: returnedValues.values.elementAt(6),
+                                  address: returnedValues.values.elementAt(7),
+                                  membre: returnedValues.values.last,
+                                )));
+                  }
+                });
               },
               child: Icon(
                 Icons.add,

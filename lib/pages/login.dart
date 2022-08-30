@@ -24,11 +24,7 @@ class _loginState extends State<login> {
   bool is_adm = false;
   var passController = TextEditingController();
   var emailController = TextEditingController();
-  // @override
-  // void initState() {
-  //   this.valide();
-  //   super.initState();
-  // }
+
   // @override
   // void initState() {
   //   this.valide();
@@ -159,15 +155,15 @@ class _loginState extends State<login> {
                   onTap: () async {
                     login_func();
 
-                    // SharedPreferences prefs =
-                    //     await SharedPreferences.getInstance();
-                    // prefs.setString('email', emailController.text);
-                    // print('$is_adm');
-                    // // Navigator.pushReplacement(
-                    // //     context,
-                    // //     MaterialPageRoute(
-                    // //         builder: (BuildContext ctx) =>
-                    // //             (is_adm) ? home() : DrawerPage()));
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('email', emailController.text);
+                    print('$is_adm');
+                    // Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (BuildContext ctx) =>
+                    //             (is_adm) ? home() : DrawerPage()));
                   },
                   child: Container(
                     padding: EdgeInsets.all(15),
