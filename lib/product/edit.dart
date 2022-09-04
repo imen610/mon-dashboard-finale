@@ -68,7 +68,7 @@ class _EditproductState extends State<Editproduct> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 picPicker(isImageSelected,
-                    "http://127.0.0.1:8000" + productImage.toString(), (file) {
+                    "http://192.168.43.61:8000" + productImage.toString(), (file) {
                   setState(() {
                     productImage = file.path;
                     isImageSelected = true;
@@ -222,7 +222,7 @@ class _EditproductState extends State<Editproduct> {
                   )
             : SizedBox(
                 child: Image.network(
-                  'http://127.0.0.1:8000/images/2af5edae259d0d57fc410682e0338b14_y2DfKqW.jpg',
+                  'http://192.168.43.61:8000/images/2af5edae259d0d57fc410682e0338b14_y2DfKqW.jpg',
                   width: 50,
                   height: 50,
                   fit: BoxFit.scaleDown,

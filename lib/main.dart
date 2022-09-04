@@ -1,12 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:responsive_admin_dashboard/controllers/controller.dart';
 import 'package:responsive_admin_dashboard/pages/home.dart';
 import 'package:responsive_admin_dashboard/pages/login.dart';
 import 'package:responsive_admin_dashboard/product/constants/base_api.dart';
-import 'package:responsive_admin_dashboard/screens/dash_board_screen.dart';
 import 'package:responsive_admin_dashboard/simpleUser/ui/screen/drawer_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +13,9 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString('email');
 
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: email == null ? login() : MyApp()));
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: email == null ? login() : MyApp()));
   // runApp(MyApp());
 }
 

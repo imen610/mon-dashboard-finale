@@ -281,7 +281,7 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://127.0.0.1:8000' + img),
+                        image: NetworkImage('http://192.168.43.61:8000' + img),
                         fit: BoxFit.cover)),
               )),
             ),
@@ -346,7 +346,7 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://127.0.0.1:8000' + image2),
+                        image: NetworkImage('http://192.168.43.61:8000' + image2),
                         fit: BoxFit.cover)),
               )),
             ),

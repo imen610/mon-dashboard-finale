@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:responsive_admin_dashboard/pages/home.dart';
 
+import '../simpleUser/ui/screen/drawer_page.dart';
 import 'login.dart';
 
 class signUp extends StatefulWidget {
@@ -25,7 +26,7 @@ class _signUpState extends State<signUp> {
   void sigup(String email, username, password, phone) async {
     try {
       Response response =
-          await post(Uri.parse('http://127.0.0.1:8000/auth/sign-up/'), body: {
+          await post(Uri.parse('http://192.168.43.61:8000/auth/sign-up/'), body: {
         'email': email,
         'username': username,
         'password': password,
@@ -34,17 +35,17 @@ class _signUpState extends State<signUp> {
       print(response.statusCode);
       print(response.body);
 
-      if (response.statusCode != 302) {
+      if (response.statusCode == 302) {
         var data = jsonDecode(response.body.toString());
         print(data);
         //print(data['token']);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => home()));
+            context, MaterialPageRoute(builder: (context) => DrawerPage()));
 
         print('account created successfully');
       } else {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => home()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => home()));
         print('failed');
       }
     } catch (e) {

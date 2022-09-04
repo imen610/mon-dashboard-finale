@@ -23,7 +23,7 @@ class _sendMailPageState extends State<sendMailPage> {
   Future<void> sendEmail() async {
     if (_controllerEmail.text.isNotEmpty) {
       var response = await http.post(
-          Uri.parse("http://127.0.0.1:8000/auth/request-reset-email/"),
+          Uri.parse("http://192.168.43.61:8000/auth/request-reset-email/"),
           headers: {"Content-Type": "application/json"},
           body: (jsonEncode({
             "email": _controllerEmail.text,

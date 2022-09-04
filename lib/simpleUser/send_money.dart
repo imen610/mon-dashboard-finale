@@ -57,7 +57,7 @@ class _SendMoneyState extends State<SendMoney> {
     _focusNode.addListener(onFocusChanged);
     setState(() {
       userId = widget.userId;
-      image = 'http://127.0.0.1:8000' + widget.image.toString();
+      image = 'http://192.168.43.61:8000' + widget.image.toString();
       userName = widget.username;
     });
 

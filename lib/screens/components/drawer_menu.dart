@@ -123,29 +123,3 @@ class DrawerMenu extends StatelessWidget {
   }
 }
 
-
-
-//  Expanded(
-//                   child: Container(
-//                     margin: EdgeInsets.only(top: 100, right: 100),
-//                     child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Container(
-//                             height: 70,
-//                             width: 70,
-//                             decoration: BoxDecoration(
-//                                 image: DecorationImage(
-//                                     image:
-//                                         AssetImage('assets/images/logo1.png'))),
-//                           ),
-//                           Text(
-//                             'MyWallet',
-//                             style: TextStyle(
-//                               fontFamily: 'Ubuntu',
-//                               fontSize: 30,
-//                             ),
-//                           ),
-//                         ]),
-//                   ),
-//                 ),

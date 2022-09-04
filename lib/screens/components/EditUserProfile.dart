@@ -2,15 +2,12 @@ import 'dart:convert';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:responsive_admin_dashboard/addMember.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../../pages/home.dart';
 import '../../shop/constants/base_api.dart';
-import '../../shop/constants/util.dart';
 import '../../simpleUser/main_page/theme/colors.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -185,7 +182,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
-                                image: NetworkImage('http://127.0.0.1:8000' +
+                                image: NetworkImage('http://192.168.43.61:8000' +
                                     widget.image.toString()),
                                 fit: BoxFit.cover)),
                       )),
@@ -348,12 +345,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       var bodyData = json.encode({
         "username": username,
         "email": email,
-        // "image": image,
         "first_name": firstName,
         "last_name": lastName,
         "phone": phone,
         "address": address,
-        // "image_User": null
       });
       var response = await http.put(Uri.parse(url),
           headers: {

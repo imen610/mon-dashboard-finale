@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
-import 'package:responsive_admin_dashboard/constants/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +40,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
       var items = jsonDecode(response.body);
       print(items['username']);
       print(items['image']);
-      print('http://127.0.0.1:8000' + items['image'].toString());
+      print('http://192.168.43.61:8000' + items['image'].toString());
       setState(() {
         user = items;
         isLoading = false;
@@ -113,23 +112,13 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
                         image: NetworkImage(
-                          'http://127.0.0.1:8000' + items['image'].toString(),
+                          'http://192.168.43.61:8000' + items['image'].toString(),
                         ),
                         fit: BoxFit.cover)),
               )),
             ),
           ),
-          if (!Responsive.isMobile(context))
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: appPadding / 2),
-              child: Text(
-                'Hii, ${items['username']}',
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            )
+          
         ],
       ),
     );

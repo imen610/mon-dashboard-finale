@@ -14,8 +14,6 @@ class UsersByDevice extends StatefulWidget {
 }
 
 class _UsersByDeviceState extends State<UsersByDevice> {
- 
-
   List stats = [];
 
   bool isLoading = false;

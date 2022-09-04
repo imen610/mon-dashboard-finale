@@ -199,7 +199,7 @@ class _userProfilePageState extends State<userProfilePage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
-                                image: NetworkImage('http://127.0.0.1:8000' +
+                                image: NetworkImage('http://192.168.43.61:8000' +
                                     user['image'].toString()),
                                 fit: BoxFit.cover)),
                       )),

@@ -158,7 +158,6 @@ class _loginState extends State<login> {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     prefs.setString('email', emailController.text);
-                    print('$is_adm');
                     // Navigator.pushReplacement(
                     //     context,
                     //     MaterialPageRoute(
@@ -251,7 +250,7 @@ class _loginState extends State<login> {
   Future<void> login_func() async {
     if (passController.text.isNotEmpty && emailController.text.isNotEmpty) {
       var response = await http.post(
-          Uri.parse("http://127.0.0.1:8000/auth/login/"),
+          Uri.parse("http://192.168.43.61:8000/auth/login/"),
           headers: {"Content-Type": "application/json"},
           body: (jsonEncode({
             "email": emailController.text,

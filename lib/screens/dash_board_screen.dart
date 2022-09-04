@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
-import 'package:responsive_admin_dashboard/constants/responsive.dart';
 import 'package:responsive_admin_dashboard/controllers/controller.dart';
 import 'package:responsive_admin_dashboard/screens/components/dashboard_content.dart';
 
@@ -20,7 +19,6 @@ class DashBoardScreen extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (Responsive.isDesktop(context)) Expanded(child: DrawerMenu(),),
             Expanded(
               flex: 5,
               child: DashboardContent(),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
-import 'package:responsive_admin_dashboard/constants/responsive.dart';
 import 'package:responsive_admin_dashboard/data/data.dart';
 
 import 'analytic_info_card.dart';
@@ -13,15 +12,9 @@ class AnalyticCards extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-      child: Responsive(
-        mobile: AnalyticInfoCardGridView(
-          crossAxisCount: size.width < 650 ? 2 : 4,
-          childAspectRatio: size.width < 650 ? 2 : 1.5,
-        ),
-        tablet: AnalyticInfoCardGridView(),
-        desktop: AnalyticInfoCardGridView(
-          childAspectRatio: size.width < 1400 ? 1.5 : 2.1,
-        ),
+      child: AnalyticInfoCardGridView(
+        crossAxisCount: size.width < 650 ? 2 : 4,
+        childAspectRatio: size.width < 650 ? 2 : 1.5,
       ),
     );
   }

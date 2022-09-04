@@ -279,7 +279,7 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://127.0.0.1:8000' + img),
+                        image: NetworkImage('http://192.168.43.61:8000' + img),
                         fit: BoxFit.cover)),
               )),
             ),

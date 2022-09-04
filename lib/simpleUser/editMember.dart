@@ -58,7 +58,7 @@ class _EditMemberState extends State<EditMember> {
       _controllerlastName.text = widget.lastName;
       _controllerfirstName.text = widget.firstName;
       _controlleraddress.text = widget.address;
-      image = 'http://127.0.0.1:8000' + widget.image.toString();
+      image = 'http://192.168.43.61:8000' + widget.image.toString();
     });
 
     print(widget.userId);
@@ -288,7 +288,7 @@ class _EditMemberState extends State<EditMember> {
                   )
             : SizedBox(
                 child: Image.network(
-                  'http://127.0.0.1:8000/images/2af5edae259d0d57fc410682e0338b14_y2DfKqW.jpg',
+                  'http://192.168.43.61:8000/images/2af5edae259d0d57fc410682e0338b14_y2DfKqW.jpg',
                   width: 50,
                   height: 50,
                   fit: BoxFit.scaleDown,

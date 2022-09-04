@@ -350,7 +350,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://127.0.0.1:8000' + img1),
+                                          'http://192.168.43.61:8000' + img1),
                                       fit: BoxFit.cover)),
                             )),
                           )
@@ -368,7 +368,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://127.0.0.1:8000' + image2),
+                                          'http://192.168.43.61:8000' + image2),
                                       fit: BoxFit.cover)),
                             )),
                           ),
@@ -489,7 +489,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget getmemberitems(item) {
     String image = list_members[item]['image'].toString();
-    String URL_image = 'http://127.0.0.1:8000' + image;
+    String URL_image = 'http://192.168.43.61:8000' + image;
     print(URL_image);
     var username = list_members[item]['username'];
     print('hello_hello_hello $username');
@@ -510,7 +510,7 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   image: DecorationImage(
-                      image: NetworkImage('http://127.0.0.1:8000' + image),
+                      image: NetworkImage('http://192.168.43.61:8000' + image),
                       fit: BoxFit.cover)),
             )),
           ),
@@ -608,7 +608,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://127.0.0.1:8000' + img),
+                                        'http://192.168.43.61:8000' + img),
                                     fit: BoxFit.cover)),
                           )),
                         )
@@ -626,7 +626,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://127.0.0.1:8000' + image2),
+                                        'http://192.168.43.61:8000' + image2),
                                     fit: BoxFit.cover)),
                           )),
                         ),

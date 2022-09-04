@@ -248,7 +248,7 @@ class _MemberAccountState extends State<MemberAccount> {
                               borderRadius: BorderRadius.circular(30),
                               image: DecorationImage(
                                   image: NetworkImage(
-                                    'http://127.0.0.1:8000' +
+                                    'http://192.168.43.61:8000' +
                                         widget.image.toString(),
                                   ),
                                   fit: BoxFit.cover)),
@@ -419,7 +419,7 @@ class _MemberAccountState extends State<MemberAccount> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://127.0.0.1:8000' + img1),
+                                          'http://192.168.43.61:8000' + img1),
                                       fit: BoxFit.cover)),
                             )),
                           )
@@ -437,7 +437,7 @@ class _MemberAccountState extends State<MemberAccount> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://127.0.0.1:8000' + image2),
+                                          'http://192.168.43.61:8000' + image2),
                                       fit: BoxFit.cover)),
                             )),
                           ),
@@ -627,7 +627,7 @@ class _MemberAccountState extends State<MemberAccount> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://127.0.0.1:8000' + img),
+                                        'http://192.168.43.61:8000' + img),
                                     fit: BoxFit.cover)),
                           )),
                         )
