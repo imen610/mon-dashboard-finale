@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../shop/constants/base_api.dart';
 import '../../user/constants/util.dart';
 
 class ViewLineChart extends StatefulWidget {
@@ -127,15 +128,14 @@ class _ViewLineChartState extends State<ViewLineChart> {
                 lineBarsData: [
                   LineChartBarData(
                       spots: [
-                        FlSpot(0, stats[0]["count"]),
-                        FlSpot(1, stats[1]["count"]),
-                        FlSpot(2, stats[2]["count"]),
-                        FlSpot(3, stats[3]["count"]),
-                        FlSpot(4, stats[4]["count"]),
-                        FlSpot(5, stats[5]["count"]),
-                        FlSpot(6, stats[6]["count"]),
+                        FlSpot(0, stats[0]["count"].toDouble()),
+                        FlSpot(1, stats[1]["count"].toDouble()),
+                        FlSpot(2, stats[2]["count"].toDouble()),
+                        FlSpot(3, stats[3]["count"].toDouble()),
+                        FlSpot(4, stats[4]["count"].toDouble()),
+                        FlSpot(5, stats[5]["count"].toDouble()),
+                        FlSpot(6, stats[6]["count"].toDouble()),
                       ],
-                     
                       isCurved: true,
                       colors: [primaryColor],
                       barWidth: 5,

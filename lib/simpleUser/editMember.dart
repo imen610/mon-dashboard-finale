@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 
+import '../shop/constants/base_api.dart';
 import 'accounts.dart';
 
 class EditMember extends StatefulWidget {
@@ -75,7 +76,7 @@ class _EditMemberState extends State<EditMember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(180),
+        preferredSize: Size.fromHeight(240),
         child: AppBar(
           elevation: 0,
           backgroundColor: Color(0xff89e6f5),
@@ -167,8 +168,13 @@ class _EditMemberState extends State<EditMember> {
         SizedBox(
           height: 40,
         ),
-        FlatButton(
-            color: Color(0xff89e6f5),
+        TextButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+              Color(0xff89e6f5),
+            )),
+
+            // color: Color(0xff89e6f5),
             onPressed: () {
               EditMember();
             },
@@ -254,6 +260,19 @@ class _EditMemberState extends State<EditMember> {
   ) {
     Future<XFile?> _imageFile;
     ImagePicker _picker = ImagePicker();
+    // Future pickerim() async {
+    //   final myfile = await ImagePicker().getImage(source: ImageSource.gallery);
+    //   SetSta
+    // }
+    // var x = File(fileName);
+
+    // print('uuuuuuuuuuuuuuuuuuuuuuu${File(fileName)}');
+    // String base64 = base64Encode(x.readAsBytesSync());
+    // String imagename = x.path.split("/").last;
+    // print('cuuuuuuuuuuuuuuuuuuuuuuu${File(fileName)}');
+    // print('cuuuuuuuuuuuuuuuuuuuuuuu$base64');
+    // print('cuuuuuuuuuuuuuuuuuuuuuuu$imagename');
+
     return Column(
       children: [
         fileName.isNotEmpty
@@ -264,15 +283,15 @@ class _EditMemberState extends State<EditMember> {
                   )
                 : SizedBox(
                     child: Container(
-                      width: 75,
-                      height: 75,
+                      width: 135,
+                      height: 135,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(28),
                           border: Border.all(color: Colors.black)),
                       child: Center(
                           child: Container(
-                        width: 70,
-                        height: 70,
+                        width: 130,
+                        height: 130,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
@@ -308,6 +327,7 @@ class _EditMemberState extends State<EditMember> {
                 ),
                 onPressed: () {
                   _imageFile = _picker.pickImage(source: ImageSource.gallery);
+
                   _imageFile.then((file) async {
                     onFilePicked(file);
                   });
@@ -342,7 +362,7 @@ showMessageMember(BuildContext context, String contentMessage) {
   // set up the buttons
   var primary;
 
-  Widget yesButton = FlatButton(
+  Widget yesButton = TextButton(
     child: Text("ok", style: TextStyle(color: primary)),
     onPressed: () {
       Navigator.pop(context);

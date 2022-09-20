@@ -13,6 +13,7 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../shop/constants/base_api.dart';
 import 'edit.dart';
 
 class IndexPage extends StatefulWidget {
@@ -87,7 +88,7 @@ class _IndexPageState extends State<IndexPage> {
           color: Colors.black,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => createuser()));
@@ -342,7 +343,7 @@ class _IndexPageState extends State<IndexPage> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -352,7 +353,7 @@ class _IndexPageState extends State<IndexPage> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

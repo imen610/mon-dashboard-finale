@@ -21,18 +21,19 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
   bool isLoading2 = false;
   bool isLoading3 = false;
 
-  @override
-  void initState() {
-    super.initState();
-    this.fetchtransactions();
-    this.getusers();
-  }
-
   var user;
 
   List list_shops = [];
   List list_transactions = [];
   List list_users = [];
+  @override
+  void initState() {
+    super.initState();
+    this.fetchtransactions();
+    this.getusers();
+    isLoading2 = true;
+  }
+
   fetchtransactions() async {
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
@@ -60,12 +61,7 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
   }
 
   getusers() async {
-    // SharedPreferences ID_USER = await SharedPreferences.getInstance();
-    // var x = ID_USER.getString('user_id');
-    // print('id get from constant $x');
     var url2 = BASE_API + "users/";
-    // print(x);
-    // print(url2);
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url2), headers: {
@@ -81,33 +77,6 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
 
       setState(() {
         list_users = items;
-        isLoading2 = false;
-      });
-    }
-  }
-
-  getShops() async {
-    SharedPreferences ID_USER = await SharedPreferences.getInstance();
-    var x = ID_USER.getString('user_id');
-    // print('id get from constant $x');
-    var url2 = BASE_API + "shops/";
-    // print(x);
-    // print(url2);
-
-    SharedPreferences access_data = await SharedPreferences.getInstance();
-    var response = await http.get(Uri.parse(url2), headers: {
-      'Content-Type': 'application/json ; charset=UTF-8',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${access_data.getString('access_token')}'
-    });
-
-    // print(response.body);
-    if (response.statusCode == 200) {
-      var items = jsonDecode(response.body);
-      // print(items);
-
-      setState(() {
-        list_shops = items;
         isLoading2 = false;
       });
     }
@@ -216,11 +185,13 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-       
           Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: getTransanctions(),
-          ),
+              padding: EdgeInsets.only(left: 15),
+              child: (isLoading2 == true)
+                  ? Center(
+                      child: CircularProgressIndicator(color: Colors.black),
+                    )
+                  : getTransanctions())
         ],
       ),
     );
@@ -248,6 +219,8 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
     ];
     print(result);
     String image2 = result.isEmpty ? null : result.first;
+    print('vvvvvvvvvvvvvvvvv$image2');
+
     return Container(
         margin: EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(10),

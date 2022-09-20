@@ -17,6 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../product/theme/theme_colors.dart';
 import '../screens/components/AddMember.dart';
 import '../screens/components/UserAccountDash.dart';
+import '../screens/components/UserBlockedProducts.dart';
+import '../shop/constants/base_api.dart';
 import '../shop/constants/util.dart';
 
 class member extends StatefulWidget {
@@ -47,13 +49,6 @@ class member extends StatefulWidget {
 }
 
 class _memberState extends State<member> {
-  // final TextEditingController _controllerUserName = new TextEditingController();
-  // final TextEditingController _controllerEmail = new TextEditingController();
-  // final TextEditingController _controllerphone = new TextEditingController();
-  // final TextEditingController _controllerfirstName =
-  //     new TextEditingController();
-  // final TextEditingController _controllerlastName = new TextEditingController();
-  // final TextEditingController _controlleraddress = new TextEditingController();
   String memberId = '';
   var id;
   bool isLoading = false;
@@ -66,20 +61,13 @@ class _memberState extends State<member> {
   TextEditingController? _textEditingController = TextEditingController();
   @override
   void initState() {
+    this.fetchUsers();
     // TODO: implement initState
     super.initState();
     setState(() {
       memberId = widget.memberId;
-
-      // _controllerUserName.text = widget.username;
-      // _controllerEmail.text = widget.email;
-      // _controllerphone.text = widget.phone;
-      // _controllerlastName.text = widget.lastName;
-      // _controllerfirstName.text = widget.firstName;
-      // _controlleraddress.text = widget.address;
       image = widget.image;
-      print(
-          '::::::::::::::::::::::::::::::::::${image.substring(0, 4).toString()}');
+      print('::${image.substring(0, 4).toString()}');
     });
   }
 
@@ -98,7 +86,7 @@ class _memberState extends State<member> {
           color: Colors.black,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () {
                 Navigator.push(
                         context,
@@ -286,8 +274,9 @@ class _memberState extends State<member> {
                                   image: NetworkImage(image.toString()),
                                   fit: BoxFit.cover)
                               : DecorationImage(
-                                  image: NetworkImage('http://192.168.43.61:8000' +
-                                      image.toString()),
+                                  image: NetworkImage(
+                                      'http://192.168.43.61:8000' +
+                                          image.toString()),
                                   fit: BoxFit.cover)),
                     )),
                   ),
@@ -388,6 +377,20 @@ class _memberState extends State<member> {
                               )),
                         ),
                       )),
+                      PopupMenuItem(
+                          child: InkWell(
+                        onTap: () => getproductBlocked(item),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.block,
+                            color: Color.fromARGB(255, 255, 93, 43),
+                          ),
+                          title: Text('blocked_products',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 255, 93, 43),
+                              )),
+                        ),
+                      )),
                     ],
                     icon: Icon(
                       Icons.more_vert_rounded,
@@ -401,6 +404,21 @@ class _memberState extends State<member> {
         ),
       ),
     );
+  }
+
+  getproductBlocked(item) {
+    var memberId = item['id'].toString();
+
+    print(memberId);
+
+    var prod_block = item['prod_block'];
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => userProductBlocked(
+                  memberId: memberId,
+                  prod_block: prod_block,
+                )));
   }
 
   getaccount(item) {
@@ -449,7 +467,6 @@ class _memberState extends State<member> {
     print('$wstat');
 
     if (response.statusCode != 200) {
-      fetchUsers();
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("okk !!")));
     }
@@ -497,7 +514,7 @@ class _memberState extends State<member> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -507,7 +524,7 @@ class _memberState extends State<member> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

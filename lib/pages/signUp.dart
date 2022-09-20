@@ -24,32 +24,51 @@ class _signUpState extends State<signUp> {
   TextEditingController phoneNumberController = TextEditingController();
 
   void sigup(String email, username, password, phone) async {
-    try {
-      Response response =
-          await post(Uri.parse('http://192.168.43.61:8000/auth/sign-up/'), body: {
-        'email': email,
-        'username': username,
-        'password': password,
-        'phone_number': int.parse(phone).toString()
-      });
-      print(response.statusCode);
-      print(response.body);
+    if (emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        usernameController.text.isNotEmpty &&
+        phoneNumberController.text.isNotEmpty) {
+      try {
+        Response response = await post(
+            Uri.parse('http://192.168.43.61:8000/auth/sign-up/'),
+            body: {
+              'email': email,
+              'username': username,
+              'password': password,
+              'phone_number': int.parse(phone).toString()
+            });
+        print(response.statusCode);
 
-      if (response.statusCode == 302) {
-        var data = jsonDecode(response.body.toString());
-        print(data);
-        //print(data['token']);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DrawerPage()));
+        if (response.statusCode == 302) {
+          var data = jsonDecode(response.body.toString());
+          print(data);
+          //print(data['token']);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => DrawerPage()));
 
-        print('account created successfully');
-      } else {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => home()));
-        print('failed');
+          print('account created successfully');
+        } else {
+          var d = json.decode(response.body);
+          print(d.runtimeType);
+          print(d.runtimeType);
+          print(d);
+          d.forEach((key, val) {
+            print("pays : ${key.toUpperCase()}, capitale : $val ");
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('${val[0]}')));
+          });
+
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => home()));
+          print('failed');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("failed")));
       }
-    } catch (e) {
-      print(e.toString());
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("black field not allowed")));
     }
   }
 

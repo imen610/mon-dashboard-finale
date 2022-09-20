@@ -275,7 +275,6 @@ class _HomePageState extends State<HomePage> {
 
   getproducts(item) {
     String listId = list_payments[item]['product']['id'].toString();
-    // print(listId);
 
     Navigator.push(
         context,
@@ -301,15 +300,12 @@ class _HomePageState extends State<HomePage> {
     String type = list_payments[item]['type'];
     String name2 = list_payments[item]['to'];
 
-    // print(type);
     var result = [
       for (var shop in list_shops)
         if (shop["name_shop"] == name2) shop['image_shop']
     ];
-    // print(result);
-    // print(result);
+
     String image2 = result.isEmpty ? null : result.first;
-    // print('wwwwwwwwwwwwwwwwwwww${list_payments[item]['product']['product']}');
     return GestureDetector(
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
@@ -441,7 +437,6 @@ class _HomePageState extends State<HomePage> {
 
   getShops() async {
     var url2 = BASE_API + "shops/";
-    // print(url2);
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
     var response = await http.get(Uri.parse(url2), headers: {
@@ -450,10 +445,8 @@ class _HomePageState extends State<HomePage> {
       'Authorization': 'Bearer ${access_data.getString('access_token')}'
     });
 
-    // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      // print(items);
 
       setState(() {
         list_shops = items;
@@ -466,24 +459,26 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       padding: EdgeInsets.only(bottom: 5),
       scrollDirection: Axis.horizontal,
-      child: Row(
-          children: List.generate(
-              list_members.length,
-              (index) => index == 0
-                  ? Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 15),
-                          child: getSearchBox(),
-                        ),
-                        Container(
+      child: Flexible(
+        child: Row(
+            children: List.generate(
+                list_members.length,
+                (index) => index == 0
+                    ? Row(
+                        children: [
+                          Container(
                             margin: const EdgeInsets.only(right: 15),
-                            child: getmemberitems(index))
-                      ],
-                    )
-                  : Container(
-                      margin: const EdgeInsets.only(right: 15),
-                      child: getmemberitems(index)))),
+                            child: getSearchBox(),
+                          ),
+                          Container(
+                              margin: const EdgeInsets.only(right: 15),
+                              child: getmemberitems(index))
+                        ],
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(right: 15),
+                        child: getmemberitems(index)))),
+      ),
     );
   }
 
@@ -710,13 +705,12 @@ class _HomePageState extends State<HomePage> {
       'Authorization': 'Bearer ${access_data.getString('access_token')}'
     });
 
-    // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      // print(items);
 
       setState(() {
         list_members = items;
+        // print('wwwwwwwwwwwwwwwwwwwwwwwww${list_members}');
         isLoading3 = false;
       });
     }
@@ -732,7 +726,6 @@ class _HomePageState extends State<HomePage> {
     var lastName = index['last_name'].toString();
     var phone = index['phone'].toString();
     var address = index['address'].toString();
-    // print(image);
     Navigator.push(
         context,
         MaterialPageRoute(

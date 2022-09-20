@@ -68,7 +68,8 @@ class _EditproductState extends State<Editproduct> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 picPicker(isImageSelected,
-                    "http://192.168.43.61:8000" + productImage.toString(), (file) {
+                    "http://192.168.43.61:8000" + productImage.toString(),
+                    (file) {
                   setState(() {
                     productImage = file.path;
                     isImageSelected = true;
@@ -118,8 +119,11 @@ class _EditproductState extends State<Editproduct> {
         SizedBox(
           height: 30,
         ),
-        FlatButton(
-            color: Color.fromARGB(255, 233, 181, 38),
+        TextButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+              Color.fromARGB(255, 233, 181, 38),
+            )),
             onPressed: () {
               editproduct();
             },
@@ -169,7 +173,7 @@ class _EditproductState extends State<Editproduct> {
     // set up the buttons
     var primary;
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

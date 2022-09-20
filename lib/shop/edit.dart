@@ -126,8 +126,9 @@ class _EditShopState extends State<EditShop> {
         SizedBox(
           height: 30,
         ),
-        FlatButton(
-            color: Color.fromARGB(255, 233, 181, 38),
+        TextButton(
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 233, 181, 38),)),
+          
             onPressed: () {
               EditShop();
             },
@@ -178,7 +179,7 @@ class _EditShopState extends State<EditShop> {
     // set up the buttons
     var primary;
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

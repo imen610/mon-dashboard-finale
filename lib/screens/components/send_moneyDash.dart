@@ -13,6 +13,7 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../shop/constants/base_api.dart';
 import '../../simpleUser/send_money.dart';
 import '../../user/edit.dart';
 import 'SendPage.dart';
@@ -81,21 +82,10 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Users",
+          "charge the wristband",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        actions: <Widget>[
-          FlatButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => createuser()));
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-              ))
-        ],
       ),
       body: getBody(),
     );
@@ -113,13 +103,6 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
             flex: 1,
             child: Column(
               children: [
-                // Text(
-                //   "Users",
-                //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
                 Container(
                   width: double.infinity,
                   height: 48,
@@ -328,7 +311,7 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -338,7 +321,7 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

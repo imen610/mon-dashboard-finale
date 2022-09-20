@@ -14,6 +14,8 @@ import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/components/UserAccountDash.dart';
+import '../screens/components/UserBlockedProducts.dart';
+import '../shop/constants/base_api.dart';
 import 'edit.dart';
 
 class IndexPage extends StatefulWidget {
@@ -69,7 +71,6 @@ class _IndexPageState extends State<IndexPage> {
           return user['is_membre'] == false;
         }).toList();
         superuser = superusers;
-        print('****************************${superusers[2]}');
       });
 
       return;
@@ -96,7 +97,7 @@ class _IndexPageState extends State<IndexPage> {
           color: Colors.black,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => createuser()));
@@ -211,7 +212,8 @@ class _IndexPageState extends State<IndexPage> {
   Widget cardItem(item) {
     var username = item['username'];
     var email = item['email'];
-    var image = item['image'];
+    var image = 'http://192.168.43.61:8000' + item['image'];
+    print('<<<<<<<<<<<<<$image');
     var mem_length = item['membre'];
     List memL = item['membre'];
     var status_wallet = item['wallet_blocked'];
@@ -283,6 +285,29 @@ class _IndexPageState extends State<IndexPage> {
                                   Text(username.toString(),
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black)),
+                                  Spacer(),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 80),
+                                    child: FlutterSwitch(
+                                      activeColor: Colors.red,
+                                      width: 50.0,
+                                      height: 25.0,
+                                      valueFontSize: 20.0,
+                                      toggleSize: 20.0,
+                                      value: status_wallet,
+                                      borderRadius: 20.0,
+                                      padding: 4.0,
+                                      // showOnOff: true,
+                                      onToggle: (val) {
+                                        setState(() {
+                                          status_wallet = val;
+                                          print('ggggggggggggg$val');
+                                          wstat = val;
+                                        });
+                                        ppstWalletStatus(item['id']);
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -366,6 +391,20 @@ class _IndexPageState extends State<IndexPage> {
                                     )),
                               ),
                             )),
+                            PopupMenuItem(
+                                child: InkWell(
+                              onTap: () => getproductBlocked(item),
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.block,
+                                  color: Color.fromARGB(255, 255, 93, 43),
+                                ),
+                                title: Text('products block',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 93, 43),
+                                    )),
+                              ),
+                            )),
                           ],
                           icon: Icon(
                             Icons.more_vert_rounded,
@@ -382,6 +421,21 @@ class _IndexPageState extends State<IndexPage> {
         ),
       ),
     );
+  }
+
+  getproductBlocked(item) {
+    var memberId = item['id'].toString();
+
+    print(memberId);
+
+    var prod_block = item['prod_block'];
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => userProductBlocked(
+                  memberId: memberId,
+                  prod_block: prod_block,
+                )));
   }
 
   getaccount(item) {
@@ -481,21 +535,25 @@ class _IndexPageState extends State<IndexPage> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
       ),
       onPressed: () {
-        Navigator.pop(context);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => IndexPage()),
+            (Route<dynamic> route) => false);
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
-        Navigator.pop(context);
-
+        fetchUsers();
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => IndexPage()),
+            (Route<dynamic> route) => false);
         deleteUser(item['id']);
       },
     );

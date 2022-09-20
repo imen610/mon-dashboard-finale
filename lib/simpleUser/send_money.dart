@@ -10,6 +10,7 @@ import 'package:responsive_admin_dashboard/simpleUser/ui/screen/drawer_page.dart
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../shop/constants/base_api.dart';
 import 'main_page/pages/home_page.dart';
 
 class SendMoney extends StatefulWidget {
@@ -238,6 +239,10 @@ class _SendMoneyState extends State<SendMoney> {
         ));
   }
 
+  Future <void> face_recog() async{
+     var url = "http://192.168.1.38:5000";
+    print(url);
+  }
   Future<void> SendMoneyToMember() async {
     var url = BASE_API + "pay/";
     print(url);
@@ -280,7 +285,7 @@ class _SendMoneyState extends State<SendMoney> {
     // set up the buttons
     var primary;
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 
+import '../shop/constants/base_api.dart';
 import 'constants/base_api.dart';
 
 class EditUser extends StatefulWidget {
@@ -167,8 +168,10 @@ class _EditUserState extends State<EditUser> {
         SizedBox(
           height: 40,
         ),
-        FlatButton(
-            color: Color(0xff89e6f5),
+        TextButton(
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xff89e6f5),)),
+
+             
             onPressed: () {
               editUser();
             },

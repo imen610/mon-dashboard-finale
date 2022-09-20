@@ -387,7 +387,7 @@ class _transactionsPageState extends State<transactionsPage> {
     // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      // print(items);
 
       setState(() {
         list_members = items;

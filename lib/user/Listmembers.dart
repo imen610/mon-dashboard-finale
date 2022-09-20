@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:responsive_admin_dashboard/user/constants/util.dart';
 
+import '../shop/constants/base_api.dart';
 import '../shop/theme/theme_colors.dart';
 import 'constants/base_api.dart';
 import 'member.dart';
@@ -380,7 +381,7 @@ class _ListMemberState extends State<ListMember> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -390,7 +391,7 @@ class _ListMemberState extends State<ListMember> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

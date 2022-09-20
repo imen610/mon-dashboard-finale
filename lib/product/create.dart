@@ -51,8 +51,9 @@ class _createproductState extends State<createproduct> {
         SizedBox(
           height: 40,
         ),
-        FlatButton(
-            color: primary,
+        TextButton(
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primary)),
+            
             onPressed: () {
               CreateNewproduct();
             },

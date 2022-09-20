@@ -69,7 +69,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
           color: Colors.black,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => createshop()));
@@ -331,7 +331,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -341,7 +341,7 @@ class _IndexPageProductState extends State<IndexPageProduct> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

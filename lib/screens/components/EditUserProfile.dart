@@ -372,7 +372,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     // set up the buttons
     var primary;
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.push(

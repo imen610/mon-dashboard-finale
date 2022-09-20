@@ -10,6 +10,7 @@ import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+import '../../shop/constants/base_api.dart';
 import '../../user/edit.dart';
 
 // import 'edit.dart';
@@ -93,7 +94,7 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
           color: Colors.black,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => createuser()));
@@ -368,7 +369,7 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -378,7 +379,7 @@ class _AccountsDashPageState extends State<AccountsDashPage> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

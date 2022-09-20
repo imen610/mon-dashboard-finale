@@ -151,84 +151,84 @@ class _BarChartUsersState extends State<BarChartUsers> {
             barGroups: [
                 BarChartGroupData(x: stats[0]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[0]["count"],
+                      y: stats[0]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[1]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[1]["count"],
+                      y: stats[1]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[2]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[2]["count"],
+                      y: stats[2]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[3]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[3]["count"],
+                      y: stats[3]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[4]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[4]["count"],
+                      y: stats[4]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[5]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[5]["count"],
+                      y: stats[5]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[6]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[6]["count"],
+                      y: stats[6]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[7]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[7]["count"],
+                      y: stats[7]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[8]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[8]["count"],
+                      y: stats[8]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[9]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[9]["count"],
+                      y: stats[9]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[10]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[10]["count"],
+                      y: stats[10]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))
                 ]),
                 BarChartGroupData(x: stats[11]["month"], barRods: [
                   BarChartRodData(
-                      y: stats[11]["count"],
+                      y: stats[11]["count"].toDouble(),
                       width: 15,
                       colors: [primaryColor],
                       borderRadius: BorderRadius.circular(5))

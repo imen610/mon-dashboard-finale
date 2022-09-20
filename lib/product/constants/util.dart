@@ -6,7 +6,7 @@ showMessage(BuildContext context, String contentMessage) {
   // set up the buttons
   var primary;
 
-  Widget yesButton = FlatButton(
+  Widget yesButton = TextButton(
     child: Text("ok", style: TextStyle(color: primary)),
     onPressed: () {
       Navigator.pop(context);

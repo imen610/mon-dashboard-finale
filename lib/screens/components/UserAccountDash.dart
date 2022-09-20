@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import '../../../../shop/constants/base_api.dart';
 
 import '../../simpleUser/AmountAllowedpage.dart';
+import '../../simpleUser/list_product_paied.dart';
 import '../../simpleUser/main_page/theme/colors.dart';
 import '../../simpleUser/main_page/widgets/balance_card.dart';
 
@@ -51,12 +52,22 @@ class _userAccountDashState extends State<userAccountDash> {
   List members = [];
   var wallet;
   var user;
+  List list_shops = [];
+
+  bool pay = false;
+  bool trans = false;
+  bool isLoading = false;
+  List list_payments = [];
   @override
   void initState() {
     super.initState();
+    this.getShops();
+
     this.getMembers();
     this.fetchwallet();
     this.getTransaction();
+    this.fetchpayments();
+
     isLoading1 = true;
     isLoading2 = true;
     isLoading3 = true;
@@ -101,6 +112,32 @@ class _userAccountDashState extends State<userAccountDash> {
     }
   }
 
+  fetchpayments() async {
+    String? token;
+    SharedPreferences.getInstance().then((sharedPrefValue) {
+      setState(() {
+        isLoading = false;
+        token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+      });
+    });
+
+    var url = BASE_API + "payments/${widget.memberId}/${widget.username}/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+      setState(() {
+        list_payments = items;
+        isLoading = false;
+      });
+    }
+  }
+
   getTransaction() async {
     var url = BASE_API + "transactions/${widget.memberId}/${widget.username}/";
     print('this is our url');
@@ -124,8 +161,11 @@ class _userAccountDashState extends State<userAccountDash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: getAppBar(),
-      body: (isLoading1 || isLoading2 || isLoading3)
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(330.0), // here the desired height
+        child: getAppBar(),
+      ),
+      body: (isLoading2 == true && isLoading3 == true)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
             )
@@ -134,102 +174,178 @@ class _userAccountDashState extends State<userAccountDash> {
   }
 
   getAppBar() {
-    return Container(
-      height: 100,
-      padding: EdgeInsets.only(left: 30, right: 20, top: 20),
-      decoration: BoxDecoration(
-          color: appBgColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-                color: shadowColor.withOpacity(0.1),
-                blurRadius: .5,
-                spreadRadius: .5,
-                offset: Offset(0, 1))
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: new Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          SizedBox(
-            width: 120,
-          ),
-          Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+    return Column(
+      children: [
+        Container(
+          height: 100,
+          padding: EdgeInsets.only(left: 30, right: 20, top: 20),
+          decoration: BoxDecoration(
+              color: appBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
               boxShadow: [
                 BoxShadow(
-                  color: Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
+                    color: shadowColor.withOpacity(0.1),
+                    blurRadius: .5,
+                    spreadRadius: .5,
+                    offset: Offset(0, 1))
+              ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: new Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
+              ),
+              SizedBox(
+                width: 120,
+              ),
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Color.fromARGB(255, 227, 219, 219).withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: Offset(1, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                // child: Icon(Icons.notifications_rounded)
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(top: 30),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${widget.username}",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 34, 33, 33),
+                                    fontSize: 13),
+                              )
+                            ]),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 55,
+                        height: 55,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(color: Colors.black)),
+                        child: Center(
+                            child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                    widget.image.toString(),
+                                  ),
+                                  fit: BoxFit.cover)),
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                getBalanceCard(),
+                // Positioned(
+                //     top: 100,
+                //     left: 0,
+                //     right: 0,
+                //     child: Container(
+                //         padding: EdgeInsets.all(5),
+                //         decoration: BoxDecoration(
+                //             color: secondary,
+                //             shape: BoxShape.circle,
+                //             border: Border.all()),
+                //         child: Icon(Icons.add)))
               ],
-            ),
-            // child: Icon(Icons.notifications_rounded)
-            child: Container(
-              padding: EdgeInsets.all(3),
+            )),
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            )),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            alignment: Alignment.centerLeft,
+            child: Flexible(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(top: 30),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${widget.username}",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 34, 33, 33),
-                                fontSize: 13),
-                          )
-                        ]),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        pay = false;
+                        trans = true;
+                      });
+                    },
+                    child: Text(
+                      "Transactions",
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                    ),
                   ),
                   SizedBox(
-                    width: 10,
+                    width: 160,
                   ),
-                  Container(
-                    width: 55,
-                    height: 55,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
-                        border: Border.all(color: Colors.black)),
-                    child: Center(
-                        child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                widget.image.toString(),
-                              ),
-                              fit: BoxFit.cover)),
-                    )),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        pay = true;
+                        trans = false;
+                      });
+                    },
+                    child: Text(
+                      "payments",
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
+            ))
+      ],
     );
   }
 
@@ -237,77 +353,202 @@ class _userAccountDashState extends State<userAccountDash> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          getAppBar(),
-          SizedBox(
-            height: 25,
-          ),
-          Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  getBalanceCard(),
-                  // Positioned(
-                  //     top: 100,
-                  //     left: 0,
-                  //     right: 0,
-                  //     child: Container(
-                  //         padding: EdgeInsets.all(5),
-                  //         decoration: BoxDecoration(
-                  //             color: secondary,
-                  //             shape: BoxShape.circle,
-                  //             border: Border.all()),
-                  //         child: Icon(Icons.add)))
-                ],
-              )),
-          Container(
-              padding: EdgeInsets.only(left: 20),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-              )),
-          SizedBox(
-            height: 15,
-          ),
-          // Padding(
-          //   padding: EdgeInsets.only(left: 15),
-          //   child: getRecentUsers(),
-          // ),
-          SizedBox(
-            height: 25,
-          ),
-          Container(
-              padding: EdgeInsets.only(left: 20, right: 15),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Transactions",
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                  ),
-                  Expanded(
-                      child: Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "Today",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ))),
-                  Icon(Icons.expand_more_rounded),
-                ],
-              )),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: (list_transactions.length != 0)
-                ? getTransanctions()
-                : Center(child: Text('No Transactions')),
-          ),
+          (trans == true || pay == false)
+              ? Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: (list_transactions.length != 0 || isLoading2 == false)
+                      ? getTransanctions()
+                      : Center(child: Text('No Transactions')),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: (list_payments.length != 0)
+                      ? getPayments()
+                      : Center(child: Text('No Transactions')),
+                ),
         ],
+      ),
+    );
+  }
+
+  getproducts(item) {
+    String listId = list_payments[item]['product']['id'].toString();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => listProducts(
+                  listId: listId,
+                )));
+  }
+
+  getShops() async {
+    var url2 = BASE_API + "shops/";
+
+    SharedPreferences access_data = await SharedPreferences.getInstance();
+    var response = await http.get(Uri.parse(url2), headers: {
+      'Content-Type': 'application/json ; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${access_data.getString('access_token')}'
+    });
+
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body);
+
+      setState(() {
+        list_shops = items;
+        isLoading2 = false;
+      });
+    }
+  }
+
+  getPayments() {
+    return Column(
+        children: List.generate(
+            list_payments.length,
+            (index) => Container(
+                margin: const EdgeInsets.only(right: 15),
+                child: PaymentsItems(index))));
+  }
+
+  Widget PaymentsItems(item) {
+    String img1 = list_payments[item]['account']['image_shop'].toString();
+    String name1 = list_payments[item]['account']['name_shop'];
+    String amount = list_payments[item]['amount'];
+    String type = list_payments[item]['type'];
+    String name2 = list_payments[item]['to'];
+
+    var result = [
+      for (var shop in list_shops)
+        if (shop["name_shop"] == name2) shop['image_shop']
+    ];
+
+    String image2 = result.isEmpty ? null : result.first;
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: secondary,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: shadowColor.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: Offset(1, 1), // changes position of shadow
+            ),
+          ],
+        ),
+        child: InkWell(
+          onTap: () => getproducts(item),
+          child: Column(
+            children: [
+              SizedBox(height: 2),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: type == 'Inflow'
+                        ? Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://192.168.43.61:8000' + img1),
+                                      fit: BoxFit.cover)),
+                            )),
+                          )
+                        : Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://192.168.43.61:8000' + image2),
+                                      fit: BoxFit.cover)),
+                            )),
+                          ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Container(
+                                  child: type == 'Inflow'
+                                      ? Text(name1,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700))
+                                      : Text(name2,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700)))),
+                          SizedBox(width: 5),
+                          Container(
+                              child: Text(amount,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)))
+                        ],
+                      ),
+                      SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              child: Text(
+                                  '${DateFormat.yMd().add_jm().format(DateTime.tryParse(list_payments[item]['timestamp']))}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey))),
+                          Container(
+                              child: type == 'Inflow'
+                                  ? Icon(
+                                      Icons.download_rounded,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(
+                                      Icons.upload_rounded,
+                                      color: Colors.red,
+                                    )),
+                        ],
+                      ),
+                    ],
+                  )),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

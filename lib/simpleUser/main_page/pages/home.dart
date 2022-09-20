@@ -4,7 +4,6 @@ import 'package:responsive_admin_dashboard/simpleUser/main_page/pages/home_page.
 
 import '../theme/colors.dart';
 
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -14,7 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int activeTab = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,8 +24,8 @@ class _HomeState extends State<Home> {
       ),
       child: Scaffold(
           backgroundColor: Colors.white,
-          bottomNavigationBar: getBottomBar(),
-          floatingActionButton: getHomeButton(),
+          // bottomNavigationBar: getBottomBar(),
+          // floatingActionButton: getHomeButton(),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterDocked,
           body: getBarPage()),

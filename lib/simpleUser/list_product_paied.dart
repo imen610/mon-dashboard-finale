@@ -87,14 +87,6 @@ class _listProductsState extends State<listProducts> {
         leading: BackButton(
           color: Colors.black,
         ),
-        actions: <Widget>[
-          FlatButton(
-              onPressed: () {},
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-              ))
-        ],
       ),
       body: getBody(),
     );
@@ -152,7 +144,7 @@ class _listProductsState extends State<listProducts> {
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: "search for contacts"),
+                            hintText: "search for products"),
                       ),
                     )
                   ]),
@@ -202,7 +194,7 @@ class _listProductsState extends State<listProducts> {
     return Card(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -241,8 +233,9 @@ class _listProductsState extends State<listProducts> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               image: DecorationImage(
-                                  image: NetworkImage('http://192.168.43.61:8000' +
-                                      image.toString()),
+                                  image: NetworkImage(
+                                      'http://192.168.43.61:8000' +
+                                          image.toString()),
                                   fit: BoxFit.cover)),
                         )),
                       ),

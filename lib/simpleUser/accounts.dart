@@ -15,6 +15,7 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../shop/constants/base_api.dart';
 import '../user/edit.dart';
 import 'member_account_page.dart';
 
@@ -101,7 +102,7 @@ class _AccountsPageState extends State<AccountsPage> {
           color: Colors.black,
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => createuser()));
@@ -229,8 +230,8 @@ class _AccountsPageState extends State<AccountsPage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(
-                              image: NetworkImage(
-                                  'http://192.168.43.61:8000' + image.toString()),
+                              image: NetworkImage('http://192.168.43.61:8000' +
+                                  image.toString()),
                               fit: BoxFit.cover)),
                     )),
                   ),
@@ -423,7 +424,7 @@ class _AccountsPageState extends State<AccountsPage> {
 
   showDeleteAlert(BuildContext context, item) {
     // set up the buttons
-    Widget noButton = FlatButton(
+    Widget noButton = TextButton(
       child: Text(
         "No",
         style: TextStyle(color: primary),
@@ -433,7 +434,7 @@ class _AccountsPageState extends State<AccountsPage> {
       },
     );
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

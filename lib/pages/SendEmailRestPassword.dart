@@ -19,53 +19,14 @@ class sendMailPage extends StatefulWidget {
 // http://127.0.0.1:8000/auth/request-reset-email/
 class _sendMailPageState extends State<sendMailPage> {
   TextEditingController _controllerEmail = TextEditingController();
-
-  Future<void> sendEmail() async {
-    if (_controllerEmail.text.isNotEmpty) {
-      var response = await http.post(
-          Uri.parse("http://192.168.43.61:8000/auth/request-reset-email/"),
-          headers: {"Content-Type": "application/json"},
-          body: (jsonEncode({
-            "email": _controllerEmail.text,
-          })));
-      var access_token = json.decode(response.body);
-      String? token;
-      print('hello');
-      // print('----------->${response.body}');
-
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      sharedPreferences.setString(
-          appConstants.KEY_ACCESS_TOKEN, access_token['access'].toString());
-      SharedPreferences.getInstance().then((sharedPrefValue) {
-        setState(() {
-          token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
-          // print('token  $token');
-        });
-      });
-      if (response.statusCode != 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("invalid")));
-      } else {
-        showMessage(context,
-            '"success":"we have sent you a link to reset yourpassword"');
-        // Navigator.push(
-        //     //  home() ===> admin
-        //     // and DrawerPage() =====> simple user
-        //     context,
-        //     MaterialPageRoute(builder: (context) => login()));
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("black field not allowed")));
-    }
-  }
+  bool err = false;
 
   bool isFocused = false;
   FocusNode _focusNode = new FocusNode();
   @override
   void initState() {
     _focusNode.addListener(onFocusChanged);
+    err = false;
 
     // TODO: implement initState
     super.initState();
@@ -94,6 +55,10 @@ class _sendMailPageState extends State<sendMailPage> {
             child: AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
+              title: Text(
+                'Rest password',
+                style: TextStyle(color: Colors.black),
+              ),
               leading: BackButton(
                 color: Colors.black,
               ),
@@ -183,11 +148,12 @@ class _sendMailPageState extends State<sendMailPage> {
         onPressed: () async {
           setState(() {
             state = ButtonState.loading;
+            err = false;
+            sendEmail();
           });
           await Future.delayed(Duration(seconds: 2));
           setState(() {
             state = ButtonState.done;
-            sendEmail();
           });
           await Future.delayed(Duration(seconds: 3));
           setState(() {
@@ -200,16 +166,26 @@ class _sendMailPageState extends State<sendMailPage> {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isDone ? Colors.green : Color.fromARGB(255, 252, 193, 75),
+        color: err
+            ? Colors.red
+            : isDone
+                ? Colors.green
+                : Color.fromARGB(255, 252, 193, 75),
       ),
       child: Center(
-          child: isDone
+          child: err
               ? Icon(
-                  Icons.done,
+                  Icons.cancel,
                   size: 52,
                   color: Colors.white,
                 )
-              : CircularProgressIndicator(color: Colors.white)),
+              : isDone
+                  ? Icon(
+                      Icons.done,
+                      size: 52,
+                      color: Colors.white,
+                    )
+                  : CircularProgressIndicator(color: Colors.white)),
     );
   }
 
@@ -261,11 +237,56 @@ class _sendMailPageState extends State<sendMailPage> {
   //   );
   // }
 
+  Future<void> sendEmail() async {
+    if (_controllerEmail.text.isNotEmpty) {
+      var response = await http.post(
+          Uri.parse("http://192.168.43.61:8000/auth/request-reset-email/"),
+          headers: {"Content-Type": "application/json"},
+          body: (jsonEncode({
+            "email": _controllerEmail.text,
+          })));
+      var access_token = json.decode(response.body);
+      String? token;
+      print('hello');
+      // print('----------->${response.body}');
+
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString(
+          appConstants.KEY_ACCESS_TOKEN, access_token['access'].toString());
+      SharedPreferences.getInstance().then((sharedPrefValue) {
+        setState(() {
+          token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
+          // print('token  $token');
+        });
+      });
+      if (response.statusCode != 200) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("invalid")));
+        setState(() {
+          err = true;
+        });
+      } else {
+        setState(() {
+          err = false;
+        });
+        showMessage(context,
+            '"success":"we have sent you a link to reset your password"');
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("black field not allowed")));
+      setState(() {
+        err = true;
+      });
+    }
+  }
+
   showMessage(BuildContext context, String contentMessage) {
     // set up the buttons
     var primary;
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

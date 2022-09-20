@@ -99,10 +99,10 @@ class _UsersByDeviceState extends State<UsersByDevice> {
                     padding: EdgeInsets.only(top: 70),
                     child: PieChart(
                       dataMap: {
-                        stats[0][0]: stats[0][1],
-                        stats[1][0]: stats[1][1],
-                        stats[2][0]: stats[2][1],
-                        stats[3][0]: stats[3][1],
+                        stats[0][0]: stats[0][1].toDouble(),
+                        stats[1][0]: stats[1][1].toDouble(),
+                        stats[2][0]: stats[2][1].toDouble(),
+                        stats[3][0]: stats[3][1].toDouble(),
                       },
                       chartType: ChartType.ring,
                       baseChartColor: Colors.grey[50]!.withOpacity(0.15),

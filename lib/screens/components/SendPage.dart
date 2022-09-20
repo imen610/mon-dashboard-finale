@@ -8,10 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:responsive_admin_dashboard/screens/components/send_moneyDash.dart';
 import 'package:responsive_admin_dashboard/simpleUser/ui/screen/drawer_page.dart';
 
-import 'package:responsive_admin_dashboard/user/constants/util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pages/home.dart';
+import '../../shop/constants/base_api.dart';
 
 class SendPageDash extends StatefulWidget {
   //const EditUser({Key? key}) : super(key: key);
@@ -282,7 +282,7 @@ class _SendPageDashState extends State<SendPageDash> {
     // set up the buttons
     var primary;
 
-    Widget yesButton = FlatButton(
+    Widget yesButton = TextButton(
       child: Text("ok", style: TextStyle(color: primary)),
       onPressed: () {
         Navigator.pop(context);

@@ -1,39 +1,42 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:responsive_admin_dashboard/product/constants/base_api.dart';
 import 'package:http/http.dart' as http;
-import 'package:responsive_admin_dashboard/shop/constants/base_api.dart';
-import 'package:responsive_admin_dashboard/shop/create.dart';
-import 'package:responsive_admin_dashboard/shop/productsPage.dart';
-import 'package:responsive_admin_dashboard/shop/theme/theme_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'edit.dart';
+import 'addProd.dart';
 
-class IndexPageShop extends StatefulWidget {
-  const IndexPageShop({Key? key}) : super(key: key);
-
+class addblockProductPage extends StatefulWidget {
+  // const addblockProductPage({Key? key}) : super(key: key);
+  String memberId;
+  List blockprod;
+  addblockProductPage({required this.memberId, required this.blockprod});
   @override
-  State<IndexPageShop> createState() => _IndexPageShopState();
+  State<addblockProductPage> createState() => _addblockProductPageState();
 }
 
-class _IndexPageShopState extends State<IndexPageShop> {
-  List shops = [];
+class _addblockProductPageState extends State<addblockProductPage> {
+  List products = [];
   List shopsOnSearch = [];
   bool isLoading = false;
+  // List blockprod = [];
   TextEditingController? _textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    this.fetchShop();
+    this.fetchproducts();
   }
 
-  fetchShop() async {
+  fetchproducts() async {
     setState(() {
       isLoading = false;
     });
-    var url = BASE_API + "shops/";
+    var url = BASE_API + "products/";
     print(url);
     var response = await http.get(Uri.parse(url));
     // print(response.body);
@@ -41,14 +44,14 @@ class _IndexPageShopState extends State<IndexPageShop> {
       var items = jsonDecode(response.body);
       // print(items);
       setState(() {
-        shops = items;
+        products = items;
 
         isLoading = false;
       });
       return;
     } else {
       setState(() {
-        shops = [];
+        products = [];
         isLoading = true;
       });
     }
@@ -61,31 +64,20 @@ class _IndexPageShopState extends State<IndexPageShop> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "shops",
+          "Products",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         leading: BackButton(
           color: Colors.black,
         ),
-        actions: <Widget>[
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => createshop()));
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-              ))
-        ],
       ),
       body: getBody(),
     );
   }
 
   Widget getBody() {
-    if (isLoading || shops.length == 0) {
+    if (isLoading || products.length == 0) {
       return Center(child: CircularProgressIndicator());
     }
     return Scaffold(
@@ -128,8 +120,8 @@ class _IndexPageShopState extends State<IndexPageShop> {
                         controller: _textEditingController,
                         onChanged: (value) {
                           setState(() {
-                            shopsOnSearch = shops
-                                .where((shop) => shop['name_shop']
+                            shopsOnSearch = products
+                                .where((product) => product['name_product']
                                     .toString()
                                     .toLowerCase()
                                     .contains(value.toLowerCase()))
@@ -170,11 +162,11 @@ class _IndexPageShopState extends State<IndexPageShop> {
                   : ListView.builder(
                       itemCount: _textEditingController!.text.isNotEmpty
                           ? shopsOnSearch.length
-                          : shops.length,
+                          : products.length,
                       itemBuilder: (context, index) {
                         return _textEditingController!.text.isNotEmpty
                             ? cardItem(shopsOnSearch[index])
-                            : cardItem(shops[index]);
+                            : cardItem(products[index]);
                       }))
         ],
       ),
@@ -182,11 +174,10 @@ class _IndexPageShopState extends State<IndexPageShop> {
   }
 
   Widget cardItem(item) {
-    var name_shop = item['name_shop'];
-    var email_shop = item['email_shop'];
-    var address_shop = item['address_shop'];
-    var products = item['products'];
-    var image_shop = item['image_shop'];
+    var name_product = item['name_product'];
+    var price_product = item['price_product'];
+
+    var image_product = item['image_product'];
     return Card(
       child: SingleChildScrollView(
         child: Padding(
@@ -195,22 +186,25 @@ class _IndexPageShopState extends State<IndexPageShop> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               GestureDetector(
-                onTap: () => getproducts(item),
+                onTap: () {
+                  print('hello');
+                  addProduct(item);
+                },
                 child: Container(
-                  height: 100,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromARGB(255, 204, 200, 200)
-                                .withOpacity(0.15),
-                            spreadRadius: 2,
-                            blurRadius: 3,
-                            offset: Offset(0, 1))
-                      ],
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(33)),
-                  child: Flexible(
+                  child: Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(255, 204, 200, 200)
+                                  .withOpacity(0.15),
+                              spreadRadius: 2,
+                              blurRadius: 3,
+                              offset: Offset(0, 1))
+                        ],
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(33)),
                     child: Row(children: [
                       SizedBox(
                         width: 20,
@@ -230,7 +224,7 @@ class _IndexPageShopState extends State<IndexPageShop> {
                               image: DecorationImage(
                                   image: NetworkImage(
                                       "http://192.168.43.61:8000" +
-                                          image_shop.toString()),
+                                          image_product.toString()),
                                   fit: BoxFit.cover)),
                         )),
                       ),
@@ -242,61 +236,21 @@ class _IndexPageShopState extends State<IndexPageShop> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(name_shop.toString(),
+                            Text(name_product.toString(),
                                 style: TextStyle(
                                     fontSize: 15, color: Colors.black)),
                             SizedBox(
                               height: 5,
                             ),
                             Text(
-                              address_shop.toString(),
+                              price_product.toString(),
                               style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black.withOpacity(0.5)),
                             ),
                           ],
                         ),
-                      ),
-                      Spacer(),
-                      Container(
-                          child: popUpMen(
-                        menuList: [
-                          PopupMenuItem(
-                              child: InkWell(
-                            onTap: () => editShop(item),
-                            child: ListTile(
-                              leading: Icon(
-                                Icons.edit,
-                                color: Color(0xff16F8FA),
-                              ),
-                              title: Text(
-                                'edit',
-                                style: TextStyle(
-                                  color: Color(0xff16F8FA),
-                                ),
-                              ),
-                            ),
-                          )),
-                          PopupMenuItem(
-                              child: InkWell(
-                            onTap: () => showDeleteAlert(context, item),
-                            child: ListTile(
-                              leading: Icon(
-                                Icons.delete,
-                                color: Color(0xffFA1645),
-                              ),
-                              title: Text('delete',
-                                  style: TextStyle(
-                                    color: Color(0xffFA1645),
-                                  )),
-                            ),
-                          )),
-                        ],
-                        icon: Icon(
-                          Icons.more_vert_rounded,
-                          size: 23,
-                        ),
-                      ))
+                      )
                     ]),
                   ),
                 ),
@@ -308,101 +262,51 @@ class _IndexPageShopState extends State<IndexPageShop> {
     );
   }
 
-  getproducts(item) {
-    var shopId = item['id'].toString();
+  addProduct(item) {
+    var idUser = widget.memberId.toString();
+    var idprod = item['id'].toString();
+    var image_product = item['image_product'].toString();
+    var name_product = item['name_product'].toString();
+    var blockprod = widget.blockprod;
 
+    print(idUser);
+    print(idprod);
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => products(
-                  shopId: shopId,
-                )));
-  }
-
-  editShop(item) {
-    var shopId = item['id'].toString();
-    var name_shop = item['name_shop'].toString();
-    var email_shop = item['email_shop'].toString();
-    var address_shop = item['address_shop'].toString();
-    var image_shop = item['image_shop'].toString();
-    var products = item['products'];
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EditShop(
-                  shopId: shopId,
-                  ShopName: name_shop,
-                  ShopEmail: email_shop,
-                  ShopAddress: address_shop,
-                  ShopImage: image_shop,
-                  products: products,
-                )));
-  }
-
-  deleteProduct(shopId) async {
-    print(shopId);
-    var url = BASE_API + "shops/$shopId/";
-    var response = await http.delete(Uri.parse(url), headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
+            builder: (context) => addProd(
+                idUser: idUser,
+                idprod: idprod,
+                image_product: image_product,
+                name_product: name_product,
+                blockprod: blockprod))).then((value) {
+      if (value != null) {
+        Navigator.pop(context, value);
+      }
     });
-    if (response.statusCode == 200) {
-      this.fetchShop();
-
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => IndexPageShop()),
-          (Route<dynamic> route) => false);
-    }
   }
 
-  showDeleteAlert(BuildContext context, item) {
-    // set up the buttons
-    Widget noButton = TextButton(
-      child: Text(
-        "No",
-        style: TextStyle(color: primary),
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
+  // Future<void> Getblock() async {
+  //   var url = BASE_API + "AddblockedProducts/${widget.memberId}/";
+  //   // print(url);
 
-    Widget yesButton = TextButton(
-      child: Text("Yes", style: TextStyle(color: primary)),
-      onPressed: () {
-        Navigator.pop(context);
+  //   SharedPreferences access_data = await SharedPreferences.getInstance();
+  //   var response = await http.get(
+  //     Uri.parse(url),
+  //     headers: {
+  //       'Content-Type': 'application/json ; charset=UTF-8',
+  //       'Accept': 'application/json',
+  //       'Authorization': 'Bearer ${access_data.getString('access_token')}'
+  //     },
+  //   );
+  //   // print(userName);
 
-        deleteProduct(item['id']);
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Message"),
-      content: Text("Would you like to delete this user?"),
-      actions: [
-        noButton,
-        yesButton,
-      ],
-    );
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-}
-
-class popUpMen extends StatelessWidget {
-  final List<PopupMenuEntry> menuList;
-  final Widget? icon;
-  const popUpMen({Key? key, required this.menuList, required this.icon})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(itemBuilder: ((context) => menuList), icon: icon);
-  }
+  //   // print(response.body[0]);
+  //   if (response.statusCode == 200) {
+  //     var items = jsonDecode(response.body);
+  //     setState(() {
+  //       blockprod = items;
+  //     });
+  //   }
+  // }
 }
