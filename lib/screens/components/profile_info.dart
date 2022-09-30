@@ -40,7 +40,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
       var items = jsonDecode(response.body);
       print(items['username']);
       print(items['image']);
-      print('http://192.168.43.61:8000' + items['image'].toString());
+      print('http://192.168.11.105:8000' + items['image'].toString());
       setState(() {
         user = items;
         isLoading = false;
@@ -94,9 +94,26 @@ class _ProfileInfoState extends State<ProfileInfo> {
       child: Row(
         children: [
           InkWell(
-            onTap: () => {
+            onTap: () {
+              var userId = user['id'].toString();
+              var username = user['username'].toString();
+              var email = user['email'].toString();
+              var image = user['image'].toString();
+              var firstName = user['first_name'].toString();
+              var lastName = user['last_name'].toString();
+              var phone = user['phone'].toString();
+              var address = user['address'].toString();
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => getUserItem()))
+                  MaterialPageRoute(builder: (context) => EditProfilePage(
+      userId: userId,
+      username: username,
+      email: email,
+      phone: phone,
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      image: image,
+    )));
             },
             child: Container(
               width: 55,
@@ -112,39 +129,16 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
                         image: NetworkImage(
-                          'http://192.168.43.61:8000' + items['image'].toString(),
+                          'http://192.168.11.105:8000' +
+                              items['image'].toString(),
                         ),
                         fit: BoxFit.cover)),
               )),
             ),
           ),
-          
         ],
       ),
     );
   }
 
-  getUserItem() {
-    var userId = user['id'].toString();
-    var username = user['username'].toString();
-    var email = user['email'].toString();
-    var image = user['image'].toString();
-    var firstName = user['first_name'].toString();
-    var lastName = user['last_name'].toString();
-    var phone = user['phone'].toString();
-    var address = user['address'].toString();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EditProfilePage(
-                  userId: userId,
-                  username: username,
-                  email: email,
-                  phone: phone,
-                  firstName: firstName,
-                  lastName: lastName,
-                  address: address,
-                  image: image,
-                )));
-  }
 }

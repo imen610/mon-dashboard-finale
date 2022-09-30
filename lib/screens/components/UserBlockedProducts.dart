@@ -24,16 +24,19 @@ class userProductBlocked extends StatefulWidget {
 class _userProductBlockedState extends State<userProductBlocked> {
   List productsOnSearch = [];
   var prodId;
-
+  List blocked = [];
+  List<int> deletedIndexs = [];
   TextEditingController? _textEditingController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    blocked = widget.prod_block;
+  }
 
-
-
-  
   @override
   Widget build(BuildContext context) {
     print(widget.memberId);
-    print(widget.prod_block);
+    print(blocked);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,6 +49,9 @@ class _userProductBlockedState extends State<userProductBlocked> {
         ),
         leading: BackButton(
           color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context, deletedIndexs);
+          },
         ),
         actions: <Widget>[
           TextButton(
@@ -53,8 +59,9 @@ class _userProductBlockedState extends State<userProductBlocked> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            addblockProductPage(memberId: widget.memberId,blockprod :widget.prod_block))) .then((value) {
+                        builder: (context) => addblockProductPage(
+                            memberId: widget.memberId,
+                            blockprod: blocked))).then((value) {
                   if (value != null) {
                     Map<String, dynamic> returnedValues =
                         value as Map<String, dynamic>;
@@ -62,10 +69,12 @@ class _userProductBlockedState extends State<userProductBlocked> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => userProductBlocked(
-                  memberId: returnedValues.values.first,
-                  prod_block: returnedValues.values.last,)));
-              }
-               });},
+                                  memberId: returnedValues.values.first,
+                                  prod_block: returnedValues.values.last,
+                                )));
+                  }
+                });
+              },
               child: Icon(
                 Icons.add,
                 color: Colors.black,
@@ -117,7 +126,7 @@ class _userProductBlockedState extends State<userProductBlocked> {
                         controller: _textEditingController,
                         onChanged: (value) {
                           setState(() {
-                            productsOnSearch = widget.prod_block
+                            productsOnSearch = blocked
                                 .where((product) => product['name_product']
                                     .toString()
                                     .toLowerCase()
@@ -159,18 +168,18 @@ class _userProductBlockedState extends State<userProductBlocked> {
                   : ListView.builder(
                       itemCount: _textEditingController!.text.isNotEmpty
                           ? productsOnSearch.length
-                          : widget.prod_block.length,
+                          : blocked.length,
                       itemBuilder: (context, index) {
                         return _textEditingController!.text.isNotEmpty
-                            ? cardItem(productsOnSearch[index])
-                            : cardItem(widget.prod_block[index]);
+                            ? cardItem(productsOnSearch[index], index)
+                            : cardItem(blocked[index], index);
                       }))
         ],
       ),
     );
   }
 
-  Widget cardItem(item) {
+  Widget cardItem(item, int position) {
     var nameProd = item['name_product'];
     var image = item['image_product'];
     var id = item['id'];
@@ -219,7 +228,7 @@ class _userProductBlockedState extends State<userProductBlocked> {
                                   fit: BoxFit.cover)
                               : DecorationImage(
                                   image: NetworkImage(
-                                      'http://192.168.43.61:8000' +
+                                      'http://192.168.11.105:8000' +
                                           image.toString()),
                                   fit: BoxFit.cover)),
                     )),
@@ -246,7 +255,7 @@ class _userProductBlockedState extends State<userProductBlocked> {
                                 setState(() {
                                   prodId = id;
                                 });
-                                unblock();
+                                unblock(position);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(left: 10),
@@ -274,7 +283,7 @@ class _userProductBlockedState extends State<userProductBlocked> {
     );
   }
 
-  Future<void> unblock() async {
+  Future<void> unblock(int position) async {
     var url = BASE_API + "RemoveblockedProducts/${widget.memberId}/";
     // print(url);
 
@@ -286,12 +295,15 @@ class _userProductBlockedState extends State<userProductBlocked> {
           'Authorization': 'Bearer ${access_data.getString('access_token')}'
         },
         body: (jsonEncode({"id": prodId})));
-    print(prodId);
 
-    // print(response.body[0]);
+     print(response.body);
     if (response.statusCode == 200) {
-      var items = jsonDecode(response.body);
-      
+      //var items = jsonDecode(response.body);
+      setState(() {
+        deletedIndexs.add(position);
+        blocked.removeAt(position);
+      });
+      print('hello salma _____${blocked}');
     }
   }
 }

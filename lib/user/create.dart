@@ -152,7 +152,7 @@ class _createuserState extends State<createuser> {
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    'http://192.168.43.61:8000/images/1053244.png'),
+                                    'http://192.168.11.105:8000/images/1053244.png'),
                                 fit: BoxFit.cover)),
                       )),
                     ),

@@ -34,6 +34,7 @@ class _addProdState extends State<addProd> {
   var name;
   var prodId;
   List users = [];
+  List blockprod_ = [];
   var User;
   @override
   void initState() {
@@ -45,10 +46,12 @@ class _addProdState extends State<addProd> {
       image = widget.image_product;
       prodId = widget.idprod;
       name = widget.name_product;
+      blockprod_ = widget.blockprod;
       print(userid);
       print(prodId);
       print(image);
       print(name);
+      print(widget.blockprod);
     });
   }
 
@@ -116,7 +119,8 @@ class _addProdState extends State<addProd> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
                           image: DecorationImage(
-                              image: NetworkImage(image.toString()),
+                              image: NetworkImage("http://192.168.11.105:8000" +
+                                  image.toString()),
                               fit: BoxFit.cover)),
                     )),
                   ),
@@ -208,12 +212,14 @@ class _addProdState extends State<addProd> {
             this.fetchUsers();
             // print(widget.membre);
             // print(list);
+            blockprod_.add(
+                {"id": prodId, "name_product": name, "image_product": image});
             Map<String, dynamic> params = {};
             params.putIfAbsent('idUser', () => widget.idUser);
             params.putIfAbsent('idprod', () => widget.idprod);
             params.putIfAbsent('image_product', () => widget.image_product);
             params.putIfAbsent('name_product', () => widget.name_product);
-            params.putIfAbsent('blockprod', () => widget.blockprod);
+            params.putIfAbsent('blockprod', () => blockprod_);
             Navigator.pop(context, params);
           });
         });

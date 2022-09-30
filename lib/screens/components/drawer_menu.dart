@@ -49,7 +49,7 @@ class DrawerMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: 'Users',
-            svgSrc: 'assets/icons/Dashboard.svg',
+            svgSrc: 'assets/icons/groups_black_24dp.svg',
             tap: () => {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => IndexPage()))
@@ -57,7 +57,7 @@ class DrawerMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: 'charge the wristband',
-            svgSrc: 'assets/icons/Statistics.svg',
+            svgSrc: 'assets/icons/input_black_24dp.svg',
             tap: () => {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => sendMoneyDash()))
@@ -65,7 +65,7 @@ class DrawerMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: 'Shops',
-            svgSrc: 'assets/icons/BlogPost.svg',
+            svgSrc: 'assets/icons/storefront_black_24dp.svg',
             tap: () => {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => IndexPageShop()))
@@ -73,7 +73,7 @@ class DrawerMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: 'Transactions',
-            svgSrc: 'assets/icons/Message.svg',
+            svgSrc: 'assets/icons/currency_exchange_black_24dp.svg',
             tap: () => {
               Navigator.push(
                   context,
@@ -83,20 +83,20 @@ class DrawerMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: 'Payments',
-            svgSrc: 'assets/icons/Message.svg',
+            svgSrc: 'assets/icons/payments_black_24dp.svg',
             tap: () => {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => PaymentsDashPage()))
             },
           ),
-          DrawerListTile(
-            title: 'Products',
-            svgSrc: 'assets/icons/Statistics.svg',
-            tap: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => IndexPageProduct()))
-            },
-          ),
+          // DrawerListTile(
+          //   title: 'Products',
+          //   svgSrc: 'assets/icons/Statistics.svg',
+          //   tap: () => {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => IndexPageProduct()))
+          //   },
+          // ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: appPadding * 2),
             child: Divider(
@@ -106,11 +106,11 @@ class DrawerMenu extends StatelessWidget {
           ),
           DrawerListTile(
               title: 'Settings',
-              svgSrc: 'assets/icons/Setting.svg',
+              svgSrc: 'assets/icons/settings_black_24dp.svg',
               tap: () {}),
           DrawerListTile(
               title: 'Logout',
-              svgSrc: 'assets/icons/Logout.svg',
+              svgSrc: 'assets/icons/logout_black_24dp.svg',
               tap: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.remove('email');
@@ -122,4 +122,3 @@ class DrawerMenu extends StatelessWidget {
     );
   }
 }
-

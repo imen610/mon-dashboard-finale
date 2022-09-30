@@ -204,7 +204,9 @@ class _sendMoneyDashState extends State<sendMoneyDash> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(image.toString()),
+                                    image: NetworkImage(
+                                        'http://192.168.11.105:8000' +
+                                            image.toString()),
                                     fit: BoxFit.cover)),
                           )),
                         ),

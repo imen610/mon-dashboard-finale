@@ -59,7 +59,7 @@ class _EditUserState extends State<EditUser> {
       _controllerlastName.text = widget.lastName;
       _controllerfirstName.text = widget.firstName;
       _controlleraddress.text = widget.address;
-      image = widget.image.toString();
+      image = 'http://192.168.11.105:8000' + widget.image.toString();
     });
 
     print(widget.userId);
@@ -88,8 +88,10 @@ class _EditUserState extends State<EditUser> {
                 picPicker(isImageSelected, image, (file) {
                   setState(() {
                     image = file.path;
+                    _imageFile = file;
                     isImageSelected = true;
                   });
+                  print("rrrr" + image);
                 }),
                 Text(
                   widget.username,
@@ -169,10 +171,13 @@ class _EditUserState extends State<EditUser> {
           height: 40,
         ),
         TextButton(
-          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xff89e6f5),)),
-
-             
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+              Color(0xff89e6f5),
+            )),
             onPressed: () {
+           //   print("zzzz" + _imageFile!.path);
+
               editUser();
             },
             child: Text(
@@ -196,40 +201,48 @@ class _EditUserState extends State<EditUser> {
     var phone = _controllerphone.text;
     var address = _controlleraddress.text;
     if (username.isNotEmpty && email.isNotEmpty) {
-      var bodyData = json.encode({
+      print("ffff" + image);
+      var bodyData = {
         "username": username,
         "email": email,
-        // "image": image,
+        "image": File(image),
         "first_name": firstName,
         "last_name": lastName,
         "phone": phone,
         "address": address,
         // "image_User": null
-      });
-      var response = await http.put(Uri.parse(url),
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-          body: bodyData);
-      print(url);
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        var messageSuccess = "success";
-        showMessage(context, messageSuccess);
-      } else {
-        var messageError = "Error";
-        showMessage(context, messageError);
-      }
+      };
+      multiPart(
+        body: bodyData,
+        multipart: false,
+        files: [File(image)],
+      );
+
+      //   var response = await http.put(Uri.parse(url),
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         "Accept": "application/json",
+      //       },
+      //       body: bodyData);
+      //   print(url);
+      //   print(response.statusCode);
+      //   if (response.statusCode == 200) {
+      //     var messageSuccess = "success";
+      //     showMessage(context, messageSuccess);
+      //   } else {
+      //     var messageError = "Error";
+      //     showMessage(context, messageError);
+      //   }
     }
   }
 
-  static Widget picPicker(
+  XFile? _imageFile;
+
+  Widget picPicker(
     bool isFileSelected,
     String fileName,
     Function onFilePicked,
   ) {
-    Future<XFile?> _imageFile;
     ImagePicker _picker = ImagePicker();
     return Column(
       children: [
@@ -265,7 +278,7 @@ class _EditUserState extends State<EditUser> {
                   )
             : SizedBox(
                 child: Image.network(
-                  'http://192.168.43.61:8000/images/2af5edae259d0d57fc410682e0338b14_y2DfKqW.jpg',
+                  'http://192.168.11.105:8000/images/2af5edae259d0d57fc410682e0338b14_y2DfKqW.jpg',
                   width: 50,
                   height: 50,
                   fit: BoxFit.scaleDown,
@@ -283,10 +296,15 @@ class _EditUserState extends State<EditUser> {
                   Icons.image,
                   size: 15,
                 ),
-                onPressed: () {
-                  _imageFile = _picker.pickImage(source: ImageSource.gallery);
-                  _imageFile.then((file) async {
-                    onFilePicked(file);
+                onPressed: () async {
+                  _imageFile = await _picker
+                      .pickImage(source: ImageSource.gallery)
+                      .then((value) {
+                    print("aaaaaaaaa" + value!.path);
+                    setState(() {
+                      _imageFile = value;
+                    });
+                    onFilePicked(value);
                   });
                 },
               ),
@@ -300,11 +318,13 @@ class _EditUserState extends State<EditUser> {
                   Icons.camera,
                   size: 15,
                 ),
-                onPressed: () {
-                  _imageFile = _picker.pickImage(source: ImageSource.camera);
-                  _imageFile.then((file) async {
-                    onFilePicked(file);
-                  });
+                onPressed: () async {
+                  _imageFile = await _picker
+                      .pickImage(source: ImageSource.camera)
+                      .then((value) => onFilePicked(value));
+                  // _imageFile?.then((file) async {
+                  //   onFilePicked(file);
+                  // });
                 },
               ),
             )
@@ -312,5 +332,50 @@ class _EditUserState extends State<EditUser> {
         )
       ],
     );
+  }
+
+  Future<http.Response> multiPart(
+      {String action = "PUT",
+      Map<String, String>? headers,
+      Map<String, dynamic>? body,
+      bool multipart = true,
+      Map<String, File> namedFiles = const {},
+      List<File> files = const []}) async {
+    String url = BASE_API + "users/$userId/";
+    Uri uri = Uri.parse(url);
+
+    var request = http.MultipartRequest(action, uri);
+
+    request.headers.addAll(headers ?? {});
+
+    if (multipart) {
+      request.headers[HttpHeaders.contentTypeHeader] =
+          'multipart/form-data;charset=utf-8;application/json';
+    }
+
+    body?.forEach((key, value) {
+      if (value != null) request.fields[key] = value.toString();
+    });
+
+    print('yyyyyyyyyyyy' + request.fields.toString());
+
+    for (var file in files) {
+      final image = await http.MultipartFile.fromPath("image", file.path);
+      request.files.add(image);
+    }
+
+    namedFiles.forEach((key, mfile) async {
+      print('bbbbbbbbbbbbb' + key.toString());
+
+      final file = await http.MultipartFile.fromPath(key, mfile.path);
+      request.files.add(file);
+    });
+
+    return request.send().then((http.StreamedResponse value) {
+      return value.stream.bytesToString().then((body) {
+        print(body);
+        return Future.value(http.Response(body, value.statusCode));
+      });
+    });
   }
 }

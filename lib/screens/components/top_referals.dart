@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_admin_dashboard/constants/constants.dart';
 import 'package:responsive_admin_dashboard/data/data.dart';
-import 'package:responsive_admin_dashboard/screens/components/referal_info_detail.dart';
 import 'package:http/http.dart' as http;
 import '../../shop/constants/base_api.dart';
 
@@ -56,7 +55,7 @@ class _TopReferalsState extends State<TopReferals> {
     setState(() {
       // isLoading = false;
     });
-    var url = "http://192.168.43.61:8000/auth/TopProdcuts/";
+    var url = "http://192.168.11.105:8000/auth/TopProdcuts/";
     print(url);
     var response = await http.get(Uri.parse(url));
     print(response.statusCode);
@@ -102,14 +101,14 @@ class _TopReferalsState extends State<TopReferals> {
                   color: textColor,
                 ),
               ),
-              Text(
-                'View All',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: textColor.withOpacity(0.5),
-                ),
-              ),
+              // Text(
+              //   'View All',
+              //   style: TextStyle(
+              //     fontSize: 13,
+              //     fontWeight: FontWeight.bold,
+              //     color: textColor.withOpacity(0.5),
+              //   ),
+              // ),
             ],
           ),
           SizedBox(
@@ -156,20 +155,9 @@ class _TopReferalsState extends State<TopReferals> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   image: DecorationImage(
-                      image: NetworkImage('http://192.168.43.61:8000' + image2),
+                      image: NetworkImage('http://192.168.11.105:8000' + image2),
                       fit: BoxFit.cover)),
             )),
-            // padding: EdgeInsets.all(appPadding / 1.5),
-            // height: 40,
-            // width: 40,
-            // decoration: BoxDecoration(
-            //   color: widget.info.color!.withOpacity(0.1),
-            //   borderRadius: BorderRadius.circular(30),
-            // ),
-            // child: SvgPicture.asset(
-            //   widget.info.svgSrc!,
-            //   color: widget.info.color!,
-            // ),
           ),
           Expanded(
             child: Padding(
@@ -186,12 +174,12 @@ class _TopReferalsState extends State<TopReferals> {
                       color: textColor,
                     ),
                   ),
-                  Text('hello'
-                      // '${widget.info.count!}',
-                      // style: TextStyle(
-                      //   fontWeight: FontWeight.bold,
-                      //   color: textColor,
-                      ),
+                  Text(
+                      '${((topProd[item][1] * 100) / topProd.length).toStringAsFixed(2)}%',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
+                      )),
                 ],
               ),
             ),

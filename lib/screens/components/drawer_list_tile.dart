@@ -21,12 +21,14 @@ class DrawerListTile extends StatelessWidget {
       leading: SvgPicture.asset(
         svgSrc,
         color: Color.fromARGB(255, 93, 84, 84),
-        height: 20,
+        height: 23,
       ),
       title: Text(
         title,
         style: GoogleFonts.quicksand(
-            color: Color.fromARGB(255, 93, 84, 84), fontWeight: FontWeight.w500, fontSize: 15.0),
+            color: Color.fromARGB(255, 93, 84, 84),
+            fontWeight: FontWeight.w500,
+            fontSize: 15.0),
       ),
     );
   }

@@ -65,8 +65,6 @@ class _userProfilePageState extends State<userProfilePage> {
 
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      // print(items['username']);
-      // print(items['is_membre']);
 
       SharedPreferences sharedPreferencesUserId =
           await SharedPreferences.getInstance();
@@ -81,6 +79,7 @@ class _userProfilePageState extends State<userProfilePage> {
 
       setState(() {
         user = items;
+        isLoading = false;
         // print(user);
         _controllerUserName.text = user['username'];
         _controllerEmail.text = user['email'];
@@ -89,6 +88,11 @@ class _userProfilePageState extends State<userProfilePage> {
         _controllerfirstName.text = user['first_name'];
         _controlleraddress.text = user['address'];
         progress = false;
+      });
+    } else {
+      setState(() {
+        user = [];
+        isLoading = true;
       });
     }
   }
@@ -173,125 +177,130 @@ class _userProfilePageState extends State<userProfilePage> {
               ),
             )),
         body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(left: 30, right: 30),
-            // width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                FadeInDown(
-                  from: 100,
-                  duration: Duration(milliseconds: 1000),
-                  child: Stack(children: [
-                    Container(
-                      width: 135,
-                      height: 135,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(48),
-                          border: Border.all(color: Colors.black)),
-                      child: Center(
-                          child: Container(
-                        width: 125,
-                        height: 125,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            image: DecorationImage(
-                                image: NetworkImage('http://192.168.43.61:8000' +
-                                    user['image'].toString()),
-                                fit: BoxFit.cover)),
-                      )),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                            height: 40,
-                            width: 40,
+          child: (isLoading)
+              ? Center(
+                  child: CircularProgressIndicator(color: Colors.black),
+                )
+              : Container(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  // width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      FadeInDown(
+                        from: 100,
+                        duration: Duration(milliseconds: 1000),
+                        child: Stack(children: [
+                          Container(
+                            width: 135,
+                            height: 135,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  width: 2,
-                                  color: Colors.white,
-                                ),
-                                color: Color.fromARGB(255, 252, 193, 75)),
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )))
-                  ]),
+                                borderRadius: BorderRadius.circular(48),
+                                border: Border.all(color: Colors.black)),
+                            child: Center(
+                                child: Container(
+                              width: 125,
+                              height: 125,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'http://192.168.11.105:8000' +
+                                              user['image'].toString()),
+                                      fit: BoxFit.cover)),
+                            )),
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        width: 2,
+                                        color: Colors.white,
+                                      ),
+                                      color: Color.fromARGB(255, 252, 193, 75)),
+                                  child: Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  )))
+                        ]),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextField(
+                        controller: _controllerUserName,
+                        decoration: InputDecoration(
+                            labelText: 'Username',
+                            hintText: "username",
+                            border: OutlineInputBorder()),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        controller: _controllerEmail,
+                        decoration: InputDecoration(
+                            labelText: 'Email',
+                            hintText: "Email",
+                            border: OutlineInputBorder()),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        controller: _controlleraddress,
+                        decoration: InputDecoration(
+                            labelText: 'Address',
+                            hintText: "Address",
+                            border: OutlineInputBorder()),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        controller: _controllerphone,
+                        decoration: InputDecoration(
+                            labelText: 'Phone',
+                            hintText: "Phone",
+                            border: OutlineInputBorder()),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(32),
+                        child: AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                            width: state == ButtonState.init ? width : 70,
+                            onEnd: () => setState(() {
+                                  isAnimating != isAnimating;
+                                }),
+                            height: 70,
+                            child: isStretched
+                                ? buildButton()
+                                : buildSmallButton(isDone)),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                TextField(
-                  controller: _controllerUserName,
-                  decoration: InputDecoration(
-                      labelText: 'Username',
-                      hintText: "username",
-                      border: OutlineInputBorder()),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: _controllerEmail,
-                  decoration: InputDecoration(
-                      labelText: 'Email',
-                      hintText: "Email",
-                      border: OutlineInputBorder()),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: _controlleraddress,
-                  decoration: InputDecoration(
-                      labelText: 'Address',
-                      hintText: "Address",
-                      border: OutlineInputBorder()),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: _controllerphone,
-                  decoration: InputDecoration(
-                      labelText: 'Phone',
-                      hintText: "Phone",
-                      border: OutlineInputBorder()),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(32),
-                  child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                      width: state == ButtonState.init ? width : 70,
-                      onEnd: () => setState(() {
-                            isAnimating != isAnimating;
-                          }),
-                      height: 70,
-                      child: isStretched
-                          ? buildButton()
-                          : buildSmallButton(isDone)),
-                ),
-              ],
-            ),
-          ),
         ));
   }
 

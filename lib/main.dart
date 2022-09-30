@@ -68,6 +68,9 @@ class _MyAppState extends State<MyApp> {
             child: CircularProgressIndicator(color: Colors.black),
           )
         : MaterialApp(
+            routes: {
+              '/home': (context) => home(),
+            },
             debugShowCheckedModeBanner: false,
             home: (user['is_admin'] == null)
                 ? login()

@@ -30,7 +30,7 @@ class _signUpState extends State<signUp> {
         phoneNumberController.text.isNotEmpty) {
       try {
         Response response = await post(
-            Uri.parse('http://192.168.43.61:8000/auth/sign-up/'),
+            Uri.parse('http://192.168.11.105:8000/auth/sign-up/'),
             body: {
               'email': email,
               'username': username,

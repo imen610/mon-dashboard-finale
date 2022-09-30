@@ -119,7 +119,8 @@ class _SendPageDashState extends State<SendPageDash> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
                           image: DecorationImage(
-                              image: NetworkImage(image.toString()),
+                              image: NetworkImage('http://192.168.11.105:8000' +
+                                  image.toString()),
                               fit: BoxFit.cover)),
                     )),
                   ),

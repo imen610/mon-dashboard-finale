@@ -64,6 +64,7 @@ class _memberState extends State<member> {
     this.fetchUsers();
     // TODO: implement initState
     super.initState();
+    members = widget.membre;
     setState(() {
       memberId = widget.memberId;
       image = widget.image;
@@ -171,7 +172,7 @@ class _memberState extends State<member> {
                         controller: _textEditingController,
                         onChanged: (value) {
                           setState(() {
-                            membersOnSearch = widget.membre
+                            membersOnSearch = members
                                 .where((member) => member['username']
                                     .toString()
                                     .toLowerCase()
@@ -213,22 +214,21 @@ class _memberState extends State<member> {
                   : ListView.builder(
                       itemCount: _textEditingController!.text.isNotEmpty
                           ? membersOnSearch.length
-                          : widget.membre.length,
+                          : members.length,
                       itemBuilder: (context, index) {
                         return _textEditingController!.text.isNotEmpty
-                            ? cardItem(membersOnSearch[index])
-                            : cardItem(widget.membre[index]);
+                            ? cardItem(membersOnSearch[index], index)
+                            : cardItem(members[index], index);
                       }))
         ],
       ),
     );
   }
 
-  Widget cardItem(item) {
+  Widget cardItem(item, int index) {
     var username = item['username'];
     var email = item['email'];
     var image = item['image'];
-    var status_wallet = item['wallet_blocked'];
 
     return Card(
       child: SingleChildScrollView(
@@ -260,7 +260,7 @@ class _memberState extends State<member> {
                     height: 65,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(28),
-                        border: (status_wallet)
+                        border: (item['wallet_blocked'])
                             ? Border.all(color: Colors.red)
                             : Border.all(color: Colors.black)),
                     child: Center(
@@ -275,7 +275,7 @@ class _memberState extends State<member> {
                                   fit: BoxFit.cover)
                               : DecorationImage(
                                   image: NetworkImage(
-                                      'http://192.168.43.61:8000' +
+                                      'http://192.168.11.105:8000' +
                                           image.toString()),
                                   fit: BoxFit.cover)),
                     )),
@@ -302,13 +302,13 @@ class _memberState extends State<member> {
                                 height: 25.0,
                                 valueFontSize: 20.0,
                                 toggleSize: 20.0,
-                                value: status_wallet,
+                                value: item['wallet_blocked'],
                                 borderRadius: 20.0,
                                 padding: 4.0,
                                 // showOnOff: true,
                                 onToggle: (val) {
                                   setState(() {
-                                    status_wallet = val;
+                                    members[index]['wallet_blocked'] = val;
                                     print('ggggggggggggg$val');
                                     wstat = val;
                                   });

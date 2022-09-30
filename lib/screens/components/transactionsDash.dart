@@ -252,7 +252,7 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://192.168.43.61:8000' + img),
+                        image: NetworkImage('http://192.168.11.105:8000' + img),
                         fit: BoxFit.cover)),
               )),
             ),
@@ -313,7 +313,7 @@ class _transactionsDashPageState extends State<transactionsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage(image2), fit: BoxFit.cover)),
+                        image: NetworkImage('http://192.168.11.105:8000' + image2), fit: BoxFit.cover)),
               )),
             ),
             SizedBox(

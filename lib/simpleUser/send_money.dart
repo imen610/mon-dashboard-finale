@@ -58,7 +58,7 @@ class _SendMoneyState extends State<SendMoney> {
     _focusNode.addListener(onFocusChanged);
     setState(() {
       userId = widget.userId;
-      image = 'http://192.168.43.61:8000' + widget.image.toString();
+      image = 'http://192.168.11.105:8000' + widget.image.toString();
       userName = widget.username;
     });
 
@@ -239,12 +239,8 @@ class _SendMoneyState extends State<SendMoney> {
         ));
   }
 
-  Future <void> face_recog() async{
-     var url = "http://192.168.1.38:5000";
-    print(url);
-  }
   Future<void> SendMoneyToMember() async {
-    var url = BASE_API + "pay/";
+    var url = "http://192.168.11.105:8000/auth/pay/";
     print(url);
     print(userName);
     // ToController = userName;

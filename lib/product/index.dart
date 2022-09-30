@@ -196,84 +196,67 @@ class _IndexPageProductState extends State<IndexPageProduct> {
               GestureDetector(
                 onTap: () {},
                 child: Container(
-                  child: Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.25,
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromARGB(255, 204, 200, 200)
-                                    .withOpacity(0.15),
-                                spreadRadius: 2,
-                                blurRadius: 3,
-                                offset: Offset(0, 1))
-                          ],
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(33)),
-                      child: Row(children: [
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        "http://192.168.43.61:8000" +
-                                            image_product.toString()),
-                                    fit: BoxFit.cover)),
-                          )),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(name_product.toString(),
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.black)),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                price_product.toString(),
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black.withOpacity(0.5)),
-                              ),
-                            ],
-                          ),
-                        )
-                      ]),
-                    ),
-                    secondaryActions: <Widget>[
-                      IconSlideAction(
-                        caption: 'Edit',
-                        color: Color(0xff16F8FA),
-                        icon: Icons.edit,
-                        onTap: () => editShop(item),
+                  child: Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(255, 204, 200, 200)
+                                  .withOpacity(0.15),
+                              spreadRadius: 2,
+                              blurRadius: 3,
+                              offset: Offset(0, 1))
+                        ],
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(33)),
+                    child: Row(children: [
+                      SizedBox(
+                        width: 20,
                       ),
-                      IconSlideAction(
-                          caption: 'Delete',
-                          color: Color(0xffFA1645),
-                          icon: Icons.delete,
-                          onTap: () => showDeleteAlert(context, item)),
-                    ],
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(color: Colors.black)),
+                        child: Center(
+                            child: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      "http://192.168.11.105:8000" +
+                                          image_product.toString()),
+                                  fit: BoxFit.cover)),
+                        )),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(name_product.toString(),
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              price_product.toString(),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                          ],
+                        ),
+                      )
+                    ]),
                   ),
                 ),
               )

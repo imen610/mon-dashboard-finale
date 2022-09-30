@@ -71,23 +71,13 @@ class _userAccountDashState extends State<userAccountDash> {
     isLoading1 = true;
     isLoading2 = true;
     isLoading3 = true;
+    isLoading = true;
     setState(() {
       image = widget.image;
+      print(image);
     });
-    print(widget.memberId);
-    print(widget.username);
-    print(widget.email);
-    print(widget.image);
-    print(widget.phone);
-    print(widget.lastName);
-    print(widget.firstName);
-    print(widget.address);
-    print("hello ACCOUNT MEMBER YEAAAH !!!!!");
-    print(widget.membre);
-    print("users  ");
-    var name = widget.membre.length;
 
-    print(name);
+    var name = widget.membre.length;
   }
 
   bool isLoading1 = false;
@@ -104,11 +94,14 @@ class _userAccountDashState extends State<userAccountDash> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items['balance']);
+      // print(items['balance']);
       setState(() {
         wallet = items;
         isLoading1 = false;
       });
+    } else {
+      wallet = [];
+      isLoading1 = true;
     }
   }
 
@@ -135,6 +128,11 @@ class _userAccountDashState extends State<userAccountDash> {
         list_payments = items;
         isLoading = false;
       });
+    } else {
+      setState(() {
+        list_payments = [];
+        isLoading = true;
+      });
     }
   }
 
@@ -149,7 +147,7 @@ class _userAccountDashState extends State<userAccountDash> {
     });
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(' voici la liste des transactions $items');
+      // print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
         isLoading2 = false;
@@ -159,13 +157,18 @@ class _userAccountDashState extends State<userAccountDash> {
 
   @override
   Widget build(BuildContext context) {
+    // print(widget.image);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(330.0), // here the desired height
-        child: getAppBar(),
+        child: (isLoading1)
+            ? Center(
+                child: CircularProgressIndicator(color: Colors.black),
+              )
+            : getAppBar(),
       ),
-      body: (isLoading2 == true && isLoading3 == true)
+      body: (isLoading2 == true || isLoading3 == true || isLoading == true)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
             )
@@ -262,7 +265,8 @@ class _userAccountDashState extends State<userAccountDash> {
                               borderRadius: BorderRadius.circular(30),
                               image: DecorationImage(
                                   image: NetworkImage(
-                                    widget.image.toString(),
+                                    'http://192.168.11.105:8000' +
+                                        widget.image.toString(),
                                   ),
                                   fit: BoxFit.cover)),
                         )),
@@ -464,7 +468,7 @@ class _userAccountDashState extends State<userAccountDash> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://192.168.43.61:8000' + img1),
+                                          'http://192.168.11.105:8000' + img1),
                                       fit: BoxFit.cover)),
                             )),
                           )
@@ -482,7 +486,7 @@ class _userAccountDashState extends State<userAccountDash> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://192.168.43.61:8000' + image2),
+                                          'http://192.168.11.105:8000' + image2),
                                       fit: BoxFit.cover)),
                             )),
                           ),
@@ -590,14 +594,12 @@ class _userAccountDashState extends State<userAccountDash> {
     String type = list_transactions[item]['type'];
     String name2 = list_transactions[item]['to'];
 
-    print(type);
-    print(name2);
     var result = [
       for (var member in list_members)
         if (member["username"] == name2) member['image']
     ];
     String image2 = result.isEmpty ? null : result.first;
-    print(image2);
+    // print(image2);
     return GestureDetector(
       // onTap: widget.onTap,
       child: Container(
@@ -637,7 +639,7 @@ class _userAccountDashState extends State<userAccountDash> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://192.168.43.61:8000' + img),
+                                        'http://192.168.11.105:8000' + img),
                                     fit: BoxFit.cover)),
                           )),
                         )
@@ -654,7 +656,8 @@ class _userAccountDashState extends State<userAccountDash> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
-                                    image: NetworkImage(image2),
+                                    image: NetworkImage(
+                                        'http://192.168.11.105:8000' + image2),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -725,9 +728,9 @@ class _userAccountDashState extends State<userAccountDash> {
 
   getMembers() async {
     SharedPreferences ID_USER = await SharedPreferences.getInstance();
-    var x = ID_USER.getString('user_id');
+    // var x = ID_USER.getString('user_id');
     var url2 = BASE_API + "users/";
-    print(x);
+    // print(x);
     print(url2);
 
     SharedPreferences access_data = await SharedPreferences.getInstance();
@@ -740,7 +743,7 @@ class _userAccountDashState extends State<userAccountDash> {
     // print(response.body);
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body);
-      print(items);
+      // print(items);
 
       setState(() {
         list_members = items;

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:responsive_admin_dashboard/addMember.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -50,7 +51,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   FocusNode _focusNode = new FocusNode();
 
-  bool isAnimating = true;
+  // bool isAnimating = true;
   bool isFocused = false;
   List members = [];
   var user;
@@ -59,33 +60,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool progress = false;
   @override
   void initState() {
-    _focusNode.addListener(onFocusChanged);
-
     // TODO: implement initState
     super.initState();
+    _focusNode.addListener(onFocusChanged);
+
     // this.fetchmember();
-    setState(() {
-      userId = widget.userId;
-      _controllerUserName.text = widget.username;
-      _controllerEmail.text = widget.email;
-      _controllerphone.text = widget.phone;
-      _controllerlastName.text = widget.lastName;
-      _controllerfirstName.text = widget.firstName;
-      _controlleraddress.text = widget.address;
-      _controllerphone.text = widget.phone;
-      image = widget.image.toString();
-    });
+    userId = widget.userId;
+    _controllerUserName.text = widget.username;
+    _controllerEmail.text = widget.email;
+    _controllerphone.text = widget.phone;
+    _controllerlastName.text = widget.lastName;
+    _controllerfirstName.text = widget.firstName;
+    _controlleraddress.text = widget.address;
+    _controllerphone.text = widget.phone;
+    image = widget.image.toString();
+   
   }
 
   void onFocusChanged() {
-    setState(() {
-      isFocused = _focusNode.hasFocus;
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        isFocused = _focusNode.hasFocus;
+      });
     });
 
     print('focus changed.');
   }
 
   ButtonState state = ButtonState.init;
+  // double width = 0.0;
+  // bool isDone = false;
+  // bool isStretched = false;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width * 0.75;
@@ -96,10 +101,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100),
+            preferredSize: Size.fromHeight(100+MediaQuery.of(context).padding.top),
             child: Container(
-              height: 90,
-              padding: EdgeInsets.only(left: 15, right: 20, top: 5),
+              height: 90+MediaQuery.of(context).padding.top,
+              padding: EdgeInsets.only(left: 15, right: 20, top: MediaQuery.of(context).padding.top),
               decoration: BoxDecoration(
                   color: appBgColor,
                   borderRadius: BorderRadius.only(
@@ -124,7 +129,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         color: Colors.black,
                         size: 30,
                       ),
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        SchedulerBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          Navigator.pop(context);
+                        });
+                      },
                     ),
                   ),
                   SizedBox(
@@ -182,8 +192,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
-                                image: NetworkImage('http://192.168.43.61:8000' +
-                                    widget.image.toString()),
+                                image: NetworkImage(
+                                    'http://192.168.11.105:8000' +
+                                        widget.image.toString()),
                                 fit: BoxFit.cover)),
                       )),
                     ),
@@ -264,9 +275,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       duration: Duration(milliseconds: 300),
                       curve: Curves.easeIn,
                       width: state == ButtonState.init ? width : 70,
-                      onEnd: () => setState(() {
-                            isAnimating != isAnimating;
-                          }),
+                      // onEnd: () => setState(() {
+                      //       isAnimating != isAnimating;
+                      //     }),
                       height: 70,
                       child: isStretched
                           ? buildButton()

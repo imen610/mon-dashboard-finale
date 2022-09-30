@@ -24,7 +24,7 @@ class _DiscussionsState extends State<Discussions> {
   }
 
   fetchShop() async {
-    var url = Uri.parse("http://192.168.43.61:8000/auth/shops/");
+    var url = Uri.parse("http://192.168.11.105:8000/auth/shops/");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var items = json.decode(response.body);
@@ -112,7 +112,7 @@ class _DiscussionsState extends State<Discussions> {
                   borderRadius: BorderRadius.circular(30),
                   image: DecorationImage(
                       image: NetworkImage(
-                        "http://192.168.43.61:8000" + image_shop.toString(),
+                        "http://192.168.11.105:8000" + image_shop.toString(),
                       ),
                       fit: BoxFit.cover)),
             )),

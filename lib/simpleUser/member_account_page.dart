@@ -92,6 +92,11 @@ class _MemberAccountState extends State<MemberAccount> {
         wallet = items;
         isLoading1 = false;
       });
+    } else {
+      setState(() {
+        wallet = [];
+        isLoading1 = true;
+      });
     }
   }
 
@@ -149,7 +154,11 @@ class _MemberAccountState extends State<MemberAccount> {
       // appBar: getAppBar(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(340.0), // here the desired height
-        child: getAppBar(),
+        child: (isLoading1)
+            ? Center(
+                child: CircularProgressIndicator(color: Colors.black),
+              )
+            : getAppBar(),
       ),
       body: (isLoading1 || isLoading2 || isLoading3)
           ? Center(
@@ -248,7 +257,7 @@ class _MemberAccountState extends State<MemberAccount> {
                               borderRadius: BorderRadius.circular(30),
                               image: DecorationImage(
                                   image: NetworkImage(
-                                    'http://192.168.43.61:8000' +
+                                    'http://192.168.11.105:8000' +
                                         widget.image.toString(),
                                   ),
                                   fit: BoxFit.cover)),
@@ -419,7 +428,7 @@ class _MemberAccountState extends State<MemberAccount> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://192.168.43.61:8000' + img1),
+                                          'http://192.168.11.105:8000' + img1),
                                       fit: BoxFit.cover)),
                             )),
                           )
@@ -437,7 +446,7 @@ class _MemberAccountState extends State<MemberAccount> {
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          'http://192.168.43.61:8000' + image2),
+                                          'http://192.168.11.105:8000' + image2),
                                       fit: BoxFit.cover)),
                             )),
                           ),
@@ -627,7 +636,7 @@ class _MemberAccountState extends State<MemberAccount> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://192.168.43.61:8000' + img),
+                                        'http://192.168.11.105:8000' + img),
                                     fit: BoxFit.cover)),
                           )),
                         )

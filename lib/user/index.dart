@@ -68,7 +68,7 @@ class _IndexPageState extends State<IndexPage> {
       setState(() {
         users = items;
         final superusers = users.where((user) {
-          return user['is_membre'] == false;
+          return (user['is_membre'] == false && user['is_admin'] == false);
         }).toList();
         superuser = superusers;
       });
@@ -212,7 +212,7 @@ class _IndexPageState extends State<IndexPage> {
   Widget cardItem(item) {
     var username = item['username'];
     var email = item['email'];
-    var image = 'http://192.168.43.61:8000' + item['image'];
+    var image = 'http://192.168.11.105:8000' + item['image'];
     print('<<<<<<<<<<<<<$image');
     var mem_length = item['membre'];
     List memL = item['membre'];
@@ -365,7 +365,10 @@ class _IndexPageState extends State<IndexPage> {
                             )),
                             PopupMenuItem(
                                 child: InkWell(
-                              onTap: () => showDeleteAlert(context, item),
+                              onTap: () {
+                                print("hello salma");
+                                showDeleteAlert(context, item);
+                              },
                               child: ListTile(
                                 leading: Icon(
                                   Icons.delete,
@@ -428,14 +431,23 @@ class _IndexPageState extends State<IndexPage> {
 
     print(memberId);
 
-    var prod_block = item['prod_block'];
+    List prod_block = item['prod_block'];
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => userProductBlocked(
                   memberId: memberId,
                   prod_block: prod_block,
-                )));
+                ))).then((value) {
+      if (value != null && (value as List<int>).isNotEmpty) {
+        (value as List<int>).forEach(
+          (element) {
+            prod_block.removeAt(element);
+          },
+        );
+        setState(() {});
+      }
+    });
   }
 
   getaccount(item) {
@@ -526,10 +538,10 @@ class _IndexPageState extends State<IndexPage> {
     });
     if (response.statusCode == 200) {
       this.fetchUsers();
-
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => IndexPage()),
-          (Route<dynamic> route) => false);
+      // Navigator.of(context).pop();
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(builder: (context) => IndexPage()),
+      //     (Route<dynamic> route) => false);
     }
   }
 
@@ -541,6 +553,7 @@ class _IndexPageState extends State<IndexPage> {
         style: TextStyle(color: primary),
       ),
       onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => IndexPage()),
             (Route<dynamic> route) => false);
@@ -551,6 +564,7 @@ class _IndexPageState extends State<IndexPage> {
       child: Text("Yes", style: TextStyle(color: primary)),
       onPressed: () {
         fetchUsers();
+        Navigator.of(context, rootNavigator: true).pop();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => IndexPage()),
             (Route<dynamic> route) => false);

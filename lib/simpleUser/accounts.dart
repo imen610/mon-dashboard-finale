@@ -15,6 +15,7 @@ import 'package:responsive_admin_dashboard/user/member.dart';
 import 'package:responsive_admin_dashboard/user/theme/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../screens/components/UserBlockedProducts.dart';
 import '../shop/constants/base_api.dart';
 import '../user/edit.dart';
 import 'member_account_page.dart';
@@ -230,7 +231,7 @@ class _AccountsPageState extends State<AccountsPage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(
-                              image: NetworkImage('http://192.168.43.61:8000' +
+                              image: NetworkImage('http://192.168.11.105:8000' +
                                   image.toString()),
                               fit: BoxFit.cover)),
                     )),
@@ -332,6 +333,20 @@ class _AccountsPageState extends State<AccountsPage> {
                                         )),
                                   ),
                                 )),
+                                 PopupMenuItem(
+                                child: InkWell(
+                              onTap: () => getproductBlocked(item),
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.block,
+                                  color: Color.fromARGB(255, 255, 93, 43),
+                                ),
+                                title: Text('products block',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 93, 43),
+                                    )),
+                              ),
+                            )),
                               ],
                               icon: Icon(
                                 Icons.more_vert_rounded,
@@ -354,7 +369,20 @@ class _AccountsPageState extends State<AccountsPage> {
       ),
     );
   }
+ getproductBlocked(item) {
+    var memberId = item['id'].toString();
 
+    print(memberId);
+
+    var prod_block = item['prod_block'];
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => userProductBlocked(
+                  memberId: memberId,
+                  prod_block: prod_block,
+                )));
+  }
   getaccount(item) {
     var memberId = item['id'].toString();
     var username = item['username'].toString();

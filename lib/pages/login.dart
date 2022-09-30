@@ -250,7 +250,7 @@ class _loginState extends State<login> {
   Future<void> login_func() async {
     if (passController.text.isNotEmpty && emailController.text.isNotEmpty) {
       var response = await http.post(
-          Uri.parse("http://192.168.43.61:8000/auth/login/"),
+          Uri.parse("http://192.168.11.105:8000/auth/login/"),
           headers: {"Content-Type": "application/json"},
           body: (jsonEncode({
             "email": emailController.text,
@@ -300,7 +300,7 @@ class _loginState extends State<login> {
                 MaterialPageRoute(builder: (context) => DrawerPage()));
         (access_token['wallet_blocked'])
             ? Future.delayed(
-                Duration(seconds: 3),
+                Duration(seconds: 2),
                 () => showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(

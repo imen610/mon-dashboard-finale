@@ -64,6 +64,11 @@ class _HomePageState extends State<HomePage> {
         list_transactions = items;
         isLoading2 = false;
       });
+    } else {
+      setState(() {
+        list_transactions = [];
+        isLoading2 = true;
+      });
     }
   }
 
@@ -101,7 +106,7 @@ class _HomePageState extends State<HomePage> {
         preferredSize: Size.fromHeight(445.0), // here the desired height
         child: getAppBar(),
       ),
-      body: (isLoading2 == true && isLoading3 == true)
+      body: (isLoading2 == true || isLoading3 == true || isLoading == true)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
             )
@@ -236,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                     child: Text(
-                      "payments",
+                      "Payments",
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                     ),
@@ -264,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                 )
               : Padding(
                   padding: EdgeInsets.only(left: 15),
-                  child: (list_payments.length != 0)
+                  child: (list_payments.length != 0 || isLoading == false)
                       ? getPayments()
                       : Center(child: Text('No Transactions')),
                 ),
@@ -485,9 +490,7 @@ class _HomePageState extends State<HomePage> {
   Widget getmemberitems(item) {
     String image = list_members[item]['image'].toString();
     String URL_image = 'http://192.168.43.61:8000' + image;
-    print(URL_image);
     var username = list_members[item]['username'];
-    print('hello_hello_hello $username');
     return Column(
       children: [
         InkWell(
@@ -564,6 +567,7 @@ class _HomePageState extends State<HomePage> {
     ];
     String image2 = result.isEmpty ? null : result.first;
     print(image2);
+    print(',,,,,,,,,,,,$result');
     return GestureDetector(
       // onTap: widget.onTap,
       child: Container(
@@ -710,7 +714,6 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         list_members = items;
-        // print('wwwwwwwwwwwwwwwwwwwwwwwww${list_members}');
         isLoading3 = false;
       });
     }
@@ -718,7 +721,7 @@ class _HomePageState extends State<HomePage> {
 
   send(index) {
     var userId = index['id'].toString();
-    print('the last $userId');
+    // print('the last $userId');
     var username = index['username'].toString();
     var email = index['email'].toString();
     var image = index['image'].toString();

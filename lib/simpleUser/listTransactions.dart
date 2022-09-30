@@ -18,9 +18,10 @@ class transactionsPage extends StatefulWidget {
 }
 
 class _transactionsPageState extends State<transactionsPage> {
-  bool isLoading1 = false;
+  // bool isLoading1 = false;
   bool isLoading2 = false;
   bool isLoading3 = false;
+  bool isload = false;
 
   @override
   void initState() {
@@ -28,9 +29,10 @@ class _transactionsPageState extends State<transactionsPage> {
     this.fetchtransactions();
     this.getMembers();
     this.fetchUSER();
-    isLoading1 = true;
+    // isLoading1 = true;
     isLoading2 = true;
     isLoading3 = true;
+    isload = true;
   }
 
   var user;
@@ -40,7 +42,6 @@ class _transactionsPageState extends State<transactionsPage> {
     String? token;
     SharedPreferences.getInstance().then((sharedPrefValue) {
       setState(() {
-        isLoading1 = false;
         token = sharedPrefValue.getString(appConstants.KEY_ACCESS_TOKEN);
       });
     });
@@ -58,7 +59,11 @@ class _transactionsPageState extends State<transactionsPage> {
       // print(' voici la liste des transactions $items');
       setState(() {
         list_transactions = items;
+        isload = false;
       });
+    } else {
+      list_transactions = [];
+      isload = true;
     }
   }
 
@@ -69,9 +74,13 @@ class _transactionsPageState extends State<transactionsPage> {
       // appBar: getAppBar(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(160.0), // here the desired height
-        child: getAppBar(),
+        child: (isLoading3)
+            ? Center(
+                child: CircularProgressIndicator(color: Colors.black),
+              )
+            : getAppBar(),
       ),
-      body: (isLoading1 || isLoading2 || isLoading3)
+      body: (isLoading2 == true || isload == true || isLoading3 == true)
           ? Center(
               child: CircularProgressIndicator(color: Colors.black),
             )
@@ -168,7 +177,7 @@ class _transactionsPageState extends State<transactionsPage> {
                               borderRadius: BorderRadius.circular(30),
                               image: DecorationImage(
                                   image: NetworkImage(
-                                    'http://192.168.43.61:8000' +
+                                    'http://192.168.11.105:8000' +
                                         user['image'].toString(),
                                   ),
                                   fit: BoxFit.cover)),
@@ -282,7 +291,7 @@ class _transactionsPageState extends State<transactionsPage> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://192.168.43.61:8000' + img),
+                                        'http://192.168.11.105:8000' + img),
                                     fit: BoxFit.cover)),
                           )),
                         )
@@ -300,7 +309,7 @@ class _transactionsPageState extends State<transactionsPage> {
                                 borderRadius: BorderRadius.circular(30),
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://192.168.43.61:8000' + image2),
+                                        'http://192.168.11.105:8000' + image2),
                                     fit: BoxFit.cover)),
                           )),
                         ),
@@ -393,6 +402,11 @@ class _transactionsPageState extends State<transactionsPage> {
         list_members = items;
         isLoading2 = false;
       });
+    } else {
+      setState(() {
+        list_members = [];
+        isLoading2 = true;
+      });
     }
   }
 
@@ -412,6 +426,11 @@ class _transactionsPageState extends State<transactionsPage> {
       setState(() {
         user = items;
         isLoading3 = false;
+      });
+    } else {
+      setState(() {
+        user = [];
+        isLoading3 = true;
       });
     }
   }

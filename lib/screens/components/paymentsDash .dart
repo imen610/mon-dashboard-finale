@@ -281,7 +281,7 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://192.168.43.61:8000' + img),
+                        image: NetworkImage('http://192.168.11.105:8000' + img),
                         fit: BoxFit.cover)),
               )),
             ),
@@ -291,8 +291,14 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
             Flexible(
               child: Column(
                 children: [
+                  SizedBox(
+                    width: 4,
+                  ),
                   Row(
                     children: [
+                      SizedBox(
+                        width: 15,
+                      ),
                       Text(name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -329,9 +335,9 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
                 ],
               ),
             ),
-            SizedBox(
-              width: 7,
-            ),
+            // SizedBox(
+            //   width: 3,
+            // ),
             Container(
               margin: EdgeInsets.only(top: 3),
               width: 55,
@@ -346,7 +352,8 @@ class _PaymentsDashPageState extends State<PaymentsDashPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: NetworkImage('http://192.168.43.61:8000' + image2),
+                        image:
+                            NetworkImage('http://192.168.11.105:8000' + image2),
                         fit: BoxFit.cover)),
               )),
             ),
